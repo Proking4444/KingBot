@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, IntentsBitField } = require('discord.js');
+const { Client, IntentsBitField, EmbedBuilder } = require('discord.js');
 
 const client = new Client({
     intents: [
@@ -19,6 +19,37 @@ client.on('ready', (c) => {
 //Statements
 
 let count = 0
+
+//
+
+const randomJokeList = [
+    '**Why don\'t scientists trust atoms?** \nBecause they make up everything.',
+    '**Why do we tell actors to \"break a leg?\"** \nBecause every play has a cast!',
+    '**Where did the music teacher leave her keys?** \nIn the piano!',
+    '**Why was six afraid of seven?** \nBecause seven eight nine.',
+    '**What did the pirate say when he turned 80?** \nAye matey.',
+    '**Why did the picture go to jail?** \nBecause it was framed.',
+    '**How does NASA organize a party?** \nThey planet.',
+    '**What do you call a sad cup of coffee?** \nA Depresso.',
+    '**Why don\'t eggs tell jokes?** \nThey\'d crack each other up.',
+    '**What\'s a ninja\'s favorite type of shoes?** \nSneakers.',
+    '**Why did the doctor get mad?** \nHe ran out of patients!',
+    '**What do attorneys wear to court?** \nLaw-suits!',
+    '**Why did the robber jump in the shower?** \nHe wanted to make a clean getaway.',
+    '**What do you call a bear without any teeth?** \nA gummy bear.',
+    '**Why shouldn\'t you write with a broken pencil?** \nBecause it\'s pointless.',
+    '**What kind of music do planets like?** \nNeptunes.',
+    '**How do trees access the internet?** \nThey log in.',
+    '**Do you want to hear a construction joke?** \nSorry, I\'m still working on it.',
+    '**Why did the bullet end up losing his job?** \nHe got fired.',
+    '**Where do young trees go to learn?** \nElementree school.',
+    '**What do you give to a sick lemon?** \nLemon aid!',
+    '**Why doesn\'t the sun go to college?** \nBecause it has a million degrees!',
+    '**What is a computer\'s first sign of old age?** \nLoss of memory.',
+    '**Why were the fish\'s grades so bad?** \nIt was below sea level.',
+    '**Why did the gym close down?** \nIt just didn\'t work out!'
+        // Keep adding!
+    ];
 
 //Information/Management
 
@@ -54,35 +85,6 @@ client.on('messageCreate', (message) => {
 });
 
 //Entertainment
-
-const randomJokeList = [
-'**Why don\'t scientists trust atoms?** \nBecause they make up everything.',
-'**Why do we tell actors to \"break a leg?\"** \nBecause every play has a cast!',
-'**Where did the music teacher leave her keys?** \nIn the piano!',
-'**Why was six afraid of seven?** \nBecause seven eight nine.',
-'**What did the pirate say when he turned 80?** \nAye matey.',
-'**Why did the picture go to jail?** \nBecause it was framed.',
-'**How does NASA organize a party?** \nThey planet.',
-'**What do you call a sad cup of coffee?** \nA Depresso.',
-'**Why don\'t eggs tell jokes?** \nThey\'d crack each other up.',
-'**What\'s a ninja\'s favorite type of shoes?** \nSneakers.',
-'**Why did the doctor get mad?** \nHe ran out of patients!',
-'**What do attorneys wear to court?** \nLaw-suits!',
-'**Why did the robber jump in the shower?** \nHe wanted to make a clean getaway.',
-'**What do you call a bear without any teeth?** \nA gummy bear.',
-'**Why shouldn\'t you write with a broken pencil?** \nBecause it\'s pointless.',
-'**What kind of music do planets like?** \nNeptunes.',
-'**How do trees access the internet?** \nThey log in.',
-'**Do you want to hear a construction joke?** \nSorry, I\'m still working on it.',
-'**Why did the bullet end up losing his job?** \nHe got fired.',
-'**Where do young trees go to learn?** \nElementree school.',
-'**What do you give to a sick lemon?** \nLemon aid!',
-'**Why doesn\'t the sun go to college?** \nBecause it has a million degrees!',
-'**What is a computer\'s first sign of old age?** \nLoss of memory.',
-'**Why were the fish\'s grades so bad?** \nIt was below sea level.',
-'**Why did the gym close down?** \nIt just didn\'t work out!'
-    // Keep adding!
-];
 
 client.on('messageCreate', (message) => {
     if (message.content === '$joke') {
@@ -269,6 +271,12 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$count') {
         count = count + 1;
+        message.reply(`The count is now ${count}.`);
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$randomimg') {
         message.reply(`The count is now ${count}.`);
     }
 });
