@@ -20,6 +20,12 @@ client.on('ready', (c) => {
 
 let count = 0
 
+//Embeds
+
+const mojaveDesertImage1 = new EmbedBuilder()
+    .setTitle('Mojave Desert')
+    .setImage('https://i.postimg.cc/4xNJ91Q8/Mojave-Desert-4.jpg');
+
 //Lists
 
 const randomJokeList = [
@@ -203,6 +209,10 @@ const randomAriQuoteList = [
     // Keep adding!
 ];
 
+const randomImageList = [
+    mojaveDesertImage1
+];
+
 //Information/Management
 
 client.on('messageCreate', (message) => {
@@ -277,7 +287,8 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$randomimg') {
-        message.reply(`The count is now ${count}.`);
+        const random = Math.floor(Math.random() * randomImageList.length);
+        message.reply(randomImageList[random]);
     }
 });
 
