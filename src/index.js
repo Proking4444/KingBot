@@ -287,8 +287,8 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$randomimg') {
-        const random = Math.floor(Math.random() * randomImageList.length);
-        message.reply(randomImageList[random]);
+        let randomImage = randomImageList[Math.floor(Math.random() * randomImageList.length)];
+        message.reply(randomImage);
     }
 });
 
