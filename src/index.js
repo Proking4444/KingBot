@@ -20,7 +20,7 @@ client.on('ready', (c) => {
 
 let count = 0
 
-//
+//Lists
 
 const randomJokeList = [
     '**Why don\'t scientists trust atoms?** \nBecause they make up everything.',
