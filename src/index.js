@@ -209,10 +209,6 @@ const randomAriQuoteList = [
     // Keep adding!
 ];
 
-const randomImageList = [
-    mojaveDesertImage1
-];
-
 //Information/Management
 
 client.on('messageCreate', (message) => {
@@ -286,9 +282,8 @@ client.on('messageCreate', (message) => {
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$randomimg') {
-        let randomImage = randomImageList[Math.floor(Math.random() * randomImageList.length)];
-        message.reply(randomImage);
+    if (message.content === '$img1') {
+        message.reply({ embeds: [mojaveDesertImage1] });
     }
 });
 
