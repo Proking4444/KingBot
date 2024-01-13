@@ -49,49 +49,7 @@ const randomJokeList = [
     '**Why were the fish\'s grades so bad?** \nIt was below sea level.',
     '**Why did the gym close down?** \nIt just didn\'t work out!'
         // Keep adding!
-    ];
-
-//Information/Management
-
-client.on('messageCreate', (message) => {
-    if (message.content === '$help') {
-        message.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
-    }
-});
-
-client.on('messageCreate', (message) => {
-    if (message.content === '$kingbot') {
-        message.reply('Hi. My name is KingBot, and I was a bot created by Ari for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact Ari (Proking4).');
-    }
-});
-
-client.on('messageCreate', (message) => {
-    if (message.content === '$ping') {
-        message.reply(`Server Latency is ${Date.now() - message.createdTimestamp}ms.`);
-    }
-});
-
-client.on('messageCreate', (message) => {
-    if (message.content === '$uptime') {
-        let totalSeconds = (client.uptime / 1000);
-        let days = Math.floor(totalSeconds / 86400);
-        totalSeconds %= 86400;
-        let hours = Math.floor(totalSeconds / 3600);
-        totalSeconds %= 3600;
-        let minutes = Math.floor(totalSeconds / 60);
-        let seconds = Math.floor(totalSeconds % 60);
-        message.reply(`The bot has been online for ${days} ${days === 1 ? 'day' : 'days'}, ${hours} ${hours === 1 ? 'hour' : 'hours'}, ${minutes} ${minutes === 1 ? 'minute' : 'minutes'} and ${seconds} ${seconds === 1 ? 'second' : 'seconds'}`);
-    }
-});
-
-//Entertainment
-
-client.on('messageCreate', (message) => {
-    if (message.content === '$joke') {
-        const random = Math.floor(Math.random() * randomJokeList.length);
-        message.reply(randomJokeList[random]);
-    }
-});
+];
 
 const randomLongJokeList = [
     'A pair of cows were talking in the field. One says, "Have you heard about the mad cow disease that\'s going around?" \n"Yeah," the other cow says. \n"Makes me glad I\'m a penguin."',
@@ -107,14 +65,7 @@ const randomLongJokeList = [
     'Putin is held hostage by a terrorist. A Russian truckdriver stops at the back of a long queue on the motorway. He sees a policeman walking down the line of stopped cars to briefly talk to the drivers. \nAs the policeman approaches the truck, the truckdriver rolls down his window and asks, "What\'s going on?" \nPoliceman: "A terrorist is holding Putin hostage in a car. He\'s demanding 10 million rubles, or he\'ll douse Putin in petrol and set him on fire. So we\'re asking drivers for donations." \nDriver: "Oh, ok. How much do people donate on average?" \nPoliceman: "About a gallon."',
     'A taxi passenger tapped the driver on the shoulder to ask him a question. \nThe driver screamed, lost control of the car, nearly hit a bus, went up on the footpath, and stopped inches from a shop window. \nFor a second, everything was quiet in the cab. Then the driver said, "Look, mate, don\'t ever do that again. You scared the living daylights out of me!" \nThe passenger apologized and said, "I didn\'t realize that a little tap would scare you so much." \nThe driver replied, "Sorry, it\'s not really your fault. Today is my first day as a cab driver — I\'ve been driving a funeral van for the last 25 years."'
     // Keep adding!
-    ];
-    
-client.on('messageCreate', (message) => {
-    if (message.content === '$longjoke') {
-        const random = Math.floor(Math.random() * randomLongJokeList.length);
-        message.reply(randomLongJokeList[random]);
-    }
-});
+];
 
 const randomFactList = [
     'The scientific term for brain freeze is "sphenopalatine ganglioneuralgia."',
@@ -227,14 +178,7 @@ const randomFactList = [
     'Dinosaurs would swallow large rocks which stayed in their stomach to help churn and digest food.',
     '1912 saw the last Olympic gold medals made entirely out of gold.',
     'Before Apple bought Siri, it was originally going to be released as an app for Android & Blackberry.'  
-    ];
-    
-client.on('messageCreate', (message) => {
-    if (message.content === '$fact') {
-        const random = Math.floor(Math.random() * randomFactList.length);
-        message.reply(randomFactList[random]);
-    }
-});
+];
 
 const randomAriQuoteList = [
     '**"WOW OMG! It\'s a United Arab Emirates Airbus A380, and it has two floors!"** \n(Ari, pointing to the sky. November 2023.)',
@@ -257,7 +201,63 @@ const randomAriQuoteList = [
     '**"It\'s the "goodest" one."** \n(Ari, speaking fake English. September 2023.)',
     '**"I swear it\'s water bro!"** \n(Ari, speaking to the police. November 2023.)'
     // Keep adding!
-    ];
+];
+
+//Information/Management
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$help') {
+        message.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$kingbot') {
+        message.reply('Hi. My name is KingBot, and I was a bot created by Ari for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact Ari (Proking4).');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$ping') {
+        message.reply(`Server Latency is ${Date.now() - message.createdTimestamp}ms.`);
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$uptime') {
+        let totalSeconds = (client.uptime / 1000);
+        let days = Math.floor(totalSeconds / 86400);
+        totalSeconds %= 86400;
+        let hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = Math.floor(totalSeconds % 60);
+        message.reply(`The bot has been online for ${days} ${days === 1 ? 'day' : 'days'}, ${hours} ${hours === 1 ? 'hour' : 'hours'}, ${minutes} ${minutes === 1 ? 'minute' : 'minutes'} and ${seconds} ${seconds === 1 ? 'second' : 'seconds'}`);
+    }
+});
+
+//Entertainment
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$joke') {
+        const random = Math.floor(Math.random() * randomJokeList.length);
+        message.reply(randomJokeList[random]);
+    }
+});
+    
+client.on('messageCreate', (message) => {
+    if (message.content === '$longjoke') {
+        const random = Math.floor(Math.random() * randomLongJokeList.length);
+        message.reply(randomLongJokeList[random]);
+    }
+});
+    
+client.on('messageCreate', (message) => {
+    if (message.content === '$fact') {
+        const random = Math.floor(Math.random() * randomFactList.length);
+        message.reply(randomFactList[random]);
+    }
+});
 
 //Miscellaneous
     
