@@ -23,8 +23,44 @@ let count = 0
 //Embeds
 
 const mojaveDesertImage1 = new EmbedBuilder()
-    .setTitle('Mojave Desert')
-    .setImage('https://i.postimg.cc/4xNJ91Q8/Mojave-Desert-4.jpg');
+    .setTitle('The Mojave Desert (1)')
+    .setImage('https://i.postimg.cc/WzTN3bsC/Mojave-Desert-1.jpg');
+
+const MojaveDesertImage2 = new EmbedBuilder()
+    .setTitle('The Mojave Desert (2)')
+    .setImage('https://i.postimg.cc/9FN23Bwv/Mojave-Desert-2.jpg');
+
+const MojaveDesertImage3 = new EmbedBuilder()
+    .setTitle('The Mojave Desert (3)')
+    .setImage('https://i.postimg.cc/1XCkQ9Xp/Mojave-Desert-3.jpg');
+
+const MojaveDesertImage4 = new EmbedBuilder()
+    .setTitle('The Mojave Desert (4)')
+    .setImage('https://i.postimg.cc/NFf3Syss/Mojave-Desert-4.jpg');
+
+const MojaveDesertImage5 = new EmbedBuilder()
+    .setTitle('The Mojave Desert (5)')
+    .setImage('https://i.postimg.cc/qvhTpC8g/Mojave-Desert-5.jpg');
+
+const MojaveDesertImage6 = new EmbedBuilder()
+    .setTitle('The Mojave Desert (6)')
+    .setImage('https://i.postimg.cc/HsLmPNnw/Mojave-Desert-6.jpg');
+
+const MojaveDesertImage7 = new EmbedBuilder()
+    .setTitle('The Mojave Desert (7)')
+    .setImage('https://i.postimg.cc/Dw9K0yg6/Mojave-Desert-7.jpg');
+
+const MojaveDesertImage8 = new EmbedBuilder()
+    .setTitle('The Mojave Desert (8)')
+    .setImage('https://i.postimg.cc/VNXPCQZ8/Mojave-Desert-8.jpg');
+
+const MojaveDesertImage9 = new EmbedBuilder()
+    .setTitle('The Mojave Desert (9)')
+    .setImage('https://i.postimg.cc/76D81sjT/Mojave-Desert-9.jpg');
+
+const MojaveDesertImage10 = new EmbedBuilder()
+    .setTitle('The Mojave Desert (10)')
+    .setImage('https://i.postimg.cc/SNj0Gz1V/Mojave-Desert-10.jpg');
 
 //Lists
 
@@ -213,13 +249,13 @@ const randomAriQuoteList = [
 
 client.on('messageCreate', (message) => {
     if (message.content === '$help') {
-        message.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
+        message.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Miscellaneous** \n($)count = Adds 1 to the Count \n($)img = Sends an image in the server');
     }
 });
 
 client.on('messageCreate', (message) => {
     if (message.content === '$kingbot') {
-        message.reply('IIIHi. My name is KingBot, and I was a bot created by Ari for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact Ari (Proking4).');
+        message.reply('Hi. My name is KingBot, and I was a bot created by Ari for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact Ari (Proking4).');
     }
 });
 
@@ -282,8 +318,70 @@ client.on('messageCreate', (message) => {
 });
 
 client.on('messageCreate', (message) => {
+    if (message.content === '$img') {
+        message.reply('**Sending Images** \nPlease use $img(number) to send an image.');
+    }
+});
+
+//Image Embeds
+
+client.on('messageCreate', (message) => {
     if (message.content === '$img1') {
         message.reply({ embeds: [mojaveDesertImage1] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$img2') {
+        message.reply({ embeds: [mojaveDesertImage2] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$img3') {
+        message.reply({ embeds: [MojaveDesertImage3] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$img4') {
+        message.reply({ embeds: [MojaveDesertImage4] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$img5') {
+        message.reply({ embeds: [mojaveDesertImage5] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$img6') {
+        message.reply({ embeds: [MojaveDesertImage6] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$img7') {
+        message.reply({ embeds: [MojaveDesertImage7] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$img8') {
+        message.reply({ embeds: [MojaveDesertImage8] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$img9') {
+        message.reply({ embeds: [MojaveDesertImage9] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$img10') {
+        message.reply({ embeds: [MojaveDesertImage10] });
     }
 });
 
