@@ -22,7 +22,7 @@ let count = 0
 
 //Embeds
 
-const mojaveDesertImage1 = new EmbedBuilder()
+const MojaveDesertImage1 = new EmbedBuilder()
     .setTitle('The Mojave Desert (1)')
     .setImage('https://i.postimg.cc/WzTN3bsC/Mojave-Desert-1.jpg');
 
@@ -327,13 +327,13 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$img1') {
-        message.reply({ embeds: [mojaveDesertImage1] });
+        message.reply({ embeds: [MojaveDesertImage1] });
     }
 });
 
 client.on('messageCreate', (message) => {
     if (message.content === '$img2') {
-        message.reply({ embeds: [mojaveDesertImage2] });
+        message.reply({ embeds: [MojaveDesertImage2] });
     }
 });
 
@@ -351,7 +351,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$img5') {
-        message.reply({ embeds: [mojaveDesertImage5] });
+        message.reply({ embeds: [MojaveDesertImage5] });
     }
 });
 
