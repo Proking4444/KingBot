@@ -219,7 +219,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$kingbot') {
-        message.reply('Hi. My name is KingBot, and I was a bot created by Ari for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact Ari (Proking4).');
+        message.reply('IIIIIHi. My name is KingBot, and I was a bot created by Ari for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact Ari (Proking4).');
     }
 });
 
