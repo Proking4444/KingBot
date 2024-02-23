@@ -15,10 +15,7 @@ const client = new Client({
 client.on('ready', (c) => {
     console.log(`${c.user.tag} is Online!`);
 
-    client.user.setActivity({
-        name: '$help',
-        type: ActivityType.Playing
-    })
+    bot.user.setPresence({ activity: { name: `${bot.users.cache.size} members` , type: 'WATCHING'}, status: 'online' })
 });
 
 //Statements
