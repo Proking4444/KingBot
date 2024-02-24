@@ -328,74 +328,74 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$img') {
-        message.reply('**Sending Images** \nPlease use $img(code)(number) to send an image. \n\n**Image Codes** \n- Desert (0)');
+        message.reply('**Sending Images** \nPlease use $img (code) (number) to send an image. \n\n**Image Codes** \n- Desert (0)');
     }
 });
 
 client.on('messageCreate', (message) => {
     if (message.content === '$movie') {
-        message.reply('**Watching Movies** \nPlease use $movie(code) to watch a movie. \n\n**Movie Codes** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV)');
+        message.reply('**Watching Movies** \nPlease use $movie (code) to watch a movie. \n\n**Movie Codes** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV)');
     }
 });
 
 //Image Embeds
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img01') {
+    if (message.content === '$img 0 1') {
         message.reply({ embeds: [MojaveDesertImage1] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img02') {
+    if (message.content === '$img 0 2') {
         message.reply({ embeds: [MojaveDesertImage2] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img03') {
+    if (message.content === '$img 0 3') {
         message.reply({ embeds: [MojaveDesertImage3] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img04') {
+    if (message.content === '$img 0 4') {
         message.reply({ embeds: [MojaveDesertImage4] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img05') {
+    if (message.content === '$img 0 5') {
         message.reply({ embeds: [MojaveDesertImage5] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img06') {
+    if (message.content === '$img 0 6') {
         message.reply({ embeds: [MojaveDesertImage6] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img07') {
+    if (message.content === '$img 0 7') {
         message.reply({ embeds: [MojaveDesertImage7] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img08') {
+    if (message.content === '$img 0 8') {
         message.reply({ embeds: [MojaveDesertImage8] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img09') {
+    if (message.content === '$img 0 9') {
         message.reply({ embeds: [MojaveDesertImage9] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img010') {
+    if (message.content === '$img 0 10') {
         message.reply({ embeds: [MojaveDesertImage10] });
     }
 });
