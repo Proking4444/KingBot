@@ -27,6 +27,6 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     }
 })();
 
-rest.delete(Routes.applicationCommand('1168240045510107308', '1173111370791796737'))
+rest.delete(Routes.applicationCommand(1168240045510107308, "1173111370791796737"))
 	.then(() => console.log('Successfully deleted application command'))
 	.catch(console.error);
