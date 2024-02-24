@@ -75,6 +75,10 @@ const ClassMeme1 = new EmbedBuilder()
     .setTitle('Roy Lore')
     .setImage('https://i.imgflip.com/8gy2vz.jpg');
 
+const ClassMeme2 = new EmbedBuilder()
+    .setTitle('Roy Lore 2')
+    .setImage('https://i.imgflip.com/8gy4ny.jpg');
+
 //Lists
 
 const randomJokeList = [
@@ -539,6 +543,12 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 1') {
         message.reply({ embeds: [ClassMeme1] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 2') {
+        message.reply({ embeds: [ClassMeme2] });
     }
 });
 
