@@ -333,7 +333,7 @@ client.on('messageCreate', (message) => {
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img') {
+    if (message.content === '$movie') {
         message.reply('**Watching Movies** \nPlease use $movie(code) to watch a movie. \n\n**Movie Codes** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV)');
     }
 });
