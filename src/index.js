@@ -69,6 +69,12 @@ const MojaveDesertImage10 = new EmbedBuilder()
     .setTitle('The Mojave Desert (10)')
     .setImage('https://i.postimg.cc/SNj0Gz1V/Mojave-Desert-10.jpg');
 
+//Class Memes
+
+const ClassMeme1 = new EmbedBuilder()
+    .setTitle('Roy Lore')
+    .setImage('https://i.imgflip.com/8gy2vz.jpg');
+
 //Lists
 
 const randomJokeList = [
@@ -338,6 +344,12 @@ client.on('messageCreate', (message) => {
     }
 });
 
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme') {
+        message.reply('**Sending Class Memes** \nPlease use $classmeme (number) to send a meme.');
+    }
+});
+
 //Image Embeds
 
 client.on('messageCreate', (message) => {
@@ -521,6 +533,15 @@ client.on('messageCreate', (message) => {
         message.reply('https://www.youtube.com/watch?v=lAnT1xb1tXY&ab_channel=FilmCampInABox');
     }
 });
+
+//Class Memes
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 1') {
+        message.reply({ embeds: [ClassMeme1] });
+    }
+});
+
 
 //Slash Commands Listeners
 
