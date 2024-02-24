@@ -27,6 +27,8 @@ let count = 0
 
 //Embeds
 
+//Desert
+
 const MojaveDesertImage1 = new EmbedBuilder()
     .setTitle('The Mojave Desert (1)')
     .setImage('https://i.postimg.cc/WzTN3bsC/Mojave-Desert-1.jpg');
@@ -326,69 +328,107 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$img') {
-        message.reply('**Sending Images** \nPlease use $img(number) to send an image.');
+        message.reply('**Sending Images** \nPlease use $img(code)(number) to send an image. \n\nImage Codes \n- Desert (0)');
     }
 });
 
 //Image Embeds
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img1') {
+    if (message.content === '$img01') {
         message.reply({ embeds: [MojaveDesertImage1] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img2') {
+    if (message.content === '$img02') {
         message.reply({ embeds: [MojaveDesertImage2] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img3') {
+    if (message.content === '$img03') {
         message.reply({ embeds: [MojaveDesertImage3] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img4') {
+    if (message.content === '$img04') {
         message.reply({ embeds: [MojaveDesertImage4] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img5') {
+    if (message.content === '$img05') {
         message.reply({ embeds: [MojaveDesertImage5] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img6') {
+    if (message.content === '$img06') {
         message.reply({ embeds: [MojaveDesertImage6] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img7') {
+    if (message.content === '$img07') {
         message.reply({ embeds: [MojaveDesertImage7] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img8') {
+    if (message.content === '$img08') {
         message.reply({ embeds: [MojaveDesertImage8] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img9') {
+    if (message.content === '$img09') {
         message.reply({ embeds: [MojaveDesertImage9] });
     }
 });
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$img10') {
+    if (message.content === '$img010') {
         message.reply({ embeds: [MojaveDesertImage10] });
+    }
+});
+
+//Movies
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie 2GWGBU') {
+        message.reply('https://www.youtube.com/watch?v=mTJGYZonJEs&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie DWY') {
+        message.reply('https://www.youtube.com/watch?v=74x8ddmOuGE&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie FG') {
+        message.reply('https://www.youtube.com/watch?v=M7T5dUg-tvQ&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie KA') {
+        message.reply('https://www.youtube.com/watch?v=mYrNIa0TRdM&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie TCOL') {
+        message.reply('https://www.youtube.com/watch?v=FAIEsauYHbQ&t=1s&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie TFV') {
+        message.reply('https://www.youtube.com/watch?v=Vx9EVfSy3jE&ab_channel=FilmCampInABox');
     }
 });
 
