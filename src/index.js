@@ -268,7 +268,7 @@ const randomAriQuoteList = [
 
 client.on('messageCreate', (message) => {
     if (message.content === '$help') {
-        message.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
+        message.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
     }
 });
 
@@ -320,8 +320,6 @@ client.on('messageCreate', (message) => {
     }
 });
 
-//Miscellaneous
-    
 client.on('messageCreate', (message) => {
     if (message.content === '$ari') {
         const random = Math.floor(Math.random() * randomAriQuoteList.length);
@@ -329,12 +327,7 @@ client.on('messageCreate', (message) => {
     }
 });
 
-client.on('messageCreate', (message) => {
-    if (message.content === '$count') {
-        count = count + 1;
-        message.reply(`The count is now ${count}.`);
-    }
-});
+//Media
 
 client.on('messageCreate', (message) => {
     if (message.content === '$img') {
@@ -351,6 +344,15 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme') {
         message.reply('**Sending Class Memes** \nPlease use $classmeme (number) to send a meme.');
+    }
+});
+
+//Miscellaneous
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$count') {
+        count = count + 1;
+        message.reply(`The count is now ${count}.`);
     }
 });
 
@@ -559,7 +561,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'help') {
-        return interaction.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
+        return interaction.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
       }
 });
 
