@@ -258,7 +258,7 @@ const randomAriQuoteList = [
 
 client.on('messageCreate', (message) => {
     if (message.content === '$help') {
-        message.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Miscellaneous** \n($)count = Adds 1 to the Count \n($)img = Sends an image in the server');
+        message.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
     }
 });
 
@@ -328,7 +328,13 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$img') {
-        message.reply('**Sending Images** \nPlease use $img(code)(number) to send an image. \n\nImage Codes \n- Desert (0)');
+        message.reply('**Sending Images** \nPlease use $img(code)(number) to send an image. \n\n**Image Codes** \n- Desert (0)');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$img') {
+        message.reply('**Watching Movies** \nPlease use $movie(code) to watch a movie. \n\n**Movie Codes** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV)');
     }
 });
 
@@ -396,6 +402,8 @@ client.on('messageCreate', (message) => {
 
 //Movies
 
+//Boehlke 2024
+
 client.on('messageCreate', (message) => {
     if (message.content === '$movie 2GWGBU') {
         message.reply('https://www.youtube.com/watch?v=mTJGYZonJEs&ab_channel=FilmCampInABox');
@@ -432,13 +440,95 @@ client.on('messageCreate', (message) => {
     }
 });
 
+//Boehlke 2023
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie HLA') {
+        message.reply('https://www.youtube.com/watch?v=sNHxUNFNKPU&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie KC') {
+        message.reply('https://www.youtube.com/watch?v=uN7YJglqbH0&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie MM') {
+        message.reply('https://www.youtube.com/watch?v=TxGVbjbbqD0&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie MF') {
+        message.reply('https://www.youtube.com/watch?v=9OA4DHFvVG4&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie TWJ') {
+        message.reply('https://www.youtube.com/watch?v=q2EweIYOk6U&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie TFC') {
+        message.reply('https://www.youtube.com/watch?v=pFygb4GjvpY&ab_channel=FilmCampInABox');
+    }
+});
+
+//Deluca 2024
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie 90DOD') {
+        message.reply('https://www.youtube.com/watch?v=IfjO86FaemU&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie EVSGV') {
+        message.reply('https://www.youtube.com/watch?v=ClG-puU3A3U&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie GD') {
+        message.reply('https://www.youtube.com/watch?v=BBTp862EHOI&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie PB') {
+        message.reply('https://www.youtube.com/watch?v=5BFEArg1kR8&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie SAETTW') {
+        message.reply('https://www.youtube.com/watch?v=vITmBOt4Xb4&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie TM') {
+        message.reply('https://www.youtube.com/watch?v=QJtKll8R32M&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie TBA') {
+        message.reply('https://www.youtube.com/watch?v=lAnT1xb1tXY&ab_channel=FilmCampInABox');
+    }
+});
+
 //Slash Commands Listeners
 
 client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'help') {
-        return interaction.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Miscellaneous** \n($)count = Adds 1 to the Count \n($)img = Sends an image in the server');
+        return interaction.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
       }
 });
 
