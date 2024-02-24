@@ -246,7 +246,9 @@ const randomAriQuoteList = [
     '**"Some people say that the universe is shaped like a brain."** \n(Ari, discussing the shape of the universe. November 2023.)',
     '**"Black Dwarf Stars come from White Dwarfs but haven\'t been proven. \nWhat???"** \n(Ari, discussing dwarf stars. November 2023.)',
     '**"It\'s the "goodest" one."** \n(Ari, speaking fake English. September 2023.)',
-    '**"I swear it\'s water bro!"** \n(Ari, speaking to the police. November 2023.)'
+    '**"I swear it\'s water bro!"** \n(Ari, speaking to the police. November 2023.)',
+    '**"I swear I\'m not Gen Alpha. Im just not like them! I wasn\'t born holding an Iphone."** \n(Ari, persuading others that he is Gen Z. February 2024.)',
+    '**"My life could be a tragedy movie, or it could be an epic."** \n(Ari, talking about his life. January 2024.)'
     // Keep adding!
 ];
 
@@ -260,7 +262,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$kingbot') {
-        message.reply('Hi. My name is KingBot, and I was a bot created by Ari for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact Ari (Proking4).');
+        message.reply('Hi. My name is KingBot, and I was a bot created by Ari for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact Ari (@proking4).');
     }
 });
 
@@ -396,7 +398,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'help') {
-        return interaction.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
+        return interaction.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Miscellaneous** \n($)count = Adds 1 to the Count \n($)img = Sends an image in the server');
       }
 });
 
