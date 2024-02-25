@@ -79,6 +79,10 @@ const ClassMeme2 = new EmbedBuilder()
     .setTitle('Roy Lore 2')
     .setImage('https://i.imgflip.com/8gy4ny.jpg');
 
+const ClassMeme3 = new EmbedBuilder()
+    .setTitle('Eraser Lore')
+    .setImage('https://i.imgflip.com/8h1dfo.jpg');
+
 //Lists
 
 const randomJokeList = [
@@ -554,6 +558,11 @@ client.on('messageCreate', (message) => {
     }
 });
 
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 3') {
+        message.reply({ embeds: [ClassMeme3] });
+    }
+});
 
 //Slash Commands Listeners
 
