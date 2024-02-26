@@ -12,13 +12,25 @@ const client = new Client({
     ],
 });
 
+let status = [
+    {
+        name: '$help',
+        type: ActivityType.Playing
+    },
+
+    {
+        name: `${bot.users.cache.size} users!`,
+        type: ActivityType.Watching
+    }
+]
+
 client.on('ready', (c) => {
     console.log(`${c.user.tag} is Online!`);
     
-    client.user.setActivity({
-        name: '$help',
-        type: ActivityType.Playing
-    });
+    setInterval(() => {
+        let random = Math.floor(Math.random() * status.length);
+        client.user.setActivity(status[random]);
+    }, 20000);
 });
 
 //Statements
