@@ -111,6 +111,26 @@ const ClassMeme6 = new EmbedBuilder()
     .setImage('https://i.imgflip.com/8h1jxf.jpg')
     .setFooter({ text: 'Created by Amy Wang' });
 
+const ClassMeme7 = new EmbedBuilder()
+    .setTitle('Roy Lore 3')
+    .setImage('https://i.imgflip.com/8h1v6n.jpg')
+    .setFooter({ text: 'Created by Ari Khan' });
+
+const ClassMeme8 = new EmbedBuilder()
+    .setTitle('Grade 8 Girls Lore')
+    .setImage('https://i.imgflip.com/8h1vmn.jpg')
+    .setFooter({ text: 'Created by Roy Mei' });
+
+const ClassMeme9 = new EmbedBuilder()
+    .setTitle('Derek Lore')
+    .setImage('https://i.imgflip.com/8h1vwi.jpg')
+    .setFooter({ text: 'Created by Roy Mei' });
+
+const ClassMeme10 = new EmbedBuilder()
+    .setTitle('Grade 7 Boy Lore')
+    .setImage('https://i.imgflip.com/8h1w1n.jpg')
+    .setFooter({ text: 'Created by Roy Mei' });
+
 //Lists
 
 const randomJokeList = [
@@ -312,7 +332,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$ping') {
-        message.reply(`Server Latency is ${Date.now() - message.createdTimestamp}ms.`);
+        message.reply(`Server Latency is **${Date.now() - message.createdTimestamp}ms**.`);
     }
 });
 
@@ -607,6 +627,30 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 6') {
         message.reply({ embeds: [ClassMeme6] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 7') {
+        message.reply({ embeds: [ClassMeme7] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 8') {
+        message.reply({ embeds: [ClassMeme8] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 9') {
+        message.reply({ embeds: [ClassMeme9] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 10') {
+        message.reply({ embeds: [ClassMeme10] });
     }
 });
 
