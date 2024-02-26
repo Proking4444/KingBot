@@ -26,3 +26,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     console.log(`There was an error: ${error}`);
     }
 })();
+
+rest.delete(Routes.applicationCommand(1168240045510107308, "1195826460091490325"))
+	.then(() => console.log('Successfully deleted application command'))
+	.catch(console.error);
