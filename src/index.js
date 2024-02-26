@@ -31,57 +31,85 @@ let count = 0
 
 const MojaveDesertImage1 = new EmbedBuilder()
     .setTitle('The Mojave Desert (1)')
-    .setImage('https://i.postimg.cc/WzTN3bsC/Mojave-Desert-1.jpg');
+    .setImage('https://i.postimg.cc/WzTN3bsC/Mojave-Desert-1.jpg')
+    .setFooter({ text: 'Photo taken by Ari Khan' });
 
 const MojaveDesertImage2 = new EmbedBuilder()
     .setTitle('The Mojave Desert (2)')
-    .setImage('https://i.postimg.cc/9FN23Bwv/Mojave-Desert-2.jpg');
+    .setImage('https://i.postimg.cc/9FN23Bwv/Mojave-Desert-2.jpg')
+    .setFooter({ text: 'Photo taken by Ari Khan' });
 
 const MojaveDesertImage3 = new EmbedBuilder()
     .setTitle('The Mojave Desert (3)')
-    .setImage('https://i.postimg.cc/1XCkQ9Xp/Mojave-Desert-3.jpg');
+    .setImage('https://i.postimg.cc/1XCkQ9Xp/Mojave-Desert-3.jpg')
+    .setFooter({ text: 'Photo taken by Ari Khan' });
 
 const MojaveDesertImage4 = new EmbedBuilder()
     .setTitle('The Mojave Desert (4)')
-    .setImage('https://i.postimg.cc/NFf3Syss/Mojave-Desert-4.jpg');
+    .setImage('https://i.postimg.cc/NFf3Syss/Mojave-Desert-4.jpg')
+    .setFooter({ text: 'Photo taken by Ari Khan' });
 
 const MojaveDesertImage5 = new EmbedBuilder()
     .setTitle('The Mojave Desert (5)')
-    .setImage('https://i.postimg.cc/qvhTpC8g/Mojave-Desert-5.jpg');
+    .setImage('https://i.postimg.cc/qvhTpC8g/Mojave-Desert-5.jpg')
+    .setFooter({ text: 'Photo taken by Ari Khan' });
 
 const MojaveDesertImage6 = new EmbedBuilder()
     .setTitle('The Mojave Desert (6)')
-    .setImage('https://i.postimg.cc/HsLmPNnw/Mojave-Desert-6.jpg');
+    .setImage('https://i.postimg.cc/HsLmPNnw/Mojave-Desert-6.jpg')
+    .setFooter({ text: 'Photo taken by Ari Khan' });
 
 const MojaveDesertImage7 = new EmbedBuilder()
     .setTitle('The Mojave Desert (7)')
-    .setImage('https://i.postimg.cc/Dw9K0yg6/Mojave-Desert-7.jpg');
+    .setImage('https://i.postimg.cc/Dw9K0yg6/Mojave-Desert-7.jpg')
+    .setFooter({ text: 'Photo taken by Ari Khan' });
 
 const MojaveDesertImage8 = new EmbedBuilder()
     .setTitle('The Mojave Desert (8)')
-    .setImage('https://i.postimg.cc/VNXPCQZ8/Mojave-Desert-8.jpg');
+    .setImage('https://i.postimg.cc/VNXPCQZ8/Mojave-Desert-8.jpg')
+    .setFooter({ text: 'Photo taken by Ari Khan' });
 
 const MojaveDesertImage9 = new EmbedBuilder()
     .setTitle('The Mojave Desert (9)')
-    .setImage('https://i.postimg.cc/76D81sjT/Mojave-Desert-9.jpg');
+    .setImage('https://i.postimg.cc/76D81sjT/Mojave-Desert-9.jpg')
+    .setFooter({ text: 'Photo taken by Ari Khan' });
 
 const MojaveDesertImage10 = new EmbedBuilder()
     .setTitle('The Mojave Desert (10)')
-    .setImage('https://i.postimg.cc/SNj0Gz1V/Mojave-Desert-10.jpg');
+    .setImage('https://i.postimg.cc/SNj0Gz1V/Mojave-Desert-10.jpg')
+    .setFooter({ text: 'Photo taken by Ari Khan' });
 
 //Class Memes
 
 const ClassMeme1 = new EmbedBuilder()
     .setTitle('Roy Lore')
-    .setImage('https://i.imgflip.com/8gy2vz.jpg');
+    .setImage('https://i.imgflip.com/8gy2vz.jpg')
+    .setFooter({ text: 'Created by Ari Khan' });
 
 const ClassMeme2 = new EmbedBuilder()
     .setTitle('Roy Lore 2')
-    .setImage('https://i.imgflip.com/8gy4ny.jpg');
+    .setImage('https://i.imgflip.com/8gy4ny.jpg')
+    .setFooter({ text: 'Created by Ari Khan' });
 
 const ClassMeme3 = new EmbedBuilder()
     .setTitle('Eraser Lore')
-    .setImage('https://i.imgflip.com/8h1dfo.jpg');
+    .setImage('https://i.imgflip.com/8h1dfo.jpg')
+    .setFooter({ text: 'Created by Ari Khan' });
+
+const ClassMeme4 = new EmbedBuilder()
+    .setTitle('Ian C. Lore')
+    .setImage('https://i.imgflip.com/8h1h5e.jpg')
+    .setFooter({ text: 'Created by Ari Khan' });
+
+const ClassMeme5 = new EmbedBuilder()
+    .setTitle('Ian X. Lore')
+    .setImage('https://i.imgflip.com/8h1jew.jpg')
+    .setFooter({ text: 'Created by Ari Khan' });
+
+const ClassMeme6 = new EmbedBuilder()
+    .setTitle('Gibson Class Lore')
+    .setImage('https://i.imgflip.com/8h1jxf.jpg')
+    .setFooter({ text: 'Created by Amy Wang' });
 
 //Lists
 
@@ -561,6 +589,24 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 3') {
         message.reply({ embeds: [ClassMeme3] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 4') {
+        message.reply({ embeds: [ClassMeme4] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 5') {
+        message.reply({ embeds: [ClassMeme5] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 6') {
+        message.reply({ embeds: [ClassMeme6] });
     }
 });
 
