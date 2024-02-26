@@ -11,6 +11,16 @@ const commands = [
         name: 'kingbot',
         description: 'Bot Information',
     },
+
+    {
+        name: 'ping',
+        description: 'Bot Latency',
+    },
+
+    {
+        name: 'uptime',
+        description: 'Bot Uptime',
+    },
 ];
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
