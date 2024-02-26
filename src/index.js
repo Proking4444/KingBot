@@ -14,12 +14,12 @@ const client = new Client({
 
 let status = [
     {
-        name: '$help',
+        name: '**$help**',
         type: ActivityType.Playing
     },
 
     {
-        name: `${bot.users.cache.size} users!`,
+        name: '**85** users!',
         type: ActivityType.Watching
     }
 ]
