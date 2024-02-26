@@ -343,7 +343,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$kingbot') {
-        message.reply('Hi. My name is KingBot, and I was a bot created by Ari for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact Ari (@proking4).');
+        message.reply(`Hello. My name is KingBot, and I was a bot created by Ari Khan for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>).`);
     }
 });
 
@@ -684,6 +684,14 @@ client.on('interactionCreate', (interaction) => {
   
     if (interaction.commandName === 'help') {
         return interaction.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Server Latency \n($)uptime = Bot Uptime \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
+      }
+});
+
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+  
+    if (interaction.commandName === 'kingbot') {
+        return interaction.reply(`Hello. My name is KingBot, and I was a bot created by Ari Khan for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>).`);
       }
 });
 
