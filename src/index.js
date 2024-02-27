@@ -318,7 +318,26 @@ const randomFactList = [
     'Before Apple bought Siri, it was originally going to be released as an app for Android & Blackberry.',  
     'There is a liquid that you can breathe in called perfluorohexane. Animals can be submerged in a bath of perfluorohexane without drowning.',
     'During a conversation, each speaker\'s "turn" averages 2 seconds, and the pause in between is only 200 milliseconds. That figure is nearly universal.',
-    'Despite being landlocked, Mongolia has a navy consisting of seven men and one vessel, the "Sukhbaatar III," stationed on Lake Khövsgöl.'
+    'Despite being landlocked, Mongolia has a navy consisting of seven men and one vessel, the "Sukhbaatar III," stationed on Lake Khövsgöl.',
+    'During the Second World War, German tank drivers would drive their vehicles over camel droppings, thinking it would bring them good luck.',
+    'The full Bible has been translated into over 3,000 languages. Among those include fictional languages like Elvish, Klingon, and Na\'vi.',
+    'Humans have been performing dentistry since 7000BC, which makes dentists one of the oldest professions.',
+    'Originally, the Pokémon Vulpix was going to be called "FoxFire."',
+    'Because snow is composed of ice, it can be classified as a mineral. Water, however, does not fall under the same classification and is not a mineral.',
+    'Canada eats more macaroni and cheese than any other nation in the world.',
+    'Sudan has more pyramids than any country, with 255. They outnumber Egyptian pyramids by twice the amount.',
+    'The money for the Statue of Liberty came from fundraising from auctions, a lottery, and boxing matches in Europe and the U.S. The Statue cost the French about $250,000, which today would be over $5.5 million dollars.',
+    'Soviet Russia needed lighthouses on their uninhabited Northern Coast, so they built automated lighthouses powered by small nuclear reactors.',
+    'Animals yawn based on how large their brain is. The bigger the brain, the longer they will yawn.',
+    'Nutella was invented during WWII when an Italian pastry maker mixed hazelnuts into chocolate to extend his chocolate ration.',
+    'The original name for Xbox was DirectXbox, designed to show how Microsoft\'s Direct X graphics could improve the console market.',
+    'Eminem\'s mother filed an $11 million defamation lawsuit against him because of his lyrics about her. She settled for $25,000, and $23,354.25 of that went to her lawyer.',
+    'Alaska is the only state in America that can be typed on one row of a traditional English QWERTY keyboard.',
+    'The word robot comes from the Czech "robota." This translates into forced labor or work.',
+    'The world\'s most remote ATM is run by Wells Fargo in the Antarctic. The ATMs serve around 1,200 residents at the U.S. scientific facility.',
+    'Tupac was the first U.S. artist to have an album reach Billboard #1 while still in prison. It was his third studio album, titled "Me Against the World".',
+    '"Rap God" by Eminem packs 1,560 words into a 6-minute 4-second song. It holds the world record for most words in a hit single.',
+    'The total population of insects is estimated to be a billion times greater than that of the human population.'    
 ];
 
 const randomAriQuoteList = [
