@@ -37,14 +37,6 @@ client.on('ready', (c) => {
 
 let count = 0
 
-let totalSeconds = (client.uptime / 1000);
-let days = Math.floor(totalSeconds / 86400);
-totalSeconds %= 86400;
-let hours = Math.floor(totalSeconds / 3600);
-totalSeconds %= 3600;
-let minutes = Math.floor(totalSeconds / 60);
-let seconds = Math.floor(totalSeconds % 60);
-
 //Embeds
 
 //Desert
@@ -157,7 +149,7 @@ const ClassMeme11 = new EmbedBuilder()
     .setFooter({ text: 'Created by Amy Wang' });
     
 const ClassMeme12 = new EmbedBuilder()
-    .setTitle('Math Lore')
+    .setTitle('Ian X. Lore')
     .setImage('https://i.imgflip.com/8h67he.gif')
     .setFooter({ text: 'Created by Anonymous' });
 
@@ -368,7 +360,13 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$uptime') {
-
+        let totalSeconds = (client.uptime / 1000);
+        let days = Math.floor(totalSeconds / 86400);
+        totalSeconds %= 86400;
+        let hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = Math.floor(totalSeconds % 60);
         message.reply(`The bot has been online for ${days} ${days === 1 ? 'day' : 'days'}, ${hours} ${hours === 1 ? 'hour' : 'hours'}, ${minutes} ${minutes === 1 ? 'minute' : 'minutes'} and ${seconds} ${seconds === 1 ? 'second' : 'seconds'}`);
     }
 });
@@ -720,8 +718,15 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'uptime') {
+        let totalSeconds = (client.uptime / 1000);
+        let days = Math.floor(totalSeconds / 86400);
+        totalSeconds %= 86400;
+        let hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = Math.floor(totalSeconds % 60);
         return interaction.reply(`The bot has been online for ${days} ${days === 1 ? 'day' : 'days'}, ${hours} ${hours === 1 ? 'hour' : 'hours'}, ${minutes} ${minutes === 1 ? 'minute' : 'minutes'} and ${seconds} ${seconds === 1 ? 'second' : 'seconds'}`);
-      }
+    }
 });
 
 //Keep at bottom.
