@@ -699,7 +699,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'ping') {
-        return interaction.reply(`Server Latency is **${Date.now() - message.createdTimestamp}ms**.`);
+        return interaction.reply(`Server Latency is **${Date.now() - interaction.createdTimestamp}ms**.`);
       }
 });
 
