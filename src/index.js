@@ -153,6 +153,16 @@ const ClassMeme12 = new EmbedBuilder()
     .setImage('https://i.imgflip.com/8h67he.gif')
     .setFooter({ text: 'Created by Anonymous' });
 
+const ClassMeme13 = new EmbedBuilder()
+    .setTitle('Derek Lore 2')
+    .setImage('https://i.imgflip.com/8h9zx2.jpg')
+    .setFooter({ text: 'Created by Anonymous' });
+
+const ClassMeme14 = new EmbedBuilder()
+    .setTitle('Band Lore')
+    .setImage('https://i.imgflip.com/8ha060.gif')
+    .setFooter({ text: 'Created by Ari Khan' });
+
 //Lists
 
 const randomJokeList = [
@@ -337,7 +347,62 @@ const randomFactList = [
     'The world\'s most remote ATM is run by Wells Fargo in the Antarctic. The ATMs serve around 1,200 residents at the U.S. scientific facility.',
     'Tupac was the first U.S. artist to have an album reach Billboard #1 while still in prison. It was his third studio album, titled "Me Against the World".',
     '"Rap God" by Eminem packs 1,560 words into a 6-minute 4-second song. It holds the world record for most words in a hit single.',
-    'The total population of insects is estimated to be a billion times greater than that of the human population.'    
+    'The total population of insects is estimated to be a billion times greater than that of the human population.',
+    'The oldest "your mom" joke was discovered on a 3,500-year-old Babylonian tablet in Iraq in 1976. The tablet has since been lost, but the text remains preserved.',
+    'A red blood cell takes only about 20 seconds to make a complete circuit through your body.',
+    'Iceland was chosen as the training ground for Apollo astronauts because it was the most "moonlike" surface.',
+    'The KKK headquarters were purchased by the Catholic Church and then turned into a church.',
+    'Part of the Falklands Islands is littered with leftover landmines from the Falklands War. This stretch of beach has become home to over 1 million penguins as they are too light to trigger the mines when walking on them.',
+    'A snail can sleep for 3 years.',
+    'In 2005, Frito-Lay launched Cheetos Lip Balm, but it was quickly taken off the market due to its failure.',
+    '7% of all American adults believe that chocolate milk comes from brown cows. That works out to 16.4 million people.',
+    'In Japan, many families eat a KFC for Christmas Dinner. Many people order their meals months in advance and queue for hours to collect them.',
+    'Even a small amount of alcohol placed on a scorpion will make it go crazy and sting itself to death.',
+    'The first spacecraft to visit Mars was Mariner 4 in 1965.',
+    'The process by which bread toasts is called the "Maillard Reaction."',
+    'A group of horses will not go to sleep at the same time - at least one of them will stay awake to look out for the others.',
+    'Antimatter is the most expensive substance on earth. It costs roughly $62.5 trillion per gram, or $1.75 quadrillion per ounce.',
+    'The word "friends" is said in every episode of *Friends*.',
+    'It was Nicholas Cage who first advised Johnny Depp to pursue a career in acting during the mid-1980s.',
+    'Jellyfish are considered biologically immortal. They don\'t age and will never die unless they are killed.',
+    'The longer you spend dating somebody before marrying, the less likely the marriage is to end in divorce.',
+    'Overwhelmingly, red states have the highest rate of dog ownership, while residents of blue states are more likely to keep a cat as a pet.',
+    'In Indonesian, there is a word, "Jayus," that means "A joke told so poorly, and so unfunny that one cannot help but laugh."',
+    '15% of iPhone users use an iPhone with a broken screen.',
+    'In Australia, there are nearly twice the amount of kangaroos as there are humans.',
+    'The EU didn\'t want to showcase any country over another, so the architecture on each EU banknote was created by a computer to make neutral designs.',
+    'The average person takes 12 seconds to count to 24.',
+    'Elephants can die of a broken heart if their mate dies.',
+    'In Cambodia, rats are being trained to sniff out land mines. They can clear 200 square meters in less than 35 minutes, which usually takes 2-3 days with a de-miner.',
+    'Originally, cigarette filters were made out of cork, the look of which was incorporated into today\'s pattern.',
+    'In Halden prison in Norway, guards are encouraged to interact, play sports, and eat with the inmates. This is to prevent aggression and create a sense of family.',
+    'On average, 97 chickens are killed every 0.05 seconds worldwide.',
+    'Paul McCartney was only paid £1 for performing at the 2012 London Olympics Closing Ceremonies. He willingly donated his performance.',
+    'Coca-Cola was first served in 1886. At that time, only 9 colas were served on an average day, 3,285 a year. Today, 19,400 Coke products are consumed every second.',
+    'Alexander Hamilton was shot and mortally wounded by Aaron Burr on the same spot that his son had been killed 3 years before and by the same set of pistols.',
+    'Medical errors are the 6th leading cause of death in the U.S.',
+    'You\'re not allowed to swear if playing in Wimbledon. Because of this, line judges have to learn curse words in every language.',
+    'Bob Marley\'s last words were, "Money can\'t buy life."',
+    'A study at Florida State University discovered that playing Portal 2 is better for your brain than brain-training games like Lumosity.',
+    '"Schnapsidee" is the German word for a ridiculous idea that only sounds good when you\'re drunk.',
+    'Forgiveness is the number one trait linked to happiness in humans.',
+    'In the 1830s, the ruler of Egypt, Muhammad Ali Pasha, wanted to disassemble the Giza Pyramids and use them as pre-cut building materials. Thankfully, the Quantity Surveyor for the project fudged the figures and made it look like it would cost too much to save them.',
+    'By using purchasing data, Wal-Mart determined that people stock up the most on strawberry Pop-Tarts and beer before a hurricane.',
+    'When Jay-Z was 12, he shot his older brother in the shoulder for stealing his jewelry. He later referenced it in a song titled "You Must Love Me."',
+    'When tea started being sold in bags, originally, it was intended to be removed from the bags by customers, but they found it easier to brew the tea still in the bag.',
+    'If the electors of the Holy Roman Emperor did not vote within 30 days, they were only allowed to eat bread and water and were forbidden to leave the city.',
+    'Crows can remember the faces of individual humans. They can also hold a grudge.',
+    'In 1942, a 12-year-old lied about his age to join the Navy. He became a decorated war hero at age 13 but was thrown out of the Navy after his mom found out.',
+    'The King of Macedon threatened Sparta with, "If I bring my army into your land, I will raze your city." The Spartans replied: "If." No attempt was made to capture the city.',
+    'In America, it is a federal crime to use your roommate or friend\'s Netflix account.',
+    'Facebook causes you to overestimate how happy your friends are and, in turn, makes you more depressed.',
+    'Gatorade was invented to help the Florida Gators Football Team stay hydrated.',
+    'When Nike first started, it was called Blue Ribbon Sports. The name was changed in 1971.',
+    'Alaska is the state which produces the most serial killers.',
+    'Canadian law requires citizens to answer a math question when entering sweepstakes. This is done to add some aspect of skill to the contest.',
+    'Cucumber can actually cure bad breath. A slice pressed to the roof of your mouth for 30 seconds with your tongue allows the phytochemicals to kill the problematic bacteria.',
+    'The most used hashtags on Instagram are #love, #instagood, #me, #cute and #follow.',
+    'When Pink Floyd designed the "Animals" album cover, the inflatable pig tied to the power station broke free, causing Heathrow Airport to cancel all their flights.'
 ];
 
 const randomAriQuoteList = [
@@ -712,6 +777,18 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 12') {
         message.reply({ embeds: [ClassMeme12] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 13') {
+        message.reply({ embeds: [ClassMeme13] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 14') {
+        message.reply({ embeds: [ClassMeme14] });
     }
 });
 
