@@ -688,7 +688,7 @@ client.on('messageCreate', (message) => {
     }
 });
 
-//Slash Commands Listeners
+//Informational Slash Commands Listeners
 
 client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
@@ -726,6 +726,44 @@ client.on('interactionCreate', (interaction) => {
         let minutes = Math.floor(totalSeconds / 60);
         let seconds = Math.floor(totalSeconds % 60);
         return interaction.reply(`The bot has been online for ${days} ${days === 1 ? 'day' : 'days'}, ${hours} ${hours === 1 ? 'hour' : 'hours'}, ${minutes} ${minutes === 1 ? 'minute' : 'minutes'} and ${seconds} ${seconds === 1 ? 'second' : 'seconds'}`);
+    }
+});
+
+//Entertainment Slash Command Listeners
+
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+  
+    if (interaction.commandName === 'joke') {
+        const random = Math.floor(Math.random() * randomJokeList.length);
+        return interaction.reply(randomJokeList[random]);
+    }
+});
+
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+  
+    if (interaction.commandName === 'longjoke') {
+        const random = Math.floor(Math.random() * randomLongJokeList.length);
+        return interaction.reply(randomLongJokeList[random]);
+    }
+});
+
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+  
+    if (interaction.commandName === 'fact') {
+        const random = Math.floor(Math.random() * randomFactList.length);
+        return interaction.reply(randomFactList[random]);
+    }
+});
+
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+  
+    if (interaction.commandName === 'ari') {
+        const random = Math.floor(Math.random() * randomAriQuoteList.length);
+        return interaction.reply(randomAriQuoteList[random]);
     }
 });
 

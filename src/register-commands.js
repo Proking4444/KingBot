@@ -16,6 +16,26 @@ const commands = [
         name: 'uptime',
         description: 'Bot Uptime',
     },
+
+    {
+        name: 'joke',
+        description: 'Responds with a Random Joke',
+    },
+
+    {
+        name: 'longjoke',
+        description: 'Responds with a Random Long Joke',
+    },
+
+    {
+        name: 'fact',
+        description: 'Responds with a Random Fact',
+    },
+
+    {
+        name: 'ari',
+        description: 'Responds with a Random Ari Quote',
+    }
 ];
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
