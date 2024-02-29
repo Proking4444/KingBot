@@ -163,6 +163,26 @@ const ClassMeme14 = new EmbedBuilder()
     .setImage('https://i.imgflip.com/8ha060.gif')
     .setFooter({ text: 'Created by Ari Khan' });
 
+const ClassMeme15 = new EmbedBuilder()
+.setTitle('Candice Lore')
+.setImage('https://i.imgflip.com/8haav7.gif')
+.setFooter({ text: 'Created by Anonymous' });
+
+const ClassMeme16 = new EmbedBuilder()
+.setTitle('Grade 8 Girls Lore 2')
+.setImage('https://i.imgflip.com/8habhq.jpg')
+.setFooter({ text: 'Created by Anonymous' });
+
+const ClassMeme17 = new EmbedBuilder()
+.setTitle('Mainstream Lore')
+.setImage('https://i.imgflip.com/8hadcl.jpg')
+.setFooter({ text: 'Created by Ari Khan' });
+
+const ClassMeme18 = new EmbedBuilder()
+.setTitle('Science Lore')
+.setImage('https://i.postimg.cc/tTZNhcv3/Virus.png')
+.setFooter({ text: 'Created by Ari Khan' });
+
 //Lists
 
 const randomJokeList = [
@@ -789,6 +809,30 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 14') {
         message.reply({ embeds: [ClassMeme14] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 15') {
+        message.reply({ embeds: [ClassMeme15] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 16') {
+        message.reply({ embeds: [ClassMeme16] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 17') {
+        message.reply({ embeds: [ClassMeme17] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 18') {
+        message.reply({ embeds: [ClassMeme18] });
     }
 });
 
