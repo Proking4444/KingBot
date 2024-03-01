@@ -183,6 +183,11 @@ const ClassMeme18 = new EmbedBuilder()
 .setImage('https://i.postimg.cc/tTZNhcv3/Virus.png')
 .setFooter({ text: 'Created by Ari Khan' });
 
+const ClassMeme19 = new EmbedBuilder()
+.setTitle('Tyler Lore')
+.setImage('https://i.imgflip.com/8hjjna.jpg')
+.setFooter({ text: 'Created by Anonymous' });
+
 //Lists
 
 const randomJokeList = [
@@ -833,6 +838,12 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 18') {
         message.reply({ embeds: [ClassMeme18] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 19') {
+        message.reply({ embeds: [ClassMeme19] });
     }
 });
 
