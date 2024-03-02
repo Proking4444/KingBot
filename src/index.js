@@ -119,7 +119,7 @@ const ClassMeme5 = new EmbedBuilder()
     .setFooter({ text: 'Created by Ari Khan' });
 
 const ClassMeme6 = new EmbedBuilder()
-    .setTitle('Gibson Class Lore')
+    .setTitle('Gibson Lore')
     .setImage('https://i.imgflip.com/8h1jxf.jpg')
     .setFooter({ text: 'Created by Amy Wang' });
 
@@ -164,29 +164,39 @@ const ClassMeme14 = new EmbedBuilder()
     .setFooter({ text: 'Created by Ari Khan' });
 
 const ClassMeme15 = new EmbedBuilder()
-.setTitle('Candice Lore')
-.setImage('https://i.imgflip.com/8haav7.gif')
-.setFooter({ text: 'Created by Anonymous' });
+    .setTitle('Candice Lore')
+    .setImage('https://i.imgflip.com/8haav7.gif')
+    .setFooter({ text: 'Created by Anonymous' });
 
 const ClassMeme16 = new EmbedBuilder()
-.setTitle('Grade 8 Girls Lore 2')
-.setImage('https://i.imgflip.com/8habhq.jpg')
-.setFooter({ text: 'Created by Anonymous' });
+    .setTitle('Grade 8 Girls Lore 2')
+    .setImage('https://i.imgflip.com/8habhq.jpg')
+    .setFooter({ text: 'Created by Anonymous' });
 
 const ClassMeme17 = new EmbedBuilder()
-.setTitle('Mainstream Lore')
-.setImage('https://i.imgflip.com/8hadcl.jpg')
-.setFooter({ text: 'Created by Ari Khan' });
+    .setTitle('Mainstream Lore')
+    .setImage('https://i.imgflip.com/8hadcl.jpg')
+    .setFooter({ text: 'Created by Ari Khan' });
 
 const ClassMeme18 = new EmbedBuilder()
-.setTitle('Science Lore')
-.setImage('https://i.postimg.cc/tTZNhcv3/Virus.png')
-.setFooter({ text: 'Created by Ari Khan' });
+    .setTitle('Science Lore')
+    .setImage('https://i.postimg.cc/tTZNhcv3/Virus.png')
+    .setFooter({ text: 'Created by Ari Khan' });
 
 const ClassMeme19 = new EmbedBuilder()
-.setTitle('Tyler Lore')
-.setImage('https://i.imgflip.com/8hjjna.jpg')
-.setFooter({ text: 'Created by Anonymous' });
+    .setTitle('Tyler Lore')
+    .setImage('https://i.imgflip.com/8hjjna.jpg')
+    .setFooter({ text: 'Created by Anonymous' });
+
+const ClassMeme20 = new EmbedBuilder()
+    .setTitle('Gibson Lore 2')
+    .setImage('https://i.imgflip.com/8hom40.jpg')
+    .setFooter({ text: 'Created by Anonymous' });
+
+const ClassMeme21 = new EmbedBuilder()
+    .setTitle('Mark Lore')
+    .setImage('https://i.postimg.cc/PJy3PMMy/image.png')
+    .setFooter({ text: 'Created by Derek Huang' });
 
 //Lists
 
@@ -844,6 +854,18 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 19') {
         message.reply({ embeds: [ClassMeme19] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 20') {
+        message.reply({ embeds: [ClassMeme20] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 21') {
+        message.reply({ embeds: [ClassMeme21] });
     }
 });
 
