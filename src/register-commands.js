@@ -35,6 +35,26 @@ const commands = [
     {
         name: 'ari',
         description: 'Responds with a Random Ari Quote',
+    },
+
+    {
+        name: 'img',
+        description: 'Sends an image in the server',
+    },
+
+    {
+        name: 'movie',
+        description: 'Watch a movie in the server',
+    },
+
+    {
+        name: 'classmeme',
+        description: 'Sends a class meme in the server',
+    },
+
+    {
+        name: 'count',
+        description: 'Adds 1 to the Count',
     }
 ];
 

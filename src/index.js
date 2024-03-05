@@ -228,6 +228,11 @@ const ClassMeme27 = new EmbedBuilder()
     .setImage('https://i.imgflip.com/8i0rwu.gif')
     .setFooter({ text: 'Created by Anonymous' });
 
+const ClassMeme28 = new EmbedBuilder()
+    .setTitle('Geography Lore')
+    .setImage('https://i.postimg.cc/LsCxDkkZ/2024-03-05-0uc-Kleki.png')
+    .setFooter({ text: 'Created by Amy Wang' });
+
 //Lists
 
 const randomJokeList = [
@@ -505,7 +510,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$kingbot') {
-        message.reply(`Hello. My name is KingBot, and I was a bot created by Ari Khan for organizational purposes. I am currently in active development. If you want information about the bot or have bot suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>).`);
+        message.reply(`Hello. My name is KingBot, and I was a bot created by Ari Khan for organizational purposes. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>).`);
     }
 });
 
@@ -935,6 +940,12 @@ client.on('messageCreate', (message) => {
     }
 });
 
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 28') {
+        message.reply({ embeds: [ClassMeme28] });
+    }
+});
+
 //Informational Slash Commands Listeners
 
 client.on('interactionCreate', (interaction) => {
@@ -1012,6 +1023,39 @@ client.on('interactionCreate', (interaction) => {
         const random = Math.floor(Math.random() * randomAriQuoteList.length);
         return interaction.reply(randomAriQuoteList[random]);
     }
+});
+
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+  
+    if (interaction.commandName === 'img') {
+        return interaction.reply('**Sending Images** \nPlease use $img (code) (number) to send an image. \n\n**Image Codes** \n- Desert (0)');
+      }
+});
+
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+  
+    if (interaction.commandName === 'movie') {
+        return interaction.reply('**Watching Movies** \nPlease use $movie (code) to watch a movie. \n\n**Movie Codes** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV)');
+      }
+});
+
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+  
+    if (interaction.commandName === 'classmeme') {
+        return interaction.reply('**Sending Class Memes** \nPlease use $classmeme (number) to send a meme.');
+      }
+});
+
+client.on('interactionCreate', (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+  
+    if (interaction.commandName === 'count') {
+        count = count + 1;
+        return interaction.reply(`The count is now ${count}.`);
+      }
 });
 
 //Keep at bottom.
