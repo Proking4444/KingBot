@@ -218,6 +218,16 @@ const ClassMeme25 = new EmbedBuilder()
     .setImage('https://i.imgflip.com/8hpes9.jpg')
     .setFooter({ text: 'Created by Ari Khan' });
 
+const ClassMeme26 = new EmbedBuilder()
+    .setTitle('Skiing Lore')
+    .setImage('https://i.imgflip.com/8hs25z.jpg')
+    .setFooter({ text: 'Created by Ari Khan' });
+
+const ClassMeme27 = new EmbedBuilder()
+    .setTitle('Chloe Lore')
+    .setImage('https://i.imgflip.com/8i0rwu.gif')
+    .setFooter({ text: 'Created by Anonymous' });
+
 //Lists
 
 const randomJokeList = [
@@ -910,6 +920,18 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 25') {
         message.reply({ embeds: [ClassMeme25] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 26') {
+        message.reply({ embeds: [ClassMeme26] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 27') {
+        message.reply({ embeds: [ClassMeme27] });
     }
 });
 
