@@ -776,6 +776,50 @@ client.on('messageCreate', (message) => {
     }
 });
 
+//Gibson 2024
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie 90DODD40') {
+        message.reply('https://www.youtube.com/watch?v=h_sJLpkI3qs&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie ARD') {
+        message.reply('https://www.youtube.com/watch?v=C7a_9UYLdJQ&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie THM') {
+        message.reply('https://www.youtube.com/watch?v=JTZqt1x4YUM&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie EICM') {
+        message.reply('https://www.youtube.com/watch?v=YEMSjycMGGw&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie EFFWD') {
+        message.reply('https://www.youtube.com/watch?v=hC7u0axQWGE&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie S49') {
+        message.reply('https://www.youtube.com/watch?v=S8y2aeTtgqw&ab_channel=FilmCampInABox');
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$movie SPF') {
+        message.reply('https://www.youtube.com/watch?v=bJFGeV8BiTI&t=1s&ab_channel=FilmCampInABox');
+    }
+});
+
 //Class Memes
 
 client.on('messageCreate', (message) => {
