@@ -12,8 +12,6 @@ const client = new Client({
     ],
 });
 
-const packageJSON = require("packagedotjson");
-
 let status = [
     {
         name: '$help',
@@ -542,9 +540,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$version') {
-        const discordJSVersion = packageJSON.dependencies["discord.js"];
-        const npmVersion = packageJSON.dependencies["npm"];
-        message.reply(`**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n^1.3.7.4.3 \n\n**Discord.js Version** \n${discordJSVersion} \n\n**NPM Version** \n${npmVersion} \n\n**Node.js Version** \n^20.10.0`);
+        message.reply(`**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n^1.3.7.4.3 \n\n**Discord.js Version** \n14.12.1 \n\n**NPM Version** \n$10.4.0 \n\n**Node.js Version** \n^20.10.0`);
     }
 });
 
