@@ -12,7 +12,7 @@ const client = new Client({
     ],
 });
 
-const packageJSON = require("./package.json");
+const packageJSON = require("package.json");
 
 let status = [
     {
