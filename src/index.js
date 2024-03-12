@@ -238,6 +238,11 @@ const ClassMeme29 = new EmbedBuilder()
     .setImage('https://i.imgflip.com/8iarvn.jpg')
     .setFooter({ text: 'Created by Anonymous' });
 
+const ClassMeme30 = new EmbedBuilder()
+    .setTitle('Tyler Lore')
+    .setImage('https://i.imgflip.com/8ix4ht.jpg')
+    .setFooter({ text: 'Created by Anonymous' });
+
 //Lists
 
 const randomJokeList = [
@@ -1004,6 +1009,12 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 29') {
         message.reply({ embeds: [ClassMeme29] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 30') {
+        message.reply({ embeds: [ClassMeme30] });
     }
 });
 
