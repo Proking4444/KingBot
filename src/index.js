@@ -555,7 +555,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$version') {
-        message.reply(`**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.7.4.3 \n\n**Discord.js Version** \n14.12.1 \n\n**NPM Version** \n10.4.0 \n\n**Node.js Version** \n20.10.0`);
+        message.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.7.4.4 \n\n**Discord.js Version** \n14.12.1 \n\n**NPM Version** \n10.4.0 \n\n**Node.js Version** \n20.10.0 \n\n**ENV Version** \n16.3.1');
     }
 });
 
