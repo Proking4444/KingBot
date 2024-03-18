@@ -19,7 +19,7 @@ let status = [
     },
 
     {
-        name: '85 users!',
+        name: '84 users!',
         type: ActivityType.Watching
     }
 ]
@@ -247,6 +247,11 @@ const ClassMeme31 = new EmbedBuilder()
     .setTitle('Ian X. Lore 2')
     .setImage('https://i.postimg.cc/rs1L5fxR/image.png')
     .setFooter({ text: 'Created by Anonymous' });
+
+const ClassMeme32 = new EmbedBuilder()
+    .setTitle('Yiming Lore')
+    .setImage('https://i.imgflip.com/8jnl66.gif')
+    .setFooter({ text: 'Created by Nathan Shniper' });
 
 //Lists
 
@@ -1026,6 +1031,12 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 31') {
         message.reply({ embeds: [ClassMeme31] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 32') {
+        message.reply({ embeds: [ClassMeme32] });
     }
 });
 
