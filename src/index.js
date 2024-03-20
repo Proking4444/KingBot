@@ -253,6 +253,11 @@ const ClassMeme32 = new EmbedBuilder()
     .setImage('https://i.imgflip.com/8jnl66.gif')
     .setFooter({ text: 'Created by Nathan Shniper' });
 
+const ClassMeme33 = new EmbedBuilder()
+    .setTitle('Presentation Lore')
+    .setImage('https://i.imgflip.com/8jprc3.jpg')
+    .setFooter({ text: 'Created by Max Ding' });
+
 //Lists
 
 const randomJokeList = [
@@ -555,7 +560,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$version') {
-        message.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.7.4.4 \n\n**Discord.js Version** \n14.12.1 \n\n**NPM Version** \n10.4.0 \n\n**Node.js Version** \n20.10.0 \n\n**ENV Version** \n16.3.1');
+        message.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.7.4.4 \n\n**Discord.js Version** \n14.12.1 \n\n**NPM Version** \n10.4.0 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**ENV Version** \n16.3.1');
     }
 });
 
@@ -1037,6 +1042,12 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 32') {
         message.reply({ embeds: [ClassMeme32] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 33') {
+        message.reply({ embeds: [ClassMeme33] });
     }
 });
 
