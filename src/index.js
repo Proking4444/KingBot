@@ -21,6 +21,21 @@ let status = [
     {
         name: '84 users!',
         type: ActivityType.Watching
+    },
+
+    {
+        name: '$help',
+        type: ActivityType.Playing
+    },
+
+    {
+        name: '85 users!',
+        type: ActivityType.Watching
+    },
+
+    {
+        name: '3 servers!',
+        type: ActivityType.Watching
     }
 ]
 
@@ -521,7 +536,8 @@ const randomAriQuoteList = [
     '**"It\'s the "goodest" one."** \n(Ari, speaking fake English. September 2023.)',
     '**"I swear it\'s water bro!"** \n(Ari, speaking to the police. November 2023.)',
     '**"I swear I\'m not Gen Alpha. Im just not like them! I wasn\'t born holding an Iphone."** \n(Ari, persuading others that he is Gen Z. February 2024.)',
-    '**"My life could be a tragedy movie, or it could be an epic."** \n(Ari, talking about his life. January 2024.)'
+    '**"My life could be a tragedy movie, or it could be an epic."** \n(Ari, talking about his life. January 2024.)',
+    '**Hmm... \nWe haven\'t had a World War in a while... \n(Ari, talking about history. March 2024.)'
     // Keep adding!
 ];
 
@@ -1153,6 +1169,8 @@ client.on('interactionCreate', (interaction) => {
         return interaction.reply('**Sending Class Memes** \nPlease use $classmeme (number) to send a meme.');
       }
 });
+
+//Miscellaneous Slash Command Listeners
 
 client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
