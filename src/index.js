@@ -271,7 +271,12 @@ const ClassMeme32 = new EmbedBuilder()
 const ClassMeme33 = new EmbedBuilder()
     .setTitle('Presentation Lore')
     .setImage('https://i.imgflip.com/8jprc3.jpg')
-    .setFooter({ text: 'Created by Max Ding' });
+    .setFooter({ text: 'Created by Max Ding' })
+
+const ClassMeme34 = new EmbedBuilder()
+    .setTitle('Ian C. Lore 4')
+    .setImage('https://i.imgflip.com/8mp6zf.jpg')
+    .setFooter({ text: 'Created by Roy Mei' });
 
 //Lists
 
