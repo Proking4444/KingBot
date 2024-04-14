@@ -1077,6 +1077,18 @@ client.on('messageCreate', (message) => {
     }
 });
 
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 34') {
+        message.reply({ embeds: [ClassMeme34] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 35') {
+        message.reply({ embeds: [ClassMeme35] });
+    }
+});
+
 //Informational Slash Commands Listeners
 
 client.on('interactionCreate', (interaction) => {
