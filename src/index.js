@@ -278,6 +278,11 @@ const ClassMeme34 = new EmbedBuilder()
     .setImage('https://i.imgflip.com/8mp6zf.jpg')
     .setFooter({ text: 'Created by Roy Mei' });
 
+const ClassMeme35 = new EmbedBuilder()
+    .setTitle('Nikan Lore 2')
+    .setImage('https://i.imgflip.com/8mp7gr.jpg')
+    .setFooter({ text: 'Created by Anonymous' });
+
 //Lists
 
 const randomJokeList = [
