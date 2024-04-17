@@ -29,7 +29,7 @@ let status = [
     },
 
     {
-        name: '85 users!',
+        name: '84 users!',
         type: ActivityType.Watching
     },
 
