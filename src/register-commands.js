@@ -18,6 +18,11 @@ const commands = [
     },
 
     {
+        name: 'version',
+        description: 'Bot Version',
+    },
+
+    {
         name: 'joke',
         description: 'Responds with a Random Joke',
     },
