@@ -288,6 +288,11 @@ const ClassMeme36 = new EmbedBuilder()
     .setImage('https://i.imgflip.com/8n17aq.jpg')
     .setFooter({ text: 'Created by Ari Khan' });
 
+const ClassMeme37 = new EmbedBuilder()
+    .setTitle('Ian C. Lore 5')
+    .setImage('https://i.postimg.cc/tgsKnLV2/image.png')
+    .setFooter({ text: 'Created by Derek Huang' });
+
 //Lists
 
 const randomJokeList = [
@@ -552,7 +557,8 @@ const randomAriQuoteList = [
     '**"I swear it\'s water bro!"** \n(Ari, speaking to the police. November 2023.)',
     '**"I swear I\'m not Gen Alpha. Im just not like them! I wasn\'t born holding an Iphone."** \n(Ari, persuading others that he is Gen Z. February 2024.)',
     '**"My life could be a tragedy movie, or it could be an epic."** \n(Ari, talking about his life. January 2024.)',
-    '**Hmm... \nWe haven\'t had a World War in a while... \n(Ari, talking about history. March 2024.)'
+    '**Hmm... \nWe haven\'t had a World War in a while...** \n(Ari, talking about history. March 2024.)',
+    '**Eminem might be the king of rap, \nBut I am the king of yap!** \n(Ari, "yapping." April 2024'
     // Keep adding!
 ];
 
@@ -1097,6 +1103,12 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 36') {
         message.reply({ embeds: [ClassMeme36] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 37') {
+        message.reply({ embeds: [ClassMeme37] });
     }
 });
 
