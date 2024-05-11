@@ -19,7 +19,7 @@ let status = [
     },
 
     {
-        name: '84 users!',
+        name: '86 users!',
         type: ActivityType.Watching
     },
 
@@ -29,7 +29,7 @@ let status = [
     },
 
     {
-        name: '84 users!',
+        name: '86 users!',
         type: ActivityType.Watching
     },
 
