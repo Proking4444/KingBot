@@ -1157,7 +1157,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'version') {
-        return interaction.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.7.5.5 \n\n**Discord.js Version** \n14.14.1 \n\n**NPM Version** \n10.5.2 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**ENV Version** \n16.4.5');
+        return interaction.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.7.6.5 \n\n**Discord.js Version** \n14.15.2 \n\n**NPM Version** \n10.7.0 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**ENV Version** \n16.4.5');
       }
 });
 
