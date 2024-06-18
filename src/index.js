@@ -12,7 +12,7 @@ const client = new Client({
     ],
 });
 
-client.on('ready', async () => {
+client.on('ready', async (c) => {
 
     const guilds = client.guilds.cache;
     const promiseArr = [];
