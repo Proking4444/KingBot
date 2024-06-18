@@ -12,14 +12,25 @@ const client = new Client({
     ],
 });
 
-client.on('ready', (c) => {
+client.on('ready', async () => {
 
-const guilds = client.guilds.cache;
-var totalUsers = 0;
-
-guilds.forEach((guild) => {
-    totalUsers += guild.memberCount;
-});
+    const guilds = client.guilds.cache;
+    const promiseArr = [];
+    
+    guilds.forEach(guild => {
+        // push a promise that resolves with the number of members in the server
+        promiseArr.push(new Promise(async (resolve, _reject) => {
+            // fetches the members in the guild
+            var members = await guild.members.fetch();
+            members = members.filter(m => !m.user.bot);
+            resolve(members.size);
+        }));
+    });
+    
+    // calls every promise and returns them into an array
+    var results = await Promise.all(promiseArr);
+    // this function takes all the numbers in the array and adds them into a single number
+    var totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal);
 
 let status = [
     {
