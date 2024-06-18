@@ -19,7 +19,7 @@ let status = [
     },
 
     {
-        name: '93 users!',
+        name: `${count} users!`,
         type: ActivityType.Watching
     },
 
@@ -34,7 +34,7 @@ let status = [
     },
 
     {
-        name: '3 servers!',
+        name: `${count} users!`,
         type: ActivityType.Watching
     }
 ]
@@ -563,7 +563,8 @@ const randomAriQuoteList = [
     '**"I swear I\'m not Gen Alpha. Im just not like them! I wasn\'t born holding an Iphone."** \n(Ari, persuading others that he is Gen Z. February 2024.)',
     '**"My life could be a tragedy movie, or it could be an epic."** \n(Ari, talking about his life. January 2024.)',
     '**Hmm... \nWe haven\'t had a World War in a while...** \n(Ari, talking about history. March 2024.)',
-    '**Eminem might be the king of rap, \nBut I am the king of yap!** \n(Ari, "yapping." April 2024'
+    '**Eminem might be the king of rap, \nBut I\'m the king of yap!** \n(Ari, "yapping." April 2024.)',
+    '**Tyler! \n That\'s blatantly innapropriate!** \n(Ari, shouting at Tyler for innapropriate behaviour. May 2024.)'
     // Keep adding!
 ];
 
