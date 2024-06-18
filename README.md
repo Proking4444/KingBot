@@ -1,1 +1,0 @@
-KingBot is a multipurpose Discord Bot created by Ari Khan. Its main features are currently entertainment and media sharing. The bot currently in active development. If you want information about the bot or have suggestions, please contact Ari Khan.
