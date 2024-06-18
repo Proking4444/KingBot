@@ -19,7 +19,7 @@ let status = [
     },
 
     {
-        name: `${bot.user.cache.size} users!`,
+        name: `${client.user.cache.size} users!`,
         type: ActivityType.Watching
     },
 
@@ -29,7 +29,7 @@ let status = [
     },
 
     {
-        name: `${bot.user.cache.size} users!`,
+        name: `${client.user.cache.size} users!`,
         type: ActivityType.Watching
     },
 
