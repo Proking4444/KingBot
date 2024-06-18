@@ -19,7 +19,7 @@ let status = [
     },
 
     {
-        name: '86 users!',
+        name: '93 users!',
         type: ActivityType.Watching
     },
 
@@ -29,7 +29,7 @@ let status = [
     },
 
     {
-        name: '86 users!',
+        name: '93 users!',
         type: ActivityType.Watching
     },
 
@@ -577,7 +577,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$kingbot') {
-        message.reply(`Hello. My name is KingBot, and I was a bot created by Ari Khan for organizational purposes. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>).`);
+        message.reply(`Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>).`);
     }
 });
 
@@ -602,7 +602,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$version') {
-        message.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.7.6.5 \n\n**Discord.js Version** \n14.15.2 \n\n**NPM Version** \n10.7.0 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**ENV Version** \n16.4.5');
+        message.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.7.6.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5');
     }
 });
 
@@ -1137,7 +1137,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'kingbot') {
-        return interaction.reply(`Hello. My name is KingBot, and I was a bot created by Ari Khan for organizational purposes. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>).`);
+        return interaction.reply(`Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>).`);
       }
 });
 
@@ -1168,7 +1168,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'version') {
-        return interaction.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.7.6.5 \n\n**Discord.js Version** \n14.15.2 \n\n**NPM Version** \n10.7.0 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**ENV Version** \n16.4.5');
+        return interaction.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.7.6.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5');
       }
 });
 
