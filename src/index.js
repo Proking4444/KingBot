@@ -29,12 +29,12 @@ let status = [
     },
 
     {
-        name: '93 users!',
+        name: `${count} users!`,
         type: ActivityType.Watching
     },
 
     {
-        name: `${count} users!`,
+        name: '3 servers!',
         type: ActivityType.Watching
     }
 ]
@@ -45,7 +45,7 @@ client.on('ready', (c) => {
     setInterval(() => {
         let random = Math.floor(Math.random() * status.length);
         client.user.setActivity(status[random]);
-    }, 20000);
+    }, 10000);
 });
 
 //Statements
