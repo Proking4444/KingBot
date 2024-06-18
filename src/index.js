@@ -12,6 +12,13 @@ const client = new Client({
     ],
 });
 
+const guilds = client.guilds.cache;
+var totalUsers = 0;
+
+guilds.forEach((guild) => {
+    totalUsers += guild.memberCount;
+});
+
 let status = [
     {
         name: '$help',
@@ -19,7 +26,7 @@ let status = [
     },
 
     {
-        name: `${client.user.cache.size} users!`,
+        name: `${totalUsers} users!`,
         type: ActivityType.Watching
     },
 
@@ -29,7 +36,7 @@ let status = [
     },
 
     {
-        name: `${client.user.cache.size} users!`,
+        name: `${totalUsers} users!`,
         type: ActivityType.Watching
     },
 
