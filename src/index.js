@@ -12,6 +12,8 @@ const client = new Client({
     ],
 });
 
+client.on('ready', (c) => {
+
 const guilds = client.guilds.cache;
 var totalUsers = 0;
 
@@ -46,7 +48,6 @@ let status = [
     }
 ]
 
-client.on('ready', (c) => {
     console.log(`${c.user.tag} is Online!`);
     
     setInterval(() => {
