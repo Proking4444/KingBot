@@ -14,17 +14,6 @@ const client = new Client({
     ],
 });
 
-(async () => {
-    try {
-        mongoose.set('strictQuery', false);
-        await mongoose.connect(process.env.MONGODB_URI);
-        console.log("Connected to DB.");
-
-    } catch (error) {
-        console.log(`Error: ${error}`);
-    }
-})();
-
 client.on('ready', async (c) => {
 
     const guilds = client.guilds.cache;
@@ -1276,4 +1265,15 @@ client.on('interactionCreate', (interaction) => {
 
 //Keep at bottom.
 
-client.login(process.env.TOKEN);
+(async () => {
+    try {
+        mongoose.set('strictQuery', false);
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log("Connected to DB.");
+
+
+        client.login(process.env.TOKEN);
+    } catch (error) {
+        console.log(`Error: ${error}`);
+    }
+})();
