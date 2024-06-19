@@ -3,6 +3,9 @@ const { Client, IntentsBitField, EmbedBuilder, ActivityType } = require('discord
 
 const mongoose = require('mongoose');
 
+//Update this line every time a new embed is added
+const { MojaveDesertImage1, MojaveDesertImage2, MojaveDesertImage3, MojaveDesertImage4, MojaveDesertImage5, MojaveDesertImage6, MojaveDesertImage7, MojaveDesertImage8, MojaveDesertImage9, MojaveDesertImage10 } = require('./media');
+
 const client = new Client({
     intents: [
         IntentsBitField.Flags.Guilds,
@@ -68,60 +71,6 @@ let status = [
 //Statements
 
 let count = 0
-
-//Embeds
-
-//Desert
-
-const MojaveDesertImage1 = new EmbedBuilder()
-    .setTitle('The Mojave Desert (1)')
-    .setImage('https://i.postimg.cc/WzTN3bsC/Mojave-Desert-1.jpg')
-    .setFooter({ text: 'Photo taken by Ari Khan' });
-
-const MojaveDesertImage2 = new EmbedBuilder()
-    .setTitle('The Mojave Desert (2)')
-    .setImage('https://i.postimg.cc/9FN23Bwv/Mojave-Desert-2.jpg')
-    .setFooter({ text: 'Photo taken by Ari Khan' });
-
-const MojaveDesertImage3 = new EmbedBuilder()
-    .setTitle('The Mojave Desert (3)')
-    .setImage('https://i.postimg.cc/1XCkQ9Xp/Mojave-Desert-3.jpg')
-    .setFooter({ text: 'Photo taken by Ari Khan' });
-
-const MojaveDesertImage4 = new EmbedBuilder()
-    .setTitle('The Mojave Desert (4)')
-    .setImage('https://i.postimg.cc/NFf3Syss/Mojave-Desert-4.jpg')
-    .setFooter({ text: 'Photo taken by Ari Khan' });
-
-const MojaveDesertImage5 = new EmbedBuilder()
-    .setTitle('The Mojave Desert (5)')
-    .setImage('https://i.postimg.cc/qvhTpC8g/Mojave-Desert-5.jpg')
-    .setFooter({ text: 'Photo taken by Ari Khan' });
-
-const MojaveDesertImage6 = new EmbedBuilder()
-    .setTitle('The Mojave Desert (6)')
-    .setImage('https://i.postimg.cc/HsLmPNnw/Mojave-Desert-6.jpg')
-    .setFooter({ text: 'Photo taken by Ari Khan' });
-
-const MojaveDesertImage7 = new EmbedBuilder()
-    .setTitle('The Mojave Desert (7)')
-    .setImage('https://i.postimg.cc/Dw9K0yg6/Mojave-Desert-7.jpg')
-    .setFooter({ text: 'Photo taken by Ari Khan' });
-
-const MojaveDesertImage8 = new EmbedBuilder()
-    .setTitle('The Mojave Desert (8)')
-    .setImage('https://i.postimg.cc/VNXPCQZ8/Mojave-Desert-8.jpg')
-    .setFooter({ text: 'Photo taken by Ari Khan' });
-
-const MojaveDesertImage9 = new EmbedBuilder()
-    .setTitle('The Mojave Desert (9)')
-    .setImage('https://i.postimg.cc/76D81sjT/Mojave-Desert-9.jpg')
-    .setFooter({ text: 'Photo taken by Ari Khan' });
-
-const MojaveDesertImage10 = new EmbedBuilder()
-    .setTitle('The Mojave Desert (10)')
-    .setImage('https://i.postimg.cc/SNj0Gz1V/Mojave-Desert-10.jpg')
-    .setFooter({ text: 'Photo taken by Ari Khan' });
 
 //Class Memes
 
