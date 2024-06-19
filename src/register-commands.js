@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { REST, Routes } = require('discord.js');
 
+//Add Commands Here
 const commands = [
     {
         name: 'kingbot',
@@ -20,6 +21,11 @@ const commands = [
     {
         name: 'version',
         description: 'Bot Version',
+    },
+
+    {
+        name: 'links',
+        description: 'Bot Links',
     },
 
     {
@@ -55,6 +61,11 @@ const commands = [
     {
         name: 'classmeme',
         description: 'Sends a class meme in the server',
+    },
+
+    {
+        name: 'vote',
+        description: 'Upvote the bot on Top.gg',
     },
 
     {
