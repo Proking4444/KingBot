@@ -3,6 +3,10 @@ const { Client, IntentsBitField, ActivityType } = require('discord.js');
 
 const mongoose = require('mongoose');
 
+const Global = require('../src/schemas/global');
+
+const countAdd = 1;
+
 //Update this line every time a new embed is added
 const { MojaveDesertImage1, MojaveDesertImage2, MojaveDesertImage3, MojaveDesertImage4, MojaveDesertImage5, MojaveDesertImage6, MojaveDesertImage7, MojaveDesertImage8, MojaveDesertImage9, MojaveDesertImage10 } = require('./constants');
 
@@ -73,10 +77,6 @@ let status = [
         client.user.setActivity(status[random]);
     }, 10000);
 });
-
-//Statements
-
-let count = 0
 
 //Information/Management
 
@@ -183,8 +183,8 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$count') {
-        count = count + 1;
-        message.reply(`The count is now ${count}.`);
+        Global.count += countAdd;
+        message.reply(`The count is now ${Global.count}.`);
     }
 });
 
@@ -779,8 +779,8 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'count') {
-        count = count + 1;
-        return interaction.reply(`The count is now ${count}.`);
+        Global.count += countAdd;
+        return interaction.reply(`The count is now ${Global.count}.`);
       }
 });
 
