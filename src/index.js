@@ -61,7 +61,7 @@ let status = [
     },
 
     {
-        name: `3 servers!`,
+        name: `5 servers!`,
         type: ActivityType.Watching
     }
 ]
