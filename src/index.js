@@ -5,8 +5,6 @@ const mongoose = require('mongoose');
 
 const Global = require('../src/schemas/global');
 
-const countAdd = 1;
-
 //Update this line every time a new embed is added
 const { MojaveDesertImage1, MojaveDesertImage2, MojaveDesertImage3, MojaveDesertImage4, MojaveDesertImage5, MojaveDesertImage6, MojaveDesertImage7, MojaveDesertImage8, MojaveDesertImage9, MojaveDesertImage10 } = require('./constants');
 
@@ -183,6 +181,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$count') {
+        const countAdd = 1;
         Global.count += countAdd;
         message.reply(`The count is now ${Global.count}.`);
     }
@@ -779,6 +778,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'count') {
+        const countAdd = 1;
         Global.count += countAdd;
         return interaction.reply(`The count is now ${Global.count}.`);
       }
