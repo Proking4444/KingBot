@@ -181,8 +181,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$count') {
-        const countAdd = 1;
-        Global.count += countAdd;
+        Global.count = Global.count + 1;
         message.reply(`The count is now ${Global.count}.`);
     }
 });
@@ -778,8 +777,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'count') {
-        const countAdd = 1;
-        Global.count += countAdd;
+        Global.count = Global.count + 1;
         return interaction.reply(`The count is now ${Global.count}.`);
       }
 });
