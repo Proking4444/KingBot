@@ -97,7 +97,7 @@ const ClassMeme5 = new EmbedBuilder()
 exports.ClassMeme5 = ClassMeme5;
 
 const ClassMeme6 = new EmbedBuilder()
-    .setTitle('Gibson Lore')
+    .setTitle('MGS Lore')
     .setImage('https://i.imgflip.com/8h1jxf.jpg')
     .setFooter({ text: 'Created by Amy Wang' });
 exports.ClassMeme6 = ClassMeme6;
@@ -293,6 +293,18 @@ const ClassMeme38 = new EmbedBuilder()
     .setImage('https://i.imgflip.com/8pyzre.jpg')
     .setFooter({ text: 'Created by Anonymous' });
 exports.ClassMeme38 = ClassMeme38;
+
+const ClassMeme39 = new EmbedBuilder()
+    .setTitle('MGS Lore 2')
+    .setImage('https://i.postimg.cc/bw4sHpLj/8uiz95.jpg')
+    .setFooter({ text: 'Created by Roy Mei' });
+exports.ClassMeme39 = ClassMeme39;
+
+const ClassMeme40 = new EmbedBuilder()
+    .setTitle('Levy Lore')
+    .setImage('https://i.postimg.cc/Yq3PWSrh/8uizn2.webp')
+    .setFooter({ text: 'Created by Roy Mei' });
+exports.ClassMeme40 = ClassMeme40;
 
 //Lists
 

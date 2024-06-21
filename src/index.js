@@ -9,7 +9,7 @@ const Global = require('../src/schemas/global');
 const { MojaveDesertImage1, MojaveDesertImage2, MojaveDesertImage3, MojaveDesertImage4, MojaveDesertImage5, MojaveDesertImage6, MojaveDesertImage7, MojaveDesertImage8, MojaveDesertImage9, MojaveDesertImage10 } = require('./constants');
 
 //Update this line every time a new class meme is added
-const { ClassMeme1, ClassMeme2, ClassMeme3, ClassMeme4, ClassMeme5, ClassMeme6, ClassMeme7, ClassMeme8, ClassMeme9, ClassMeme10, ClassMeme11, ClassMeme12, ClassMeme13, ClassMeme14, ClassMeme15, ClassMeme16, ClassMeme17, ClassMeme18, ClassMeme19, ClassMeme20, ClassMeme21, ClassMeme22, ClassMeme23, ClassMeme24, ClassMeme25, ClassMeme26, ClassMeme27, ClassMeme28, ClassMeme29, ClassMeme30, ClassMeme31, ClassMeme32, ClassMeme33, ClassMeme34, ClassMeme35, ClassMeme36, ClassMeme37, ClassMeme38 } = require('./constants');
+const { ClassMeme1, ClassMeme2, ClassMeme3, ClassMeme4, ClassMeme5, ClassMeme6, ClassMeme7, ClassMeme8, ClassMeme9, ClassMeme10, ClassMeme11, ClassMeme12, ClassMeme13, ClassMeme14, ClassMeme15, ClassMeme16, ClassMeme17, ClassMeme18, ClassMeme19, ClassMeme20, ClassMeme21, ClassMeme22, ClassMeme23, ClassMeme24, ClassMeme25, ClassMeme26, ClassMeme27, ClassMeme28, ClassMeme29, ClassMeme30, ClassMeme31, ClassMeme32, ClassMeme33, ClassMeme34, ClassMeme35, ClassMeme36, ClassMeme37, ClassMeme38, ClassMeme39, ClassMeme40 } = require('./constants');
 
 //Update this line every time a new list is added
 const { randomJokeList, randomLongJokeList, randomFactList, randomAriQuoteList } = require('./constants');
@@ -641,6 +641,18 @@ client.on('messageCreate', (message) => {
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme 38') {
         message.reply({ embeds: [ClassMeme38] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 39') {
+        message.reply({ embeds: [ClassMeme39] });
+    }
+});
+
+client.on('messageCreate', (message) => {
+    if (message.content === '$classmeme 40') {
+        message.reply({ embeds: [ClassMeme40] });
     }
 });
 

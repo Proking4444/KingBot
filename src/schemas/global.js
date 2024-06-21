@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const globalSchema = new Schema({
     count: {
-        type: {type: Number},
+        type: Number,
         default: 0
     },
 },
