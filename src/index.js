@@ -38,14 +38,8 @@ client.on('ready', async (c) => {
         }));
     });
     
-    Promise.all(promiseArr)
-        .then(results => {
-            const totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal, 0);
-            // Use totalUsers as needed, without logging it
-        })
-        .catch(err => {
-            // Handle errors if necessary, without logging them
-        });    
+    let results = await Promise.all(promiseArr);
+    let totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal);
 
 let status = [
     {
