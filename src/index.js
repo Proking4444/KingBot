@@ -63,7 +63,7 @@ let status = [
     },
 
     {
-        name: `5 servers!`,
+        name: `${client.guilds.cache.size} servers!`,
         type: ActivityType.Watching
     }
 ]
@@ -181,7 +181,6 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', async (message) => {
     if (message.content === '$count') {
-        try {
             // Find the count document, create if it doesn't exist
             let countDoc = await Count.findOne();
             if (!countDoc) {
@@ -194,10 +193,6 @@ client.on('messageCreate', async (message) => {
 
             // Reply with the new count
             message.reply(`The count is now ${countDoc.value}.`);
-        } catch (error) {
-            console.error('Error updating count:', error);
-            message.reply('There was an error updating the count.');
-        }
     }
 });
 
