@@ -32,14 +32,20 @@ client.on('ready', async (c) => {
     
     guilds.forEach(guild => {
         promiseArr.push(new Promise(async (resolve, _reject) => {
-            var members = await guild.members.fetch();
+            let members = await guild.members.fetch();
             members = members.filter(m => !m.user.bot);
             resolve(members.size);
         }));
     });
     
-    var results = await Promise.all(promiseArr);
-    var totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal);
+    Promise.all(promiseArr)
+        .then(results => {
+            const totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal, 0);
+            // Use totalUsers as needed, without logging it
+        })
+        .catch(err => {
+            // Handle errors if necessary, without logging them
+        });    
 
 let status = [
     {
