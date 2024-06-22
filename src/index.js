@@ -26,8 +26,17 @@ const client = new Client({
 });
 
 client.on('ready', async (c) => {
-    const totalUsers = await getTotalNonBotUserCount();
+   
+    let totalUsers = 0;
 
+    client.guilds.fetch().then(guilds => {
+        guilds.forEach(guild => {
+            guild.members.fetch().then(members => {
+                const nonBotMembers = members.filter(member => !member.user.bot).size;
+                totalUsers += nonBotMembers;
+            });
+        });
+    });
 
 let status = [
     {
@@ -63,14 +72,6 @@ let status = [
         client.user.setActivity(status[random]);
     }, 10000);
 });
-
-async function getTotalNonBotUserCount() {
-    let totalUserCount = 0;
-    client.guilds.cache.forEach(guild => {
-        totalUserCount += guild.members.cache.filter(member => !member.user.bot).size;
-    });
-    return totalUserCount;
-}
 
 //Information/Management
 
