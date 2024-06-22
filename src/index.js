@@ -795,12 +795,21 @@ client.on('interactionCreate', (interaction) => {
       }
 });
 
-client.on('interactionCreate', (interaction) => {
+client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'count') {
-        Global.count = Global.count + 1;
-        return interaction.reply(`The count is now ${Global.count}.`);
+         // Find the count document, create if it doesn't exist
+         let countDoc = await Count.findOne();
+         if (!countDoc) {
+             countDoc = new Count({ value: 0 });
+         }
+
+         // Increment the count and save
+         countDoc.value += 1;
+         await countDoc.save();
+
+        return interaction.reply(`The count is now ${countDoc.value}.`);
       }
 });
 
