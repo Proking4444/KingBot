@@ -27,15 +27,19 @@ const client = new Client({
 
 client.on('ready', async (c) => {
    
-    let totalUsers = 0;
-
-    client.guilds.cache.forEach(guild => {
-        guild.members.cache.forEach(member => {
-            if (!member.user.bot) {
-                totalUsers++;
-            }
-        });
+    const guilds = client.guilds.cache;
+    const promiseArr = [];
+    
+    guilds.forEach(guild => {
+        promiseArr.push(new Promise(async (resolve, _reject) => {
+            var members = await guild.members.fetch();
+            members = members.filter(m => !m.user.bot);
+            resolve(members.size);
+        }));
     });
+    
+    var results = await Promise.all(promiseArr);
+    var totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal);
 
 let status = [
     {
