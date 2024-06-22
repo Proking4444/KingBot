@@ -29,12 +29,11 @@ client.on('ready', async (c) => {
    
     let totalUsers = 0;
 
-    client.guilds.fetch().then(guilds => {
-        guilds.forEach(guild => {
-            guild.members.fetch().then(members => {
-                const nonBotMembers = members.filter(member => !member.user.bot).size;
-                totalUsers += nonBotMembers;
-            });
+    client.guilds.cache.forEach(guild => {
+        guild.members.cache.forEach(member => {
+            if (!member.user.bot) {
+                totalUsers++;
+            }
         });
     });
 
