@@ -3,7 +3,7 @@ const { Client, IntentsBitField, ActivityType } = require('discord.js');
 
 const mongoose = require('mongoose');
 
-const Global = require('../src/schemas/global');
+const Count = require('./schemas/global');
 
 //Update this line every time a new embed is added
 const { MojaveDesertImage1, MojaveDesertImage2, MojaveDesertImage3, MojaveDesertImage4, MojaveDesertImage5, MojaveDesertImage6, MojaveDesertImage7, MojaveDesertImage8, MojaveDesertImage9, MojaveDesertImage10 } = require('./constants');
@@ -179,10 +179,25 @@ client.on('messageCreate', (message) => {
     }
 });
 
-client.on('messageCreate', (message) => {
+client.on('messageCreate', async (message) => {
     if (message.content === '$count') {
-        Global.count = Global.count + 1;
-        message.reply(`The count is now ${Global.count}.`);
+        try {
+            // Find the count document, create if it doesn't exist
+            let countDoc = await Count.findOne();
+            if (!countDoc) {
+                countDoc = new Count({ value: 0 });
+            }
+
+            // Increment the count and save
+            countDoc.value += 1;
+            await countDoc.save();
+
+            // Reply with the new count
+            message.reply(`The count is now ${countDoc.value}.`);
+        } catch (error) {
+            console.error('Error updating count:', error);
+            message.reply('There was an error updating the count.');
+        }
     }
 });
 

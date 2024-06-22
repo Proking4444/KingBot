@@ -1,8 +1,12 @@
-const { Schema, model } = require('mongoose');
+const mongoose = require('mongoose');
 
-const globalSchema = new Schema({
-    count: Number,
-},
-);
+const countSchema = new mongoose.Schema({
+    value: {
+        type: Number,
+        required: true,
+        default: 0
+    }
+});
 
-module.exports = model('Global', globalSchema)
+const Count = mongoose.model('Count', countSchemaountSchema);
+module.exports = Count;
