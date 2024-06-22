@@ -8,5 +8,5 @@ const countSchema = new mongoose.Schema({
     }
 });
 
-const Count = mongoose.model('Count', countSchemaountSchema);
+const Count = mongoose.model('Count', countSchema);
 module.exports = Count;
