@@ -181,7 +181,7 @@ const ClassMeme19 = new EmbedBuilder()
 exports.ClassMeme19 = ClassMeme19;
 
 const ClassMeme20 = new EmbedBuilder()
-    .setTitle('Gibson Lore 2')
+    .setTitle('Gibson Boys Lore')
     .setImage('https://i.imgflip.com/8hom40.jpg')
     .setFooter({ text: 'Created by Anonymous' });
 exports.ClassMeme20 = ClassMeme20;
@@ -205,7 +205,7 @@ const ClassMeme23 = new EmbedBuilder()
 exports.ClassMeme23 = ClassMeme23;
 
 const ClassMeme24 = new EmbedBuilder()
-    .setTitle('Gibson Lore 3')
+    .setTitle('MGS Lore 2')
     .setImage('https://i.imgflip.com/8hpedw.jpg')
     .setFooter({ text: 'Created by Anonymous' });
 exports.ClassMeme24 = ClassMeme24;
@@ -295,7 +295,7 @@ const ClassMeme38 = new EmbedBuilder()
 exports.ClassMeme38 = ClassMeme38;
 
 const ClassMeme39 = new EmbedBuilder()
-    .setTitle('MGS Lore 2')
+    .setTitle('Math Lore 2')
     .setImage('https://i.postimg.cc/bw4sHpLj/8uiz95.jpg')
     .setFooter({ text: 'Created by Roy Mei' });
 exports.ClassMeme39 = ClassMeme39;
