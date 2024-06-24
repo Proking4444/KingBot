@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 
 const Count = require('./schemas/global');
 
+const User = require('./schemas/users');
+
 //Update this line every time a new embed is added
 const { MojaveDesertImage1, MojaveDesertImage2, MojaveDesertImage3, MojaveDesertImage4, MojaveDesertImage5, MojaveDesertImage6, MojaveDesertImage7, MojaveDesertImage8, MojaveDesertImage9, MojaveDesertImage10 } = require('./constants');
 
@@ -111,7 +113,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$version') {
-        message.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.8.7.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4');
+        message.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.8.7.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4');
     }
 });
 
@@ -148,6 +150,70 @@ client.on('messageCreate', (message) => {
     if (message.content === '$ari') {
         const random = Math.floor(Math.random() * randomAriQuoteList.length);
         message.reply(randomAriQuoteList[random]);
+    }
+});
+
+//Economy
+
+client.on('message', async message => {
+    if (message.content === '$start') {
+        let user = await User.findOne({ discordId: message.author.id });
+
+        if (user) {
+            message.reply('You already have an account.');
+        } else {
+            user = await User.create({
+                discordId: message.author.id,
+                username: message.author.username,
+                balance: 0,
+                lastDailyCollected: null
+            });
+
+            message.reply('Your account has been created.');
+        }
+    }
+});
+
+client.on('message', async message => {
+    if (message.content === '$daily') {
+        let user = await User.findOne({ discordId: message.author.id });
+
+        if (!user) {
+            message.reply('You need to create an account first with `$start`.');
+            return;
+        }
+
+        const now = new Date();
+        const nextDaily = new Date(user.lastDailyCollected);
+        nextDaily.setHours(nextDaily.getHours() + 12); // Next daily is 12 hours after last collected time
+
+        if (user.lastDailyCollected && now < nextDaily) {
+            const timeUntilNextDaily = nextDaily - now;
+            const hours = Math.floor((timeUntilNextDaily / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((timeUntilNextDaily / (1000 * 60)) % 60);
+            const seconds = Math.floor((timeUntilNextDaily / 1000) % 60);
+
+            message.reply(`You have already collected your daily reward. Next daily available in ${hours} hours, ${minutes} minutes, and ${seconds} seconds.`);
+        } else {
+            user.balance += 1000; // Example: Add daily reward to balance
+            user.lastDailyCollected = now;
+            await user.save();
+
+            message.reply('You have collected your daily reward of $1000.');
+        }
+    }
+});
+
+client.on('message', async message => {
+    if (message.content === '$bal' || message.content === '$balance') {
+        let user = await User.findOne({ discordId: message.author.id });
+
+        if (!user) {
+            message.reply('You need to create an account first with `$start`.');
+            return;
+        }
+
+        message.reply(`Your current balance is $${user.balance}.`);
     }
 });
 
@@ -711,7 +777,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'version') {
-        return interaction.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.3.8.7.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5');
+        return interaction.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.8.7.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5');
       }
 });
 
