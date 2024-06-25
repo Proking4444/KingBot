@@ -195,11 +195,11 @@ client.on('messageCreate', async message => {
 
             message.reply(`You have already collected your daily reward. Next daily available in ${hours} hours, ${minutes} minutes, and ${seconds} seconds.`);
         } else {
-            user.balance += 1000; // Example: Add daily reward to balance
+            user.balance += 100; // Example: Add daily reward to balance
             user.lastDailyCollected = now;
             await user.save();
 
-            message.reply('You have collected your daily reward of $1000.');
+            message.reply('You have collected your daily reward of $100.');
         }
     }
 });
@@ -221,19 +221,19 @@ client.on('messageCreate', async message => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$img') {
-        message.reply('**Sending Images** \nPlease use $img (code) (number) to send an image. \n\n**Image Codes** \n- Desert (0)');
+        message.reply('**Sending Images** \nPlease use `$img (code) (number)` to send an image. \n\n**Image Codes** \n- Desert (0)');
     }
 });
 
 client.on('messageCreate', (message) => {
     if (message.content === '$movie') {
-        message.reply('**Watching Movies** \nPlease use $movie (code) to watch a movie. \n\n**Movie Codes:** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV) \n\nBoehlke 2023 \n- Happy Little Accidents (HLA) \n- King\'s Crypt (KC) \n- Monkey Murder (MM) \n- Mount Foreverrest (MF) \n- The Wild Jeffois (TWJ) \n- Thirst For Clout (TFC) \n\nDeluca 2024 \n- 90 Days of Different (90DOD) \n- Ella vs Sohpie (Gun Version) (EVSGV) \n- Graffiti Day (GD) \n- Paint Ballistic (PB) \n- Sophie and Ella Travel the World (SAETTW) \n- The Mask (TM) \n- Thomas, Baron, Alice (TBA) \n\nGibson 2024 \n- 90 Days of Different: Day 40 (90DODD40) \n- A Ruff Day (ARD) \n- The Horror Movie (THM) \n- Epic Ice Cream Movie (EICM) \n- Every Fast Food Worker\'s Dream (EFFWD) \n- Slay 49 (S49) \n- Snowy Paintball Fight (SPF)');
+        message.reply('**Watching Movies** \nPlease use `$movie (code)` to watch a movie. \n\n**Movie Codes:** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV) \n\nBoehlke 2023 \n- Happy Little Accidents (HLA) \n- King\'s Crypt (KC) \n- Monkey Murder (MM) \n- Mount Foreverrest (MF) \n- The Wild Jeffois (TWJ) \n- Thirst For Clout (TFC) \n\nDeluca 2024 \n- 90 Days of Different (90DOD) \n- Ella vs Sohpie (Gun Version) (EVSGV) \n- Graffiti Day (GD) \n- Paint Ballistic (PB) \n- Sophie and Ella Travel the World (SAETTW) \n- The Mask (TM) \n- Thomas, Baron, Alice (TBA) \n\nGibson 2024 \n- 90 Days of Different: Day 40 (90DODD40) \n- A Ruff Day (ARD) \n- The Horror Movie (THM) \n- Epic Ice Cream Movie (EICM) \n- Every Fast Food Worker\'s Dream (EFFWD) \n- Slay 49 (S49) \n- Snowy Paintball Fight (SPF)');
     }
 });
 
 client.on('messageCreate', (message) => {
     if (message.content === '$classmeme') {
-        message.reply('**Sending Class Memes** \nPlease use $classmeme (number) to send a meme.');
+        message.reply('**Sending Class Memes** \nPlease use `$classmeme (number)` to send a meme.');
     }
 });
 
