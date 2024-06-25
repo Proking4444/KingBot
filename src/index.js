@@ -155,7 +155,7 @@ client.on('messageCreate', (message) => {
 
 //Economy
 
-client.on('message', async message => {
+client.on('messageCreate', async message => {
     if (message.content === '$start') {
         let user = await User.findOne({ discordId: message.author.id });
 
@@ -174,7 +174,7 @@ client.on('message', async message => {
     }
 });
 
-client.on('message', async message => {
+client.on('messageCreate', async message => {
     if (message.content === '$daily') {
         let user = await User.findOne({ discordId: message.author.id });
 
@@ -204,7 +204,7 @@ client.on('message', async message => {
     }
 });
 
-client.on('message', async message => {
+client.on('messageCreate', async message => {
     if (message.content === '$bal' || message.content === '$balance') {
         let user = await User.findOne({ discordId: message.author.id });
 
