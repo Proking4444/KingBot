@@ -351,9 +351,10 @@ async function handleVoteCommand(message) {
 }
 
 async function checkVoteOnTopGG(userId) {
+    try {
         const response = await axios.get(`https://top.gg/api/bots/${client.user.id}/check`, {
             headers: {
-                Authorization: topggApiKey
+                Authorization: `Bearer ${topggApiKey}`
             },
             params: {
                 userId: userId
@@ -364,6 +365,10 @@ async function checkVoteOnTopGG(userId) {
             voted: response.data.voted,
             votedAt: response.data.votedAt
         };
+    } catch (error) {
+        console.error('Error checking vote:', error.message);
+        throw error; // Re-throw the error to handle it elsewhere if needed
+    }
 }
 
 //Media
