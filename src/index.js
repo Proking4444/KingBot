@@ -222,7 +222,7 @@ client.on('messageCreate', async message => {
         let args = message.content.split(' ');
 
         if (args.length < 3) {
-            message.channel.send('Please provide both the bet amount and your choice (heads or tails).');
+            message.reply('Please provide both the bet amount and your choice (heads or tails).');
             return;
         }
 
@@ -230,24 +230,24 @@ client.on('messageCreate', async message => {
         let choice = args[2].toLowerCase();
 
         if (isNaN(betAmount) || betAmount <= 0) {
-            message.channel.send('Please enter a valid bet amount.');
+            message.reply('Please enter a valid bet amount.');
             return;
         }
 
         if (!['heads', 'tails'].includes(choice)) {
-            message.channel.send('Please choose either heads or tails.');
+            message.reply('Please choose either heads or tails.');
             return;
         }
 
         let user = await User.findOne({ discordId: message.author.id });
 
         if (!user) {
-            message.channel.send('You need to create an account first with $start.');
+            message.reply('You need to create an account first with $start.');
             return;
         }
 
         if (user.balance < betAmount) {
-            message.channel.send('You do not have enough balance to place this bet.');
+            message.reply('You do not have enough balance to place this bet.');
             return;
         }
 
@@ -262,7 +262,7 @@ client.on('messageCreate', async message => {
             resultMessage = `**You lost!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\nhttps://tinyurl.com/yajkd58h`;
         }
 
-        message.channel.send(resultMessage);
+        message.reply(resultMessage);
 
         await user.save();
     }
