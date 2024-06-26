@@ -256,10 +256,10 @@ client.on('messageCreate', async message => {
         let resultMessage;
         if (coinFlip && choice === 'heads' || !coinFlip && choice === 'tails') {
             user.balance += betAmount;
-            resultMessage = `**You won!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\nhttps://tinyurl.com/2sp68n9t`;
+            resultMessage = `**You won!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\n`, {files: ["https://i.postimg.cc/mgT7F3qb/heads.png"]};
         } else {
             user.balance -= betAmount;
-            resultMessage = `**You lost!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\nhttps://tinyurl.com/yajkd58h`;
+            resultMessage = `**You lost!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\n`, {files: ["https://i.postimg.cc/bwLk0Dc1/tails.png"]};
         }
 
         message.reply(resultMessage);
