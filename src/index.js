@@ -29,6 +29,8 @@ const client = new Client({
     ],
 });
 
+const topggApiKey = 'https://top.gg/bot/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExNjgyNDAwNDU1MTAxMDczMDgiLCJib3QiOnRydWUsImlhdCI6MTcxOTQ0MzU4MH0.135Qpvhha4yP4lFpKihDqjVqlZhH-UOzZx0XqktoYqc/webhooks';
+
 client.on('ready', async (c) => {
    
     const guilds = client.guilds.cache;
@@ -351,7 +353,7 @@ async function handleVoteCommand(message) {
 async function checkVoteOnTopGG(userId) {
         const response = await axios.get(`https://top.gg/api/bots/${client.user.id}/check`, {
             headers: {
-                Authorization: process.env.TOPGG_API
+                Authorization: topggApiKey
             },
             params: {
                 userId: userId
