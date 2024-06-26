@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, IntentsBitField, ActivityType } = require('discord.js');
+const { Client, IntentsBitField, ActivityType, MessageAttachment } = require('discord.js');
 
 const mongoose = require('mongoose');
 
@@ -256,13 +256,15 @@ client.on('messageCreate', async message => {
         let resultMessage;
         if (coinFlip && choice === 'heads' || !coinFlip && choice === 'tails') {
             user.balance += betAmount;
+            let attachment = new MessageAttachment('https://i.postimg.cc/mgT7F3qb/heads.png');
             resultMessage = `**You won!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\n`, {files: ["https://i.postimg.cc/mgT7F3qb/heads.png"]};
         } else {
             user.balance -= betAmount;
+            let attachment = new MessageAttachment('https://i.postimg.cc/bwLk0Dc1/tails.png');
             resultMessage = `**You lost!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\n`, {files: ["https://i.postimg.cc/bwLk0Dc1/tails.png"]};
         }
 
-        message.reply(resultMessage);
+        message.reply(resultMessage, attachment);
 
         await user.save();
     }
