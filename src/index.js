@@ -217,6 +217,51 @@ client.on('messageCreate', async message => {
     }
 });
 
+client.on('messageCreate', async message => {
+    if (message.content.startsWith('$coinflip')) {
+        let args = message.content.split(' ');
+        let betAmount = parseInt(args[1], 10);
+        let choice = args[2].toLowerCase();
+
+        if (isNaN(betAmount) || betAmount <= 0) {
+            message.channel.send('Please enter a valid bet amount.');
+            return;
+        }
+
+        if (!['heads', 'tails'].includes(choice)) {
+            message.channel.send('Please choose either heads or tails.');
+            return;
+        }
+
+        let user = await User.findOne({ discordId: message.author.id });
+
+        if (!user) {
+            message.channel.send('You need to create an account first with $start.');
+            return;
+        }
+
+        if (user.balance < betAmount) {
+            message.channel.send('You do not have enough balance to place this bet.');
+            return;
+        }
+
+        let coinFlip = Math.random() < 0.5;
+
+        let resultMessage;
+        if (coinFlip && choice === 'heads' || !coinFlip && choice === 'tails') {
+            user.balance += betAmount;
+            resultMessage = `**You won!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\nhttps://tinyurl.com/2sp68n9t`;
+        } else {
+            user.balance -= betAmount;
+            resultMessage = `**You lost!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\nhttps://tinyurl.com/yajkd58h`;
+        }
+
+        message.channel.send(resultMessage);
+
+        await user.save();
+    }
+});
+
 //Media
 
 client.on('messageCreate', (message) => {
