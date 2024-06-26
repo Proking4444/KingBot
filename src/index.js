@@ -113,7 +113,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$version') {
-        message.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.8.7.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4');
+        message.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.8.8.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4');
     }
 });
 
@@ -205,17 +205,54 @@ client.on('messageCreate', async message => {
 });
 
 client.on('messageCreate', async message => {
-    if (message.content === '$bal' || message.content === '$balance') {
-        let user = await User.findOne({ discordId: message.author.id });
+    if (message.content.startsWith('$bal') || message.content.startsWith('$balance')) {
+        let args = message.content.split(' ');
 
-        if (!user) {
-            message.reply('You need to create an account first with `$start`.');
-            return;
+        if (args.length < 2) {
+            // No specific user mentioned, check balance of the message author
+            await checkBalance(message.author.id, message);
+        } else {
+            // User specified, resolve the user ID or find by username
+            let userId = resolveUser(args[1], message);
+            if (userId) {
+                await checkBalance(userId, message);
+            } else {
+                message.reply('That user was not found.');
+            }
         }
-
-        message.reply(`Your current balance is $${user.balance}.`);
     }
 });
+
+async function checkBalance(userId, message) {
+    let user = await User.findOne({ discordId: userId });
+
+    if (!user) {
+        message.reply('This user has not created an account yet.');
+    } else {
+        message.reply(`<@${userId}> has $${user.balance} in their account.`);
+    }
+}
+
+function resolveUser(query, message) {
+    // Check if query is a mention
+    if (message.mentions.users.size) {
+        return message.mentions.users.first().id;
+    }
+
+    // Check if query is a user ID
+    if (query.match(/^\d{17,19}$/)) {
+        return query;
+    }
+
+    // Check if query is a username
+    const guild = message.guild;
+    const member = guild.members.cache.find(member => member.user.username === query);
+    if (member) {
+        return member.user.id;
+    }
+
+    return null; // Return null if user not found
+}
 
 client.on('messageCreate', async message => {
     if (message.content.startsWith('$coinflip')) {
@@ -256,10 +293,10 @@ client.on('messageCreate', async message => {
         let resultMessage;
         if (coinFlip && choice === 'heads' || !coinFlip && choice === 'tails') {
             user.balance += betAmount;
-            resultMessage = `**You won!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\n${coinFlip ? 'https://i.postimg.cc/mgT7F3qb/heads.png' : 'https://i.postimg.cc/bwLk0Dc1/tails.png'}`;
+            resultMessage = `**You won!** \nThe coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\n${coinFlip ? 'https://i.postimg.cc/mgT7F3qb/heads.png' : 'https://i.postimg.cc/bwLk0Dc1/tails.png'}`;
         } else {
             user.balance -= betAmount;
-            resultMessage = `**You lost!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\n${coinFlip ? 'https://i.postimg.cc/mgT7F3qb/heads.png' : 'https://i.postimg.cc/bwLk0Dc1/tails.png'}`;
+            resultMessage = `**You lost!** \nThe coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\n${coinFlip ? 'https://i.postimg.cc/mgT7F3qb/heads.png' : 'https://i.postimg.cc/bwLk0Dc1/tails.png'}`;
         }
 
         message.reply(resultMessage);
@@ -828,7 +865,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'version') {
-        return interaction.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.8.7.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5');
+        return interaction.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.8.8.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5');
       }
 });
 
