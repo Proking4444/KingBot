@@ -264,7 +264,7 @@ client.on('messageCreate', async message => {
             resultMessage = `**You lost!** The coin landed on ${coinFlip ? 'heads' : 'tails'}. Your new balance is $${user.balance}.\n`;
         }
 
-        message.reply(resultMessage);
+        message.reply(resultMessage, coinImage);
 
         await user.save();
     }
