@@ -209,10 +209,8 @@ client.on('messageCreate', async message => {
         let args = message.content.split(' ');
 
         if (args.length < 2) {
-            // No specific user mentioned, check balance of the message author
-            await checkBalance(message.author.id, message);
+            await checkSelfBalance(message);
         } else {
-            // User specified, resolve the user ID or find by username
             let userId = resolveUser(args[1], message);
             if (userId) {
                 await checkBalance(userId, message);
@@ -222,6 +220,16 @@ client.on('messageCreate', async message => {
         }
     }
 });
+
+async function checkSelfBalance(message) {
+    let user = await User.findOne({ discordId: message.author.id });
+
+    if (!user) {
+        message.reply('This user has not created an account yet.');
+    } else {
+        message.reply(`Your current balance is $${user.balance}.`);
+    }
+}
 
 async function checkBalance(userId, message) {
     let user = await User.findOne({ discordId: userId });
@@ -234,24 +242,24 @@ async function checkBalance(userId, message) {
 }
 
 function resolveUser(query, message) {
-    // Check if query is a mention
+    // Check for a mention
     if (message.mentions.users.size) {
         return message.mentions.users.first().id;
     }
 
-    // Check if query is a user ID
+    // Check for a user ID
     if (query.match(/^\d{17,19}$/)) {
         return query;
     }
 
-    // Check if query is a username
+    // Check for a username
     const guild = message.guild;
     const member = guild.members.cache.find(member => member.user.username === query);
     if (member) {
         return member.user.id;
     }
 
-    return null; // Return null if user not found
+    return null; // Return if user not found
 }
 
 client.on('messageCreate', async message => {
