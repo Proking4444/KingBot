@@ -220,6 +220,12 @@ client.on('messageCreate', async message => {
 client.on('messageCreate', async message => {
     if (message.content.startsWith('$coinflip')) {
         let args = message.content.split(' ');
+
+        if (args.length < 3) {
+            message.channel.send('Please provide both the bet amount and your choice (heads or tails).');
+            return;
+        }
+
         let betAmount = parseInt(args[1], 10);
         let choice = args[2].toLowerCase();
 
