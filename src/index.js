@@ -1,8 +1,6 @@
 require('dotenv').config();
 const { Client, IntentsBitField, ActivityType } = require('discord.js');
 
-const axios = require('axios')
-
 const mongoose = require('mongoose');
 
 const Count = require('./schemas/global');
