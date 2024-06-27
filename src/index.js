@@ -9,8 +9,6 @@ const Count = require('./schemas/global');
 
 const User = require('./schemas/users');
 
-const topggApiKey = "https://top.gg/bot/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExNjgyNDAwNDU1MTAxMDczMDgiLCJib3QiOnRydWUsImlhdCI6MTcxOTQ0MzU4MH0.135Qpvhha4yP4lFpKihDqjVqlZhH-UOzZx0XqktoYqc/webhooks"
-
 //Update this line every time a new embed is added
 const { MojaveDesertImage1, MojaveDesertImage2, MojaveDesertImage3, MojaveDesertImage4, MojaveDesertImage5, MojaveDesertImage6, MojaveDesertImage7, MojaveDesertImage8, MojaveDesertImage9, MojaveDesertImage10 } = require('./constants');
 
@@ -316,55 +314,6 @@ client.on('messageCreate', async message => {
         await user.save();
     }
 });
-
-client.on('messageCreate', async message => {
-    if (message.content === '$vote') {
-        handleVoteCommand(message);
-    }
-});
-
-async function handleVoteCommand(message) {
-    // Check if the user has voted
-    const { voted, votedAt } = await checkVoteOnTopGG(message.author.id);
-
-    if (voted) {
-        let user = await User.findOne({ discordId: message.author.id });
-
-        if (!user) {
-            message.reply('You need to create an account first with `$start`.');
-        } else {
-            user.balance += 500; // Reward amount
-            await user.save();
-
-            const nextVoteTime = votedAt + 12 * 60 * 60 * 1000; // Assuming next vote is 12 hours after last vote
-            const timeUntilNextVote = nextVoteTime - Date.now();
-            
-            const hoursUntilNextVote = Math.floor(timeUntilNextVote / (1000 * 60 * 60));
-            const minutesUntilNextVote = Math.floor((timeUntilNextVote % (1000 * 60 * 60)) / (1000 * 60));
-            const secondsUntilNextVote = Math.floor((timeUntilNextVote % (1000 * 60)) / 1000);
-
-            message.reply(`Thank you for voting! You have been rewarded with $500. You can vote again in ${hoursUntilNextVote} hours, ${minutesUntilNextVote} minutes, and ${secondsUntilNextVote} seconds.`);
-        }
-    } else {
-        message.reply('You have not voted yet. Please vote for the bot at https://top.gg/bot/1168240045510107308/vote to earn rewards.');
-    }
-}
-
-async function checkVoteOnTopGG(userId) {
-        const response = await axios.get(`https://top.gg/api/bots/1255657119445946500/check?userId=${userId}`, {
-            headers: {
-                Authorization: topggApiKey
-            },
-            params: {
-                userId: userId
-            }
-        });
-
-        return {
-            voted: response.data.voted,
-            votedAt: response.data.votedAt
-        };
-}
 
 //Media
 
