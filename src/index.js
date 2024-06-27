@@ -9,8 +9,6 @@ const Count = require('./schemas/global');
 
 const User = require('./schemas/users');
 
-const topggApiKey = "https://top.gg/bot/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExNjgyNDAwNDU1MTAxMDczMDgiLCJib3QiOnRydWUsImlhdCI6MTcxOTQ0MzU4MH0.135Qpvhha4yP4lFpKihDqjVqlZhH-UOzZx0XqktoYqc/webhooks"
-
 //Update this line every time a new embed is added
 const { MojaveDesertImage1, MojaveDesertImage2, MojaveDesertImage3, MojaveDesertImage4, MojaveDesertImage5, MojaveDesertImage6, MojaveDesertImage7, MojaveDesertImage8, MojaveDesertImage9, MojaveDesertImage10 } = require('./constants');
 
