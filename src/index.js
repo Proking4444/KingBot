@@ -350,8 +350,6 @@ async function handleVoteCommand(message) {
     }
 }
 
-const userId = message.author.id;
-
 async function checkVoteOnTopGG(userId) {
         const response = await axios.get(`https://top.gg/api/bots/1255657119445946500/check?userId=${userId}`, {
             headers: {
