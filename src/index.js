@@ -319,13 +319,13 @@ client.on('messageCreate', async message => {
 
         const data = await response.json();
 
-        if (data.voted) {
+        if (data.voted === 1) {
             user.balance += 500;
             await user.save();
 
             message.reply('Thank you for voting!');
         } else {
-            message.reply('You haven\'t voted yet. Please vote for the bot at https://top.gg/bot/1168240045510107308/vote');
+            message.reply('You haven\'t voted yet. Please vote for the bot at https://top.gg/bot/1168240045510107308/vote.');
         }
 
     }
