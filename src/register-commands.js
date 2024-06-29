@@ -64,8 +64,8 @@ const commands = [
     },
 
     {
-        name: 'vote',
-        description: 'Upvote the bot on Top.gg',
+        name: 'topgg',
+        description: 'Check out the bot\'s top.gg page',
     },
 
     {
@@ -75,6 +75,10 @@ const commands = [
 ];
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+
+rest.delete(Routes.applicationCommand('1168240045510107308', '1253097430052896871'))
+	.then(() => console.log('Successfully deleted application command'))
+	.catch(console.error);
 
 (async () => {
     try {

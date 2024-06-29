@@ -302,7 +302,7 @@ client.on('messageCreate', async message => {
 });
 
 client.on('messageCreate', async message => {
-    if (message.content === '$v') {
+    if (message.content === '$vote') {
         let user = await User.findOne({ discordId: message.author.id });
 
         if (!user) {
@@ -310,8 +310,8 @@ client.on('messageCreate', async message => {
             return;
         }
 
-        const apiKey = process.env.TOPGG_API;
-        const botId = process.env.CLIENT_ID;
+        const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExNjgyNDAwNDU1MTAxMDczMDgiLCJib3QiOnRydWUsImlhdCI6MTcxOTY5Nzk3MX0.TmH_z6isFKD2Oecg5xDliFUnvw_-_D4eAzn_tUobCsY";
+        const botId = "1168240045510107308";
 
         const response = await fetch(`https://top.gg/api/bots/${botId}/check?userId=${message.author.id}`, {
             headers: { Authorization: apiKey }
@@ -368,7 +368,7 @@ client.on('messageCreate', (message) => {
 //Miscellaneous
 
 client.on('messageCreate', (message) => {
-    if (message.content === '$vote') {
+    if (message.content === '$topgg') {
         message.reply('**If you\'re enjoying KingBot, please consider upvoting the bot and leaving a positive review on Top.gg!** \nVote: https://top.gg/bot/1168240045510107308/vote \nReview: https://top.gg/bot/1168240045510107308#reviews \nBot Page: https://top.gg/bot/1168240045510107308');
     }
 });
@@ -998,7 +998,7 @@ client.on('interactionCreate', (interaction) => {
 client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
-    if (interaction.commandName === 'vote') {
+    if (interaction.commandName === 'topgg') {
         return interaction.reply('**If you\'re enjoying KingBot, please consider upvoting the bot and leaving a positive review on Top.gg!** \nVote: https://top.gg/bot/1168240045510107308/vote \nReview: https://top.gg/bot/1168240045510107308#reviews \nBot Page: https://top.gg/bot/1168240045510107308');
       }
 });
