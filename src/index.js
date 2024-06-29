@@ -310,7 +310,7 @@ client.on('messageCreate', async message => {
             return;
         }
 
-        const apiKey = "";
+        const apiKey = "https://top.gg/bot/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExNjgyNDAwNDU1MTAxMDczMDgiLCJib3QiOnRydWUsImlhdCI6MTcxOTY5Nzk3MX0.TmH_z6isFKD2Oecg5xDliFUnvw_-_D4eAzn_tUobCsY/webhooks";
         const botId = "1168240045510107308";
 
         const response = await fetch(`https://top.gg/api/bots/${botId}/check?userId=${message.author.id}`, {
