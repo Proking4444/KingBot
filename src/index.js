@@ -310,8 +310,8 @@ client.on('messageCreate', async message => {
             return;
         }
 
-        const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExNjgyNDAwNDU1MTAxMDczMDgiLCJib3QiOnRydWUsImlhdCI6MTcxOTY5Nzk3MX0.TmH_z6isFKD2Oecg5xDliFUnvw_-_D4eAzn_tUobCsY";
-        const botId = "1168240045510107308";
+        const apiKey = process.env.TOPGG_API;
+        const botId = process.env.CLIENT_ID;
 
         const response = await fetch(`https://top.gg/api/bots/${botId}/check?userId=${message.author.id}`, {
             headers: { Authorization: apiKey }
@@ -320,7 +320,7 @@ client.on('messageCreate', async message => {
         const data = await response.json();
 
         if (data.voted === 1) {
-            const cooldownDuration = 12 * 60 * 60 * 1000; // 12 hours
+            const cooldownDuration = 12 * 60 * 60 * 1000;
             const now = new Date();
             
             if (!user.lastVoteTimestamp || now - user.lastVoteTimestamp >= cooldownDuration) {
@@ -334,8 +334,9 @@ client.on('messageCreate', async message => {
                 const remainingTime = new Date(user.lastVoteTimestamp.getTime() + cooldownDuration - now.getTime());
                 const hours = remainingTime.getUTCHours();
                 const minutes = remainingTime.getUTCMinutes();
+                const seconds = remainingTime.getUTCSeconds();
 
-                message.reply(`You have already voted recently. Please wait ${hours} hours and ${minutes} minutes.`);
+                message.reply(`You have already voted recently. Please wait ${hours} hours, ${minutes} minutes, and ${seconds} seconds.`);
             }        } else if (data.voted === 0) {
             message.reply('You haven\'t voted yet. Please vote for the bot at https://top.gg/bot/1168240045510107308/vote.');
         } else {
