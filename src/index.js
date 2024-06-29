@@ -82,7 +82,7 @@ let status = [
 
 client.on('messageCreate', (message) => {
     if (message.content === '$help') {
-        message.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n\n**Miscellaneous** \n($)vote = Upvote the bot on Top.gg \n($)count = Adds 1 to the Count');
+        message.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n($)topgg = Check out the bot\'s top.gg page \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)coinflip = Bet money on a coin flip \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
     }
 });
 
@@ -113,7 +113,7 @@ client.on('messageCreate', (message) => {
 
 client.on('messageCreate', (message) => {
     if (message.content === '$version') {
-        message.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.8.8.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4');
+        message.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.9.8.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4');
     }
 });
 
@@ -193,13 +193,13 @@ client.on('messageCreate', async message => {
             const minutes = Math.floor((timeUntilNextDaily / (1000 * 60)) % 60);
             const seconds = Math.floor((timeUntilNextDaily / 1000) % 60);
 
-            message.reply(`You have already collected your daily reward. Next daily available in ${hours} hours, ${minutes} minutes, and ${seconds} seconds.`);
+            message.reply(`You have already collected your daily salary. Next daily available in ${hours} hours, ${minutes} minutes, and ${seconds} seconds.`);
         } else {
             user.balance += 100; // Example: Add daily reward to balance
             user.lastDailyCollected = now;
             await user.save();
 
-            message.reply('You have collected your daily reward of $100.');
+            message.reply('You have collected your daily salary of $100.');
         }
     }
 });
@@ -215,20 +215,20 @@ client.on('messageCreate', async message => {
 
         const now = new Date();
         const nextClaim = new Date(user.lastClaimCollected);
-        nextClaim.setHours(nextClaim.getHours() + 1); // Next claim is 1 hour after last collected time
+        nextClaim.setHours(nextClaim.getHours() + 1);
 
         if (user.lastClaimCollected && now < nextClaim) {
             const timeUntilNextClaim = nextClaim - now;
             const minutes = Math.floor((timeUntilNextClaim / (1000 * 60)) % 60);
             const seconds = Math.floor((timeUntilNextClaim / 1000) % 60);
 
-            message.reply(`You have already collected your hourly reward. Next claim available in ${minutes} minutes and ${seconds} seconds.`);
+            message.reply(`You have already collected your hourly salary. Next claim available in ${minutes} minutes and ${seconds} seconds.`);
         } else {
-            user.balance += 10; // Example: Add hourly reward to balance
+            user.balance += 10;
             user.lastClaimCollected = now;
             await user.save();
 
-            message.reply('You have collected your hourly reward of $10.');
+            message.reply('You have collected your hourly salary of $10.');
         }
     }
 });
@@ -329,14 +329,14 @@ client.on('messageCreate', async message => {
                 user.lastVoteTimestamp = now;
                 await user.save();
 
-                message.reply(`Thank you for voting! $500 has been added to your account.`);
+                message.reply(`Thank you for voting! A $500 reward has been added to your account.`);
             } else {
                 const remainingTime = new Date(user.lastVoteTimestamp.getTime() + cooldownDuration - now.getTime());
                 const hours = remainingTime.getUTCHours();
                 const minutes = remainingTime.getUTCMinutes();
                 const seconds = remainingTime.getUTCSeconds();
 
-                message.reply(`You have already voted recently. Please wait ${hours} hours, ${minutes} minutes, and ${seconds} seconds.`);
+                message.reply(`You have already voted recently. Please wait ${hours} hours, ${minutes} minutes, and ${seconds} seconds to claim your next reward.`);
             }        } else if (data.voted === 0) {
             message.reply('You haven\'t voted yet. Please vote for the bot at https://top.gg/bot/1168240045510107308/vote.');
         } else {
@@ -878,7 +878,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'help') {
-        return interaction.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n\n**Miscellaneous** \n($)vote = Upvote the bot on Top.gg \n($)count = Adds 1 to the Count');
+        return interaction.reply('**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n($)topgg = Check out the bot\'s top.gg page \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)coinflip = Bet money on a coin flip \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n\n**Miscellaneous** \n($)count = Adds 1 to the Count');
       }
 });
 
@@ -917,7 +917,7 @@ client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
   
     if (interaction.commandName === 'version') {
-        return interaction.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.8.8.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5');
+        return interaction.reply('**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.9.8.5 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5');
       }
 });
 
