@@ -319,6 +319,8 @@ client.on('messageCreate', async message => {
 
         const data = await response.json();
 
+        console.log('Top.gg response:', data);
+
         if (data.voted === 1) {
             message.reply('Thank you for voting!');
         } else if (data.voted === 0) {
