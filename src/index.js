@@ -221,47 +221,6 @@ client.on('messageCreate', async message => {
     }
 });
 
-async function checkSelfBalance(message) {
-    let user = await User.findOne({ discordId: message.author.id });
-
-    if (!user) {
-        message.reply('This user has not created an account yet.');
-    } else {
-        message.reply(`Your current balance is $${user.balance}.`);
-    }
-}
-
-async function checkBalance(userId, message) {
-    let user = await User.findOne({ discordId: userId });
-
-    if (!user) {
-        message.reply('This user has not created an account yet.');
-    } else {
-        message.reply(`<@${userId}> has $${user.balance} in their account.`);
-    }
-}
-
-function resolveUser(query, message) {
-    // Check for a mention
-    if (message.mentions.users.size) {
-        return message.mentions.users.first().id;
-    }
-
-    // Check for a user ID
-    if (query.match(/^\d{17,19}$/)) {
-        return query;
-    }
-
-    // Check for a username
-    const guild = message.guild;
-    const member = guild.members.cache.find(member => member.user.username === query);
-    if (member) {
-        return member.user.id;
-    }
-
-    return null; // Return if user not found
-}
-
 client.on('messageCreate', async message => {
     if (message.content.startsWith('$coinflip')) {
         let args = message.content.split(' ');
@@ -989,6 +948,49 @@ client.on('interactionCreate', async (interaction) => {
         return interaction.reply(`The count is now ${countDoc.value}.`);
       }
 });
+
+//Functions
+
+async function checkSelfBalance(message) {
+    let user = await User.findOne({ discordId: message.author.id });
+
+    if (!user) {
+        message.reply('This user has not created an account yet.');
+    } else {
+        message.reply(`Your current balance is $${user.balance}.`);
+    }
+}
+
+async function checkBalance(userId, message) {
+    let user = await User.findOne({ discordId: userId });
+
+    if (!user) {
+        message.reply('This user has not created an account yet.');
+    } else {
+        message.reply(`<@${userId}> has $${user.balance} in their account.`);
+    }
+}
+
+function resolveUser(query, message) {
+    // Check for a mention
+    if (message.mentions.users.size) {
+        return message.mentions.users.first().id;
+    }
+
+    // Check for a user ID
+    if (query.match(/^\d{17,19}$/)) {
+        return query;
+    }
+
+    // Check for a username
+    const guild = message.guild;
+    const member = guild.members.cache.find(member => member.user.username === query);
+    if (member) {
+        return member.user.id;
+    }
+
+    return null; // Return if user not found
+}
 
 //Keep at bottom.
 
