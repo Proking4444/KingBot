@@ -317,6 +317,8 @@ client.on('messageCreate', async message => {
             headers: { Authorization: apiKey }
         });
 
+        const data = await response.json();
+
         if (data.voted) {
             user.balance += 500;
             await user.save();
