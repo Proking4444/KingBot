@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
     lastDailyCollected: {
         type: Date,
         default: null
+    },
+    lastClaimCollected: {
+        type: Date,
+        default: null
     }
 },
     { timestamps: true }

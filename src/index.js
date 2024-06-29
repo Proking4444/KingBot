@@ -205,6 +205,35 @@ client.on('messageCreate', async message => {
 });
 
 client.on('messageCreate', async message => {
+    if (message.content === '$claim') {
+        let user = await User.findOne({ discordId: message.author.id });
+
+        if (!user) {
+            message.reply('You need to create an account first with `$start`.');
+            return;
+        }
+
+        const now = new Date();
+        const nextClaim = new Date(user.lastClaimCollected);
+        nextClaim.setHours(nextClaim.getHours() + 1); // Next claim is 1 hour after last collected time
+
+        if (user.lastClaimCollected && now < nextClaim) {
+            const timeUntilNextClaim = nextClaim - now;
+            const minutes = Math.floor((timeUntilNextClaim / (1000 * 60)) % 60);
+            const seconds = Math.floor((timeUntilNextClaim / 1000) % 60);
+
+            message.reply(`You have already collected your hourly reward. Next claim available in ${minutes} minutes and ${seconds} seconds.`);
+        } else {
+            user.balance += 10; // Example: Add hourly reward to balance
+            user.lastClaimCollected = now;
+            await user.save();
+
+            message.reply('You have collected your hourly reward of $10.');
+        }
+    }
+});
+
+client.on('messageCreate', async message => {
     if (message.content.startsWith('$bal') || message.content.startsWith('$balance')) {
         let args = message.content.split(' ');
 
