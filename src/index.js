@@ -310,7 +310,7 @@ client.on('messageCreate', async message => {
             return;
         }
 
-        const apiKey = "https://top.gg/bot/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExNjgyNDAwNDU1MTAxMDczMDgiLCJib3QiOnRydWUsImlhdCI6MTcxOTY5Nzk3MX0.TmH_z6isFKD2Oecg5xDliFUnvw_-_D4eAzn_tUobCsY/webhooks";
+        const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExNjgyNDAwNDU1MTAxMDczMDgiLCJib3QiOnRydWUsImlhdCI6MTcxOTY5Nzk3MX0.TmH_z6isFKD2Oecg5xDliFUnvw_-_D4eAzn_tUobCsY";
         const botId = "1168240045510107308";
 
         const response = await fetch(`https://top.gg/api/bots/${botId}/check?userId=${message.author.id}`, {
@@ -319,12 +319,10 @@ client.on('messageCreate', async message => {
 
         const data = await response.json();
 
-        console.log('Top.gg response:', data);
-
         if (data.voted === 1) {
             message.reply('Thank you for voting!');
         } else if (data.voted === 0) {
-            message.reply('You haven\'t voted yet. Please vote for the bot at https://top.gg/bot/' + botId);
+            message.reply('You haven\'t voted yet. Please vote for the bot at https://top.gg/bot/1168240045510107308/vote.');
         } else {
             message.reply('Unexpected response from Top.gg. Please try again later.');
         }
