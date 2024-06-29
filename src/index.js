@@ -301,6 +301,33 @@ client.on('messageCreate', async message => {
     }
 });
 
+client.on('messageCreate', async message => {
+    if (message.content === '$v') {
+        let user = await User.findOne({ discordId: message.author.id });
+
+        if (!user) {
+            message.reply('You need to create an account first with `$start`.');
+            return;
+        }
+
+        const apiKey = "";
+        const botId = "1168240045510107308";
+
+        const response = await fetch(`https://top.gg/api/bots/${botId}/check?userId=${message.author.id}`, {
+            headers: { Authorization: apiKey }
+        });
+
+        if (data.voted) {
+            user.balance += 500;
+            await user.save();
+
+            message.reply('Thank you for voting!');
+        } else {
+            message.reply('You haven\'t voted yet. Please vote for the bot at https://top.gg/bot/1168240045510107308/vote');
+        }
+
+    }
+});
 
 //Media
 
