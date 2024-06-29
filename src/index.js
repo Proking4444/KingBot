@@ -320,8 +320,23 @@ client.on('messageCreate', async message => {
         const data = await response.json();
 
         if (data.voted === 1) {
-            message.reply('Thank you for voting!');
-        } else if (data.voted === 0) {
+            const cooldownDuration = 12 * 60 * 60 * 1000; // 12 hours
+            const now = new Date();
+            
+            if (!user.lastVoteTimestamp || now - user.lastVoteTimestamp >= cooldownDuration) {
+                // Update user's balance
+                user.balance += 500;
+                user.lastVoteTimestamp = now;
+                await user.save();
+
+                message.reply(`Thank you for voting! $500 has been added to your account.`);
+            } else {
+                const remainingTime = new Date(user.lastVoteTimestamp.getTime() + cooldownDuration - now.getTime());
+                const hours = remainingTime.getUTCHours();
+                const minutes = remainingTime.getUTCMinutes();
+
+                message.reply(`You have already voted recently. Please wait ${hours} hours and ${minutes} minutes.`);
+            }        } else if (data.voted === 0) {
             message.reply('You haven\'t voted yet. Please vote for the bot at https://top.gg/bot/1168240045510107308/vote.');
         } else {
             message.reply('Unexpected response from Top.gg. Please try again later.');

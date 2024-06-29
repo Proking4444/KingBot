@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
     lastClaimCollected: {
         type: Date,
         default: null
+    },
+    lastVoteTimestamp: {
+        type: Date,
+        defualt: null
     }
 },
     { timestamps: true }
