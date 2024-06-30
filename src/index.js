@@ -345,6 +345,14 @@ client.on('messageCreate', async message => {
     }
 });
 
+client.on('messageCreate', async message => {
+    if (message.content.startsWith('$pay')) {
+        const args = message.content.split(' ').slice(1);
+
+        handlePayCommand(message, args);
+    }
+});
+
 //Media
 
 client.on('messageCreate', (message) => {
@@ -1041,6 +1049,47 @@ async function checkBalance(userId, message) {
     } else {
         message.reply(`<@${userId}> has $${user.balance} in their account.`);
     }
+}
+
+async function handlePayCommand(message, args) {
+    const targetUserId = resolveUser(args[0], message);
+    const payAmount = parseInt(args[1]);
+
+    if (!targetUserId || isNaN(payAmount) || payAmount <= 0) {
+        message.reply('Please provide a valid user and amount.');
+        return;
+    }
+
+    const senderId = message.author.id;
+
+    if (senderId === targetUserId) {
+        message.reply('You cannot pay yourself.');
+        return;
+    }
+
+    const sender = await User.findOne({ discordId: senderId });
+    const recipient = await User.findOne({ discordId: targetUserId });
+
+    if (!sender) {
+        message.reply('You need to create an account first with `$start`.');
+        return;
+    }
+    if (!recipient) {
+        message.reply('The recipient has not created an account yet.');
+        return;
+    }
+    if (sender.balance < payAmount) {
+        message.reply('Insufficient funds.');
+        return;
+    }
+
+    sender.balance -= payAmount;
+    recipient.balance += payAmount;
+
+    await sender.save();
+    await recipient.save();
+
+    message.reply(`Successfully transferred $${payAmount} to <@${targetUserId}>.`);
 }
 
 function resolveUser(query, message) {
