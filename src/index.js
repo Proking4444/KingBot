@@ -255,7 +255,7 @@ client.on('messageCreate', async message => {
         let args = message.content.split(' ');
 
         if (args.length < 3) {
-            message.reply('Please provide both the bet amount and your choice (heads or tails).');
+            message.reply('Please use `$coinflip (bet amount) (choice)` (heads or tails) to place a bet.');
             return;
         }
 
@@ -356,7 +356,7 @@ client.on('messageCreate', async message => {
 client.on('messageCreate', async message => {
     if (message.content === '$leaderboard') {
         const leaderboard = await getBalanceLeaderboard();
-        message.reply('Global Leaderboard:\n' + leaderboard);
+        message.reply('**Global Leaderboard:** \n' + leaderboard);
     }
 });
 
@@ -1063,7 +1063,7 @@ async function handlePayCommand(message, args) {
     const payAmount = parseInt(args[1]);
 
     if (!targetUserId || isNaN(payAmount) || payAmount <= 0) {
-        message.reply('Please provide a valid user and amount.');
+        message.reply('Please use `$pay (user) (amount)` to transfer funds.');
         return;
     }
 
