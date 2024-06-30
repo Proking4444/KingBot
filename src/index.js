@@ -1059,11 +1059,21 @@ async function checkBalance(userId, message) {
 }
 
 async function handlePayCommand(message, args) {
+    if (args.length !== 2) {
+        message.reply('Please use `$pay (user) (amount)` to transfer funds.');
+        return;
+    }
+
     const targetUserId = resolveUser(args[0], message);
     const payAmount = parseInt(args[1]);
 
-    if (!targetUserId || isNaN(payAmount) || payAmount <= 0) {
-        message.reply('Please use `$pay (user) (amount)` to transfer funds.');
+    if (!targetUserId) {
+        message.reply('Please enter a valid recipient.');
+        return;
+    }
+
+    if (isNaN(payAmount) || payAmount <= 0) {
+        message.reply('Please enter a valid transfer amount.');
         return;
     }
 
