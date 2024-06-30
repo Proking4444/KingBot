@@ -1124,11 +1124,11 @@ async function getBalanceLeaderboard(message) {
     const leaderboard = await User.find().sort({ balance: -1 }).limit(10);
 
     let leaderboardString = '';
-    for (const user of leaderboard) {
-        const username = user.username; // Assuming username is a field in your User schema
+    leaderboard.forEach((user, index) => {
+        const username = user.username;
 
-        leaderboardString += `**${username}:** $${user.balance}\n`;
-    }
+        leaderboardString += `**${index + 1}. ${username}:** $${user.balance}\n`;
+    });
     
     return leaderboardString;
 }
