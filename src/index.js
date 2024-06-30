@@ -1127,7 +1127,7 @@ async function getBalanceLeaderboard(message) {
     leaderboard.forEach((user, index) => {
         const username = user.username;
 
-        leaderboardString += `**${index + 1}. ${username}:** $${user.balance}\n`;
+        leaderboardString += `${index + 1}. **${username}:** $${user.balance}\n`;
     });
     
     return leaderboardString;
