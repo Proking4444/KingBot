@@ -353,6 +353,13 @@ client.on('messageCreate', async message => {
     }
 });
 
+client.on('messageCreate', async message => {
+    if (message.content === '$leaderboard') {
+        const leaderboard = await getBalanceLeaderboard();
+        message.reply('Global Leaderboard:\n' + leaderboard);
+    }
+});
+
 //Media
 
 client.on('messageCreate', (message) => {
@@ -1111,6 +1118,17 @@ function resolveUser(query, message) {
     }
 
     return null; // Return if user not found
+}
+
+async function getBalanceLeaderboard() {
+    const leaderboard = await User.find().sort({ balance: -1 }).limit(10);
+
+    let leaderboardString = '';
+    leaderboard.forEach((user, index) => {
+        leaderboardString += `**${index + 1}. ${user.discordId}:** $${user.balance}\n`;
+    });
+
+    return leaderboardString;
 }
 
 //Keep at bottom.
