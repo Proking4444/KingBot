@@ -1099,6 +1099,24 @@ async function handlePayCommand(message, args) {
     message.reply(`Successfully transferred $${payAmount} to <@${targetUserId}>.`);
 }
 
+async function getBalanceLeaderboard(message) {
+    const leaderboard = await User.find().sort({ balance: -1 }).limit(10);
+
+    let leaderboardString = '';
+    for (const user of leaderboard) {
+        const userId = user.discordId;
+        const member = await resolveUser(userId, message);
+
+        if (member) {
+            leaderboardString += `**${member.user.username}:** $${user.balance}\n`;
+        } else {
+            console.error(`User with ID ${userId} not found in Discord`);
+        }
+    }
+    
+    return leaderboardString;
+}
+
 function resolveUser(query, message) {
     // Check for a mention
     if (message.mentions.users.size) {
@@ -1120,16 +1138,6 @@ function resolveUser(query, message) {
     return null; // Return if user not found
 }
 
-async function getBalanceLeaderboard() {
-    const leaderboard = await User.find().sort({ balance: -1 }).limit(10);
-
-    let leaderboardString = '';
-    leaderboard.forEach((user, index) => {
-        leaderboardString += `**${index + 1}. ${user.discordId}:** $${user.balance}\n`;
-    });
-
-    return leaderboardString;
-}
 
 //Keep at bottom.
 
