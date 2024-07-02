@@ -395,16 +395,30 @@ client.on('messageCreate', async message => {
             // Update user's balance
             user.balance -= price * amount;
 
-            // Add new stock purchase to user's portfolio
-            user.stocks.push({
-                symbol: symbol,
-                amount: amount,
-                purchasePrice: price,
-                purchaseDate: new Date(),
-                currentPrice: price, // Initialize with purchase price
-                currentTotalValue: price * amount,
-                profit: 0 // Initialize profit
-            });
+            // Check if stock already exists in user's portfolio
+            const existingStockIndex = user.stocks.findIndex(stock => stock.symbol === symbol);
+
+            if (existingStockIndex >= 0) {
+                // Update existing stock entry
+                const existingStock = user.stocks[existingStockIndex];
+                existingStock.amount += amount;
+                existingStock.currentPrice = price; // Update current price
+                existingStock.currentTotalValue = existingStock.amount * price; // Update current total value
+
+                // Calculate profit (current value - value when bought)
+                existingStock.profit = (existingStock.currentPrice - existingStock.purchasePrice) * existingStock.amount;
+            } else {
+                // Add new stock purchase to user's portfolio
+                user.stocks.push({
+                    symbol: symbol,
+                    amount: amount,
+                    purchasePrice: price,
+                    purchaseDate: new Date(),
+                    currentPrice: price, // Initialize with purchase price
+                    currentTotalValue: price * amount,
+                    profit: 0 // Initialize profit
+                });
+            }
 
             await user.save();
 
