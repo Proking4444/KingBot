@@ -1255,15 +1255,22 @@ async function fetchStockPrice(symbol) {
     const apiUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbol}`;
 
     try {
+        console.log(`Fetching data for symbol: ${symbol}`); // Log symbol
+
         const response = await fetch(apiUrl);
         const data = await response.json();
 
+        console.log(`API response: ${JSON.stringify(data)}`); // Log the raw API response
+
         if (!data || data.quoteResponse?.error || !data.quoteResponse?.result?.length) {
+            console.error('Invalid response structure or error in response');
             return null; // Return null if data is not in the expected format or has errors
         }
 
         const quote = data.quoteResponse.result[0];
         const price = quote.regularMarketPrice;
+
+        console.log(`Fetched price: ${price}`); // Log the fetched price
 
         return price;
     } catch (error) {
