@@ -484,7 +484,7 @@ client.on('messageCreate', async message => {
             let portfolioMessage = '**Your Portfolio:**\n\n';
             user.stocks.forEach(stock => {
                 portfolioMessage += `**${stock.symbol}:** \n`;
-                portfolioMessage += `${stock.amount} shares\n`
+                portfolioMessage += `Shares: ${stock.amount}\n`
                 portfolioMessage += `Purchase Price: $${stock.purchasePrice.toFixed(2)}\n`;
                 portfolioMessage += `Current Price: $${stock.currentPrice.toFixed(2)}\n`;
                 portfolioMessage += `Current Total Value: $${stock.currentTotalValue.toFixed(2)}\n`;
@@ -1295,24 +1295,6 @@ async function fetchStockPrice(symbol) {
         return null;
     }
 }
-
-async function updateStocksStructure() {
-    try {
-        const usersToUpdate = await User.find({ stocks: { $exists: true, $not: { $type: 'array' } } });
-
-        for (const user of usersToUpdate) {
-            user.stocks = []; // Initialize as empty array
-            await user.save();
-        }
-
-        console.log('Stocks structure updated successfully.');
-    } catch (error) {
-        console.error('Error updating stocks structure:', error);
-    }
-}
-
-updateStocksStructure();
-
 
 //Keep at bottom.
 

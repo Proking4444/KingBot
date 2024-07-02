@@ -37,9 +37,7 @@ const userSchema = new mongoose.Schema({
             currentTotalValue: Number,
             profit: Number
         }],
-        default: function () {
-            return [];
-        }
+        default: [],
     }
 }, { timestamps: true });
 
