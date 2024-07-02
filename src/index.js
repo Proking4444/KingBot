@@ -1296,6 +1296,23 @@ async function fetchStockPrice(symbol) {
     }
 }
 
+async function updateStocksStructure() {
+    try {
+        const usersToUpdate = await User.find({ stocks: { $exists: true, $not: { $type: 'array' } } });
+
+        for (const user of usersToUpdate) {
+            user.stocks = []; // Initialize as empty array
+            await user.save();
+        }
+
+        console.log('Stocks structure updated successfully.');
+    } catch (error) {
+        console.error('Error updating stocks structure:', error);
+    }
+}
+
+updateStocksStructure();
+
 
 //Keep at bottom.
 
