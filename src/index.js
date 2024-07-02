@@ -365,8 +365,6 @@ client.on('messageCreate', async message => {
 //Stocks
 //Handle $buy command
 client.on('messageCreate', async message => {
-    console.log(`Message received: ${message.content}`); // Log received message
-
     if (message.content.startsWith('$buy')) {
         const args = message.content.slice(4).trim().split(/ +/);
 
@@ -408,8 +406,6 @@ client.on('messageCreate', async message => {
 
 // Handle $sell command
 client.on('messageCreate', async message => {
-    console.log(`Message received: ${message.content}`); // Log received message
-
     if (message.content.startsWith('$sell')) {
         const args = message.content.slice(5).trim().split(/ +/);
 
@@ -453,8 +449,6 @@ client.on('messageCreate', async message => {
 
 // Handle $portfolio command
 client.on('messageCreate', async message => {
-    console.log(`Message received: ${message.content}`); // Log received message
-
     if (message.content.trim().toLowerCase() === '$portfolio') {
         try {
             const user = await User.findOne({ discordId: message.author.id });
@@ -1262,12 +1256,8 @@ async function getBalanceLeaderboard(message) {
 
 async function fetchStockPrice(symbol) {
     try {
-        console.log(`Fetching data for symbol: ${symbol}`); // Log symbol
-
         const quote = await yahooFinance.quote(symbol);
         const price = quote.regularMarketPrice;
-
-        console.log(`Fetched price: ${price}`); // Log the fetched price
 
         return price;
     } catch (error) {
