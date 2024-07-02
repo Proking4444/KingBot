@@ -27,11 +27,15 @@ const userSchema = new mongoose.Schema({
         type: Date,
         defualt: null
     },
-    stocks: { 
-        type: Map, 
-        of: Number, 
-        default: {} 
-    }
+    stocks: [{
+        symbol: String,
+        amount: Number,
+        purchasePrice: Number,
+        purchaseDate: Date,
+        currentPrice: Number,
+        currentTotalValue: Number,
+        profit: Number
+    }]
 },
     { timestamps: true }
 );

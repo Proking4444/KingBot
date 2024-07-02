@@ -392,8 +392,20 @@ client.on('messageCreate', async message => {
                 return message.reply('Insufficient balance.');
             }
 
+            // Update user's balance
             user.balance -= price * amount;
-            user.stocks.set(symbol, (user.stocks.get(symbol) || 0) + amount);
+
+            // Add new stock purchase to user's portfolio
+            user.stocks.push({
+                symbol: symbol,
+                amount: amount,
+                purchasePrice: price,
+                purchaseDate: new Date(),
+                currentPrice: price, // Initialize with purchase price
+                currentTotalValue: price * amount,
+                profit: 0 // Initialize profit
+            });
+
             await user.save();
 
             message.reply(`Successfully bought ${amount} shares of ${symbol} at $${price} each.`);
@@ -425,16 +437,28 @@ client.on('messageCreate', async message => {
         try {
             const user = await User.findOne({ discordId: message.author.id });
 
-            if (!user || !user.stocks.has(symbol) || user.stocks.get(symbol) < amount) {
+            if (!user || !user.stocks || user.stocks.length === 0) {
+                return message.reply('You do not own any stocks to sell.');
+            }
+
+            // Find the stock in user's portfolio
+            const stockIndex = user.stocks.findIndex(stock => stock.symbol === symbol);
+
+            if (stockIndex === -1 || user.stocks[stockIndex].amount < amount) {
                 return message.reply('You do not own enough shares to sell.');
             }
 
+            // Calculate revenue from selling stocks
             const revenue = price * amount;
-            user.balance += revenue;
-            user.stocks.set(symbol, user.stocks.get(symbol) - amount);
 
-            if (user.stocks.get(symbol) === 0) {
-                user.stocks.delete(symbol);
+            // Update user's balance and stocks array
+            user.balance += revenue;
+            user.stocks[stockIndex].amount -= amount;
+            user.stocks[stockIndex].currentTotalValue = user.stocks[stockIndex].amount * user.stocks[stockIndex].currentPrice;
+
+            // If no more shares left, remove the stock from portfolio
+            if (user.stocks[stockIndex].amount === 0) {
+                user.stocks.splice(stockIndex, 1);
             }
 
             await user.save();
@@ -453,14 +477,20 @@ client.on('messageCreate', async message => {
         try {
             const user = await User.findOne({ discordId: message.author.id });
 
-            if (!user || user.stocks.size === 0) {
+            if (!user || !user.stocks || user.stocks.length === 0) {
                 return message.reply('Your portfolio is empty.');
             }
 
-            let portfolioMessage = 'Your Portfolio:\n';
-            user.stocks.forEach((amount, symbol) => {
-                portfolioMessage += `${symbol}: ${amount} shares\n`;
+            let portfolioMessage = '**Your Portfolio:**\n\n';
+            user.stocks.forEach(stock => {
+                portfolioMessage += `**${stock.symbol}:** \n`;
+                portfolioMessage += `${stock.amount} shares\n`
+                portfolioMessage += `Purchase Price: $${stock.purchasePrice.toFixed(2)}\n`;
+                portfolioMessage += `Current Price: $${stock.currentPrice.toFixed(2)}\n`;
+                portfolioMessage += `Current Total Value: $${stock.currentTotalValue.toFixed(2)}\n`;
+                portfolioMessage += `Profit: $${(stock.currentTotalValue - (stock.purchasePrice * stock.amount)).toFixed(2)}\n\n`;
             });
+
             portfolioMessage += `Balance: $${user.balance.toFixed(2)}`;
 
             message.reply(portfolioMessage);
