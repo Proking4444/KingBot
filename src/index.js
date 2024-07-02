@@ -360,6 +360,114 @@ client.on('messageCreate', async message => {
     }
 });
 
+//Stocks
+client.on('messageCreate', async message => {
+    if (message.content.startsWith('$buy')) {
+        const args = message.content.slice(4).trim().split(/ +/);
+
+        if (args.length < 2) {
+            return message.reply('Please use `$buy (symbol) (amount)` to purchase stocks.');
+        }
+
+        const symbol = args[0].toUpperCase();
+        const amount = parseFloat(args[1]);
+
+        const price = await fetchStockPrice(symbol);
+
+        if (!price) {
+            return message.reply('Invalid symbol or error fetching data.');
+        }
+
+        try {
+            const user = await User.findOne({ discordId: message.author.id });
+
+            if (!user) {
+                return message.reply('You need to create an account first with `$start`.');
+            }
+
+            if (user.balance < price * amount) {
+                return message.reply('Insufficient balance.');
+            }
+
+            user.balance -= price * amount;
+            user.stocks.set(symbol, (user.stocks.get(symbol) || 0) + amount);
+            await user.save();
+
+            message.reply(`Successfully bought ${amount} shares of ${symbol} at $${price} each.`);
+        } catch (error) {
+            console.error('Error buying stocks:', error);
+            message.reply('Error buying stocks. Please try again later.');
+        }
+    }
+});
+
+// Handle $sell command
+client.on('messageCreate', async message => {
+    if (message.content.startsWith('$sell')) {
+        const args = message.content.slice(5).trim().split(/ +/);
+
+        if (args.length < 2) {
+            return message.reply('Please use `$sell (symbol) (amount)` to purchase stocks.');
+        }
+
+        const symbol = args[0].toUpperCase();
+        const amount = parseFloat(args[1]);
+
+        const price = await fetchStockPrice(symbol);
+
+        if (!price) {
+            return message.reply('Invalid symbol or error fetching data.');
+        }
+
+        try {
+            const user = await User.findOne({ discordId: message.author.id });
+
+            if (!user || !user.stocks.has(symbol) || user.stocks.get(symbol) < amount) {
+                return message.reply('You do not own enough shares to sell.');
+            }
+
+            const revenue = price * amount;
+            user.balance += revenue;
+            user.stocks.set(symbol, user.stocks.get(symbol) - amount);
+
+            if (user.stocks.get(symbol) === 0) {
+                user.stocks.delete(symbol);
+            }
+
+            await user.save();
+
+            message.reply(`Successfully sold ${amount} shares of ${symbol} at $${price} each.`);
+        } catch (error) {
+            console.error('Error selling stocks:', error);
+            message.reply('Error selling stocks. Please try again later.');
+        }
+    }
+});
+
+// Handle $portfolio command
+client.on('messageCreate', async message => {
+    if (message.content.trim().toLowerCase() === '$portfolio') {
+        try {
+            const user = await User.findOne({ discordId: message.author.id });
+
+            if (!user || user.stocks.size === 0) {
+                return message.reply('Your portfolio is empty.');
+            }
+
+            let portfolioMessage = 'Your Portfolio:\n';
+            user.stocks.forEach((amount, symbol) => {
+                portfolioMessage += `${symbol}: ${amount} shares\n`;
+            });
+            portfolioMessage += `Balance: $${user.balance.toFixed(2)}`;
+
+            message.reply(portfolioMessage);
+        } catch (error) {
+            console.error('Error fetching portfolio:', error);
+            message.reply('Error fetching portfolio. Please try again later.');
+        }
+    }
+});
+
 //Media
 
 client.on('messageCreate', (message) => {
@@ -1141,6 +1249,27 @@ async function getBalanceLeaderboard(message) {
     });
     
     return leaderboardString;
+}
+
+async function fetchStockPrice(symbol) {
+    const apiUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbol}`;
+
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (!data || data.error || !data.quoteResponse.result.length) {
+            return null;
+        }
+
+        const quote = data.quoteResponse.result[0];
+        const price = quote.regularMarketPrice;
+
+        return price;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return null;
+    }
 }
 
 

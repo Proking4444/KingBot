@@ -26,6 +26,11 @@ const userSchema = new mongoose.Schema({
     lastVoteTimestamp: {
         type: Date,
         defualt: null
+    },
+    stocks: { 
+        type: Map, 
+        of: Number, 
+        default: {} 
     }
 },
     { timestamps: true }
