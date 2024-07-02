@@ -7,6 +7,8 @@ const Count = require('./schemas/global');
 
 const User = require('./schemas/users');
 
+const yahooFinance = require('yahoo-finance2').default;
+
 //Update this line every time a new embed is added
 const { MojaveDesertImage1, MojaveDesertImage2, MojaveDesertImage3, MojaveDesertImage4, MojaveDesertImage5, MojaveDesertImage6, MojaveDesertImage7, MojaveDesertImage8, MojaveDesertImage9, MojaveDesertImage10 } = require('./constants');
 
@@ -361,7 +363,10 @@ client.on('messageCreate', async message => {
 });
 
 //Stocks
+//Handle $buy command
 client.on('messageCreate', async message => {
+    console.log(`Message received: ${message.content}`); // Log received message
+
     if (message.content.startsWith('$buy')) {
         const args = message.content.slice(4).trim().split(/ +/);
 
@@ -403,11 +408,13 @@ client.on('messageCreate', async message => {
 
 // Handle $sell command
 client.on('messageCreate', async message => {
+    console.log(`Message received: ${message.content}`); // Log received message
+
     if (message.content.startsWith('$sell')) {
         const args = message.content.slice(5).trim().split(/ +/);
 
         if (args.length < 2) {
-            return message.reply('Please use `$sell (symbol) (amount)` to purchase stocks.');
+            return message.reply('Please use `$sell (symbol) (amount)` to sell stocks.');
         }
 
         const symbol = args[0].toUpperCase();
@@ -446,6 +453,8 @@ client.on('messageCreate', async message => {
 
 // Handle $portfolio command
 client.on('messageCreate', async message => {
+    console.log(`Message received: ${message.content}`); // Log received message
+
     if (message.content.trim().toLowerCase() === '$portfolio') {
         try {
             const user = await User.findOne({ discordId: message.author.id });
@@ -1252,22 +1261,10 @@ async function getBalanceLeaderboard(message) {
 }
 
 async function fetchStockPrice(symbol) {
-    const apiUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbol}`;
-
     try {
         console.log(`Fetching data for symbol: ${symbol}`); // Log symbol
 
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-
-        console.log(`API response: ${JSON.stringify(data)}`); // Log the raw API response
-
-        if (!data || data.quoteResponse?.error || !data.quoteResponse?.result?.length) {
-            console.error('Invalid response structure or error in response');
-            return null; // Return null if data is not in the expected format or has errors
-        }
-
-        const quote = data.quoteResponse.result[0];
+        const quote = await yahooFinance.quote(symbol);
         const price = quote.regularMarketPrice;
 
         console.log(`Fetched price: ${price}`); // Log the fetched price
