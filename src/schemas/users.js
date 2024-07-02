@@ -25,20 +25,23 @@ const userSchema = new mongoose.Schema({
     },
     lastVoteTimestamp: {
         type: Date,
-        defualt: null
+        default: null
     },
-    stocks: [{
-        symbol: String,
-        amount: Number,
-        purchasePrice: Number,
-        purchaseDate: Date,
-        currentPrice: Number,
-        currentTotalValue: Number,
-        profit: Number
-    }]
-},
-    { timestamps: true }
-);
+    stocks: {
+        type: [{
+            symbol: String,
+            amount: Number,
+            purchasePrice: Number,
+            purchaseDate: Date,
+            currentPrice: Number,
+            currentTotalValue: Number,
+            profit: Number
+        }],
+        default: function () {
+            return [];
+        }
+    }
+}, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
