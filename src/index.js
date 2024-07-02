@@ -1258,8 +1258,8 @@ async function fetchStockPrice(symbol) {
         const response = await fetch(apiUrl);
         const data = await response.json();
 
-        if (!data || data.error || !data.quoteResponse.result.length) {
-            return null;
+        if (!data || data.quoteResponse?.error || !data.quoteResponse?.result?.length) {
+            return null; // Return null if data is not in the expected format or has errors
         }
 
         const quote = data.quoteResponse.result[0];
