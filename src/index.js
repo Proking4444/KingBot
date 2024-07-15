@@ -173,6 +173,25 @@ client.on("ready", async (c) => {
   }, 10000);
 });
 
+let totalUsers = 0;
+let totalGuilds = 0;
+
+client.on("ready", async () => {
+  try {
+    // Calculate total users and total guilds
+    const guilds = client.guilds.cache.array(); // Get an array of guilds
+    for (const guild of guilds) {
+      const members = await guild.members.fetch();
+      const nonBotMembers = members.filter((member) => !member.user.bot);
+      totalUsers += nonBotMembers.size;
+    }
+    totalGuilds = guilds.length; // Update total guilds count
+    console.log(`Fetched total users and guilds.`);
+  } catch (error) {
+    console.error(`Failed to fetch total users and guilds:`, error);
+  }
+});
+
 //Information/Management
 
 client.on("messageCreate", (message) => {
@@ -183,29 +202,13 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.on("messageCreate", async (message) => {
+client.on("messageCreate", (message) => {
   if (message.content === "$kingbot") {
-    let totalUsers = 0;
-    let totalGuilds = client.guilds.cache.size;
-
-    // Iterating over guilds in cache
-    for (const guild of client.guilds.cache) {
-      try {
-        const members = await guild[1].members.fetch(); // guild[1] gives the Guild object
-        const nonBotMembers = members.filter((member) => !member.user.bot);
-        totalUsers += nonBotMembers.size;
-      } catch (error) {
-        console.error(`Failed to fetch members in guild ${guild[0]}:`, error);
-      }
-    }
-
-    // Responding with the collected information
     message.reply(
       `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023 \n\n**Servers:** ${totalGuilds} \n**Users:** ${totalUsers}`
     );
   }
 });
-
 
 client.on("messageCreate", (message) => {
   if (message.content === "$ping") {
