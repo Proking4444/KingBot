@@ -173,24 +173,26 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.on("messageCreate", (message) => {
+client.on("messageCreate", async (message) => {
   if (message.content === "$kingbot") {
-    let totalUsers = 0;
-    const guilds = client.guilds.cache.array();
+    try {
+      const guilds = client.guilds.cache;
+      let totalUsers = 0;
 
-    for (const guild of guilds) {
-      const members = guild.members.cache;
-      const userCount = members.filter((member) => !member.user.bot).size;
-      totalUsers += userCount;
+      // Iterate over each guild to fetch member counts
+      guilds.forEach((guild) => {
+        const members = guild.members.cache;
+        totalUsers += members.size; // Count all members (including bots)
+      });
+
+      // Reply with the specified message structure
+      message.reply(
+        `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023** \n\n**Servers:** ${client.guilds.cache.size} \n**Users:** ${totalUsers}`
+      );
+    } catch (error) {
+      console.error("Error fetching members:", error);
+      message.reply("There was an error calculating the total number of users.");
     }
-
-    const guildsInfo = guilds
-      .map((guild) => `${guild.name}: ${guild.members.cache.size}`)
-      .join("\n");
-
-    message.reply(
-      `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023** \n\n**Servers:** ${client.guilds.cache.size} \n**Users:** ${totalUsers}\n\nGuilds Info:\n${guildsInfo}`
-    );
   }
 });
 
