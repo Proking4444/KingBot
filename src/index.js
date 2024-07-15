@@ -123,37 +123,38 @@ client.on("ready", async (c) => {
   guilds.forEach((guild) => {
     promiseArr.push(
       new Promise(async (resolve, _reject) => {
-        let members = await guild.members.fetch();
-        members = members.filter((m) => !m.user.bot);
-        resolve(members.size);
+        try {
+          let members = await guild.members.fetch();
+          let userCount = members.filter((m) => !m.user.bot).size;
+          resolve(userCount);
+        } catch (error) {
+          console.error(`Error fetching members for guild ${guild.id}:`, error);
+          resolve(0); // Resolve with 0 in case of an error
+        }
       })
     );
   });
 
   let results = await Promise.all(promiseArr);
-  let totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal);
+  let totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal, 0);
 
   let status = [
     {
       name: "$help",
       type: ActivityType.Playing,
     },
-
     {
       name: `${totalUsers} users!`,
       type: ActivityType.Watching,
     },
-
     {
       name: "$help",
       type: ActivityType.Playing,
     },
-
     {
       name: `${totalUsers} users!`,
       type: ActivityType.Watching,
     },
-
     {
       name: `${client.guilds.cache.size} servers!`,
       type: ActivityType.Watching,
