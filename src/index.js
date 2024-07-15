@@ -121,46 +121,56 @@ const client = new Client({
 
 client.setMaxListeners(Infinity);
 
-client.once("ready", async () => {
-  try {
-    let totalUsers = 0;
+client.on("ready", async (c) => {
+  const guilds = client.guilds.cache;
+  const promiseArr = [];
 
-    const guilds = await client.guilds.fetch();
-
-    const promiseArr = guilds.map((guild) =>
-      guild.members
-        .fetch()
-        .then((members) => members.filter((member) => !member.user.bot).size)
-        .catch((error) => {
-          console.error(`Error fetching members for guild ${guild.id}:`, error);
-          return 0;
-        })
+  guilds.forEach((guild) => {
+    promiseArr.push(
+      new Promise(async (resolve, _reject) => {
+        let members = await guild.members.fetch();
+        members = members.filter((m) => !m.user.bot);
+        resolve(members.size);
+      })
     );
+  });
 
-    const results = await Promise.all(promiseArr);
+  let results = await Promise.all(promiseArr);
+  let totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal);
 
-    totalUsers = results.reduce((acc, count) => acc + count, 0);
+  let status = [
+    {
+      name: "$help",
+      type: ActivityType.Playing,
+    },
 
-    const status = [
-      { name: "$help", type: "PLAYING" },
-      { name: `${totalUsers} users!`, type: "WATCHING" },
-      { name: "$help", type: "PLAYING" },
-      { name: `${totalUsers} users!`, type: "WATCHING" },
-      { name: `${client.guilds.cache.size} servers!`, type: "WATCHING" },
-    ];
+    {
+      name: `${totalUsers} users!`,
+      type: ActivityType.Watching,
+    },
 
-    console.log(`${client.user.tag} is Online!`);
+    {
+      name: "$help",
+      type: ActivityType.Playing,
+    },
 
-    // Function to set bot's activity status randomly every 10 seconds
-    setInterval(() => {
-      const random = Math.floor(Math.random() * status.length);
-      client.user.setActivity(status[random].name, {
-        type: status[random].type,
-      });
-    }, 10000);
-  } catch (error) {
-    console.error("Error in ready event:", error);
-  }
+    {
+      name: `${totalUsers} users!`,
+      type: ActivityType.Watching,
+    },
+
+    {
+      name: `${client.guilds.cache.size} servers!`,
+      type: ActivityType.Watching,
+    },
+  ];
+
+  console.log(`${c.user.tag} is Online!`);
+
+  setInterval(() => {
+    let random = Math.floor(Math.random() * status.length);
+    client.user.setActivity(status[random]);
+  }, 10000);
 });
 
 //Information/Management
@@ -2471,7 +2481,6 @@ client.on("messageCreate", async (message) => {
     console.log("Connected to DB.");
 
     client.login(process.env.TOKEN);
-    console.log(`${c.user.id} is Online!`);
   } catch (error) {
     console.log(`Error: ${error}`);
   }
