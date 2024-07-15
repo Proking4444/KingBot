@@ -181,20 +181,33 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", async (message) => {
   if (message.content === "$kingbot") {
     const guilds = client.guilds.cache;
+    const promiseArr = [];
 
-    const promiseArr = guilds.map(guild =>
-      guild.members.fetch().then(members => {
-        // Exclude bots
-        return members.filter(member => !member.user.bot).size;
-      })
-    );
+    guilds.forEach(guild => {
+      promiseArr.push(
+        new Promise(async (resolve, reject) => {
+          try {
+            let members = await guild.members.fetch();
+            members = members.filter(member => !member.user.bot);
+            resolve(members.size);
+          } catch (error) {
+            reject(error);
+          }
+        })
+      );
+    });
 
-    const results = await Promise.all(promiseArr);
-    const totalUsers = results.reduce((acc, count) => acc + count, 0);
+    try {
+      const results = await Promise.all(promiseArr);
+      const totalUsers = results.reduce((acc, count) => acc + count, 0);
 
-    message.reply(
-      `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023** \n\n**Servers:** ${client.guilds.cache.size} \n**Users:** ${totalUsers}`
-    );
+      message.reply(
+        `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023** \n\n**Servers:** ${client.guilds.cache.size} \n**Users:** ${totalUsers}`
+      );
+    } catch (error) {
+      console.error("Error fetching members:", error);
+      message.reply("There was an error calculating the total number of users.");
+    }
   }
 });
 
