@@ -183,16 +183,30 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.on("messageCreate", (message) => {
+client.on("messageCreate", async (message) => {
   if (message.content === "$kingbot") {
-    let totalUsers = client.users.cache.size; // Total users across all guilds
-    let totalGuilds = client.guilds.cache.size; // Total guilds the bot is in
+    let totalUsers = 0;
+    let totalGuilds = client.guilds.cache.size;
 
+    // Fetching non-bot members from each guild
+    const guilds = client.guilds.cache.array(); // Get an array of guilds
+    for (const guild of guilds) {
+      try {
+        const members = await guild.members.fetch();
+        const nonBotMembers = members.filter((member) => !member.user.bot);
+        totalUsers += nonBotMembers.size;
+      } catch (error) {
+        console.error(`Failed to fetch members in guild ${guild.id}:`, error);
+      }
+    }
+
+    // Responding with the collected information
     message.reply(
       `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023 \n\n**Servers:** ${totalGuilds} \n**Users:** ${totalUsers}`
     );
   }
 });
+
 
 client.on("messageCreate", (message) => {
   if (message.content === "$ping") {
