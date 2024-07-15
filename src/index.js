@@ -188,15 +188,14 @@ client.on("messageCreate", async (message) => {
     let totalUsers = 0;
     let totalGuilds = client.guilds.cache.size;
 
-    // Fetching non-bot members from each guild
-    const guilds = client.guilds.cache.array(); // Get an array of guilds
-    for (const guild of guilds) {
+    // Iterating over guilds in cache
+    for (const guild of client.guilds.cache) {
       try {
-        const members = await guild.members.fetch();
+        const members = await guild[1].members.fetch(); // guild[1] gives the Guild object
         const nonBotMembers = members.filter((member) => !member.user.bot);
         totalUsers += nonBotMembers.size;
       } catch (error) {
-        console.error(`Failed to fetch members in guild ${guild.id}:`, error);
+        console.error(`Failed to fetch members in guild ${guild[0]}:`, error);
       }
     }
 
