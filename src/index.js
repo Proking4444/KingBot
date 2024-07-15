@@ -178,8 +178,24 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.on("messageCreate", (message) => {
+client.on("messageCreate", async (message) => {
   if (message.content === "$kingbot") {
+    const guilds = client.guilds.cache;
+    const promiseArr = [];
+  
+    guilds.forEach((guild) => {
+      promiseArr.push(
+        new Promise(async (resolve, _reject) => {
+          let members = await guild.members.fetch();
+          members = members.filter((m) => !m.user.bot);
+          resolve(members.size);
+        })
+      );
+    });
+  
+    let results = await Promise.all(promiseArr);
+    let totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal);
+
     message.reply(
       `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:**November 25, 2023** \n\n**Servers:** ${client.guilds.cache.size} \n**Users:** ${totalUsers}`
     );
@@ -2448,6 +2464,7 @@ client.on("messageCreate", async (message) => {
     console.log("Connected to DB.");
 
     client.login(process.env.TOKEN);
+    console.log(`${c.user.id} is Online!`);
   } catch (error) {
     console.log(`Error: ${error}`);
   }
