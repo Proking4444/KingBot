@@ -173,26 +173,11 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.on("messageCreate", async (message) => {
+client.on("messageCreate", (message) => {
   if (message.content === "$kingbot") {
-    try {
-      const guilds = client.guilds.cache;
-      let totalUsers = 0;
-
-      // Iterate over each guild to fetch member counts
-      guilds.forEach((guild) => {
-        const members = guild.members.cache;
-        totalUsers += members.size; // Count all members (including bots)
-      });
-
-      // Reply with the specified message structure
       message.reply(
-        `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023** \n\n**Servers:** ${client.guilds.cache.size} \n**Users:** ${totalUsers}`
+        `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023** \n\n**Servers:** ${client.guilds.cache.size}`
       );
-    } catch (error) {
-      console.error("Error fetching members:", error);
-      message.reply("There was an error calculating the total number of users.");
-    }
   }
 });
 
