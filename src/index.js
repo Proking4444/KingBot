@@ -116,57 +116,49 @@ const client = new Client({
 
 client.setMaxListeners(Infinity);
 
-client.on("ready", async (c) => {
-  const guilds = client.guilds.cache;
-  const promiseArr = [];
+client.once("ready", async () => {
+  try {
+    let totalUsers = 0;
 
-  guilds.forEach((guild) => {
-    promiseArr.push(
-      new Promise(async (resolve, _reject) => {
-        try {
-          let members = await guild.members.fetch();
-          let userCount = members.filter((m) => !m.user.bot).size;
-          resolve(userCount);
-        } catch (error) {
-          console.error(`Error fetching members for guild ${guild.id}:`, error);
-          resolve(0); // Resolve with 0 in case of an error
-        }
+    // Fetch all guilds where the bot is a member
+    const guilds = await client.guilds.fetch();
+
+    // Array to hold promises for fetching members count from each guild
+    const promiseArr = guilds.map(guild =>
+      guild.members.fetch().then(members =>
+        members.filter(member => !member.user.bot).size
+      ).catch(error => {
+        console.error(`Error fetching members for guild ${guild.id}:`, error);
+        return 0; // Resolve with 0 in case of an error
       })
     );
-  });
 
-  let results = await Promise.all(promiseArr);
-  let totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal, 0);
+    // Wait for all promises to resolve
+    const results = await Promise.all(promiseArr);
 
-  let status = [
-    {
-      name: "$help",
-      type: ActivityType.Playing,
-    },
-    {
-      name: `${totalUsers} users!`,
-      type: ActivityType.Watching,
-    },
-    {
-      name: "$help",
-      type: ActivityType.Playing,
-    },
-    {
-      name: `${totalUsers} users!`,
-      type: ActivityType.Watching,
-    },
-    {
-      name: `${client.guilds.cache.size} servers!`,
-      type: ActivityType.Watching,
-    },
-  ];
+    // Calculate total number of users across all guilds
+    totalUsers = results.reduce((acc, count) => acc + count, 0);
 
-  console.log(`${c.user.tag} is Online!`);
+    // Bot's activity statuses
+    const status = [
+      { name: "$help", type: "PLAYING" },
+      { name: `${totalUsers} users!`, type: "WATCHING" },
+      { name: "$help", type: "PLAYING" },
+      { name: `${totalUsers} users!`, type: "WATCHING" },
+      { name: `${client.guilds.cache.size} servers!`, type: "WATCHING" }
+    ];
 
-  setInterval(() => {
-    let random = Math.floor(Math.random() * status.length);
-    client.user.setActivity(status[random]);
-  }, 10000);
+    console.log(`${client.user.tag} is Online!`);
+
+    // Function to set bot's activity status randomly every 10 seconds
+    setInterval(() => {
+      const random = Math.floor(Math.random() * status.length);
+      client.user.setActivity(status[random].name, { type: status[random].type });
+    }, 10000);
+
+  } catch (error) {
+    console.error("Error in ready event:", error);
+  }
 });
 
 //Information/Management
