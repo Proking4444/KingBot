@@ -184,6 +184,8 @@ client.on("messageCreate", async (message) => {
 
     const promiseArr = guilds.map(guild =>
       guild.members.fetch().then(members => {
+        // Exclude bots
+        return members.filter(member => !member.user.bot).size;
       })
     );
 
