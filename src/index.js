@@ -1,9 +1,14 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { Client, IntentsBitField, ActivityType, EmbedBuilder } from "discord.js";
+import {
+  Client,
+  IntentsBitField,
+  ActivityType,
+  EmbedBuilder,
+} from "discord.js";
 import mongoose from "mongoose";
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
 import Count from "./schemas/global.js";
 import User from "./schemas/users.js";
@@ -120,32 +125,28 @@ client.once("ready", async () => {
   try {
     let totalUsers = 0;
 
-    // Fetch all guilds where the bot is a member
     const guilds = await client.guilds.fetch();
 
-    // Array to hold promises for fetching members count from each guild
-    const promiseArr = guilds.map(guild =>
-      guild.members.fetch().then(members =>
-        members.filter(member => !member.user.bot).size
-      ).catch(error => {
-        console.error(`Error fetching members for guild ${guild.id}:`, error);
-        return 0; // Resolve with 0 in case of an error
-      })
+    const promiseArr = guilds.map((guild) =>
+      guild.members
+        .fetch()
+        .then((members) => members.filter((member) => !member.user.bot).size)
+        .catch((error) => {
+          console.error(`Error fetching members for guild ${guild.id}:`, error);
+          return 0;
+        })
     );
 
-    // Wait for all promises to resolve
     const results = await Promise.all(promiseArr);
 
-    // Calculate total number of users across all guilds
     totalUsers = results.reduce((acc, count) => acc + count, 0);
 
-    // Bot's activity statuses
     const status = [
       { name: "$help", type: "PLAYING" },
       { name: `${totalUsers} users!`, type: "WATCHING" },
       { name: "$help", type: "PLAYING" },
       { name: `${totalUsers} users!`, type: "WATCHING" },
-      { name: `${client.guilds.cache.size} servers!`, type: "WATCHING" }
+      { name: `${client.guilds.cache.size} servers!`, type: "WATCHING" },
     ];
 
     console.log(`${client.user.tag} is Online!`);
@@ -153,9 +154,10 @@ client.once("ready", async () => {
     // Function to set bot's activity status randomly every 10 seconds
     setInterval(() => {
       const random = Math.floor(Math.random() * status.length);
-      client.user.setActivity(status[random].name, { type: status[random].type });
+      client.user.setActivity(status[random].name, {
+        type: status[random].type,
+      });
     }, 10000);
-
   } catch (error) {
     console.error("Error in ready event:", error);
   }
@@ -171,30 +173,24 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.on("messageCreate", async (message) => {
+client.on("messageCreate", (message) => {
   if (message.content === "$kingbot") {
-    try {
-      const guilds = client.guilds.cache;
-      let guildsWithUsers = [];
+    let totalUsers = 0;
+    const guilds = client.guilds.cache.array();
 
-      for (const guild of guilds.values()) {
-        const members = await guild.members.fetch();
-        const userCount = members.filter(member => !member.user.bot).size;
-        guildsWithUsers.push({
-          name: guild.name,
-          users: userCount
-        });
-      }
-
-      const guildsInfo = guildsWithUsers.map(guild => `${guild.name}: ${guild.users}`).join("\n");
-
-      message.reply(
-        `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023** \n\n**Servers:** ${client.guilds.cache.size} \n**Users:** ${guildsInfo}`
-      );
-    } catch (error) {
-      console.error("Error fetching members:", error);
-      message.reply("There was an error calculating the total number of users.");
+    for (const guild of guilds) {
+      const members = guild.members.cache;
+      const userCount = members.filter((member) => !member.user.bot).size;
+      totalUsers += userCount;
     }
+
+    const guildsInfo = guilds
+      .map((guild) => `${guild.name}: ${guild.members.cache.size}`)
+      .join("\n");
+
+    message.reply(
+      `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023** \n\n**Servers:** ${client.guilds.cache.size} \n**Users:** ${totalUsers}\n\nGuilds Info:\n${guildsInfo}`
+    );
   }
 });
 
@@ -498,7 +494,8 @@ client.on("messageCreate", async (message) => {
         const seconds = remainingTime.getUTCSeconds();
 
         message.reply(
-          `You have already voted recently. Next reward available in ${hours} hours, ${minutes} minutes, and ${seconds} seconds.`        );
+          `You have already voted recently. Next reward available in ${hours} hours, ${minutes} minutes, and ${seconds} seconds.`
+        );
       }
     } else if (data.voted === 0) {
       message.reply(
@@ -1013,7 +1010,9 @@ client.on("messageCreate", async (message) => {
 
     let args = message.content.split(" ");
     if (args.length < 2) {
-      return message.reply("Please use `$ban (user) (reason)` to ban a member.");
+      return message.reply(
+        "Please use `$ban (user) (reason)` to ban a member."
+      );
     }
 
     let userId = resolveUser(args[1], message);
@@ -1042,14 +1041,18 @@ client.on("messageCreate", async (message) => {
     // Check if the bot has a role higher than the user
     const botMember = message.guild.members.me;
     if (!botMember) {
-      return message.reply("I am not fully initialized. Please try again later.");
+      return message.reply(
+        "I am not fully initialized. Please try again later."
+      );
     }
 
     const botHighestRole = botMember.roles.highest;
     const userHighestRole = user.roles.highest;
 
     if (botHighestRole.position <= userHighestRole.position) {
-      return message.reply("I cannot ban this user because their role is higher or equal to mine.");
+      return message.reply(
+        "I cannot ban this user because their role is higher or equal to mine."
+      );
     }
 
     let reason = args.slice(2).join(" ") || "No reason provided.";
@@ -1059,7 +1062,9 @@ client.on("messageCreate", async (message) => {
       message.reply(`Banned ${user.user.tag} for: ${reason}`);
     } catch (error) {
       console.error("Error banning user:", error);
-      message.reply("Failed to ban the user. Ensure the bot has the appropriate permissions and role hierarchy.");
+      message.reply(
+        "Failed to ban the user. Ensure the bot has the appropriate permissions and role hierarchy."
+      );
     }
   }
 });
@@ -1228,7 +1233,9 @@ client.on("messageCreate", async (message) => {
     const prompt = message.content.slice(9).trim();
 
     if (!prompt) {
-      message.channel.send("Please use `$chatgpt (prompt)` to send ChatGPT a prompt.");
+      message.channel.send(
+        "Please use `$chatgpt (prompt)` to send ChatGPT a prompt."
+      );
       return;
     }
 
@@ -1285,9 +1292,9 @@ client.on("messageCreate", async (message) => {
 
     try {
       const response = await ollama.chat({
-        model: 'llama3:8b',
-        messages: [{ role: 'user', content: query, "options": {"num_ctx": 100}}],
-      })
+        model: "llama3:8b",
+        messages: [{ role: "user", content: query, options: { num_ctx: 100 } }],
+      });
 
       message.reply(response.message.content);
     } catch (error) {
@@ -1308,9 +1315,9 @@ client.on("messageCreate", async (message) => {
 
     try {
       const response = await ollama.chat({
-        model: 'stablelm-zephyr',
-        messages: [{ role: 'user', content: query, num_ctx: 100 }],
-      })
+        model: "stablelm-zephyr",
+        messages: [{ role: "user", content: query, num_ctx: 100 }],
+      });
 
       message.reply(response.message.content);
     } catch (error) {
@@ -2006,7 +2013,9 @@ client.on("interactionCreate", async (interaction) => {
     let user = await User.findOne({ discordId: interaction.user.id });
 
     if (!user) {
-      return interaction.reply("You need to create an account first with `/start`.");
+      return interaction.reply(
+        "You need to create an account first with `/start`."
+      );
     }
 
     const now = new Date();
@@ -2039,7 +2048,9 @@ client.on("interactionCreate", async (interaction) => {
     let user = await User.findOne({ discordId: interaction.user.id });
 
     if (!user) {
-      return interaction.reply("You need to create an account first with `/start`.");
+      return interaction.reply(
+        "You need to create an account first with `/start`."
+      );
     }
 
     const now = new Date();
@@ -2071,7 +2082,9 @@ client.on("interactionCreate", async (interaction) => {
     let user = await User.findOne({ discordId: interaction.user.id });
 
     if (!user) {
-      return interaction.reply("You need to create an account first with `/start`.");
+      return interaction.reply(
+        "You need to create an account first with `/start`."
+      );
     }
 
     const apiKey = process.env.TOPGG_API_KEY;
@@ -2091,14 +2104,21 @@ client.on("interactionCreate", async (interaction) => {
         const cooldownDuration = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
         const now = new Date();
 
-        if (!user.lastVoteTimestamp || now - user.lastVoteTimestamp >= cooldownDuration) {
+        if (
+          !user.lastVoteTimestamp ||
+          now - user.lastVoteTimestamp >= cooldownDuration
+        ) {
           user.balance += 500;
           user.lastVoteTimestamp = now;
           await user.save();
 
-          return interaction.reply(`Thank you for voting! A $500 reward has been added to your account.`);
+          return interaction.reply(
+            `Thank you for voting! A $500 reward has been added to your account.`
+          );
         } else {
-          const remainingTime = new Date(user.lastVoteTimestamp.getTime() + cooldownDuration - now.getTime());
+          const remainingTime = new Date(
+            user.lastVoteTimestamp.getTime() + cooldownDuration - now.getTime()
+          );
           const hours = remainingTime.getUTCHours();
           const minutes = remainingTime.getUTCMinutes();
           const seconds = remainingTime.getUTCSeconds();
@@ -2112,11 +2132,15 @@ client.on("interactionCreate", async (interaction) => {
           "You haven't voted yet. Please vote for the bot at https://top.gg/bot/1168240045510107308/vote."
         );
       } else {
-        return interaction.reply("Unexpected response from Top.gg. Please try again later.");
+        return interaction.reply(
+          "Unexpected response from Top.gg. Please try again later."
+        );
       }
     } catch (error) {
       console.error(error);
-      return interaction.reply("There was an error checking your vote status. Please try again later.");
+      return interaction.reply(
+        "There was an error checking your vote status. Please try again later."
+      );
     }
   }
 });
