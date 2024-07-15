@@ -185,9 +185,12 @@ client.on("messageCreate", (message) => {
 
 client.on("messageCreate", (message) => {
   if (message.content === "$kingbot") {
-      message.reply(
-        `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023** \n\n**Servers:** ${client.guilds.cache.size}`
-      );
+    let totalUsers = client.users.cache.size; // Total users across all guilds
+    let totalGuilds = client.guilds.cache.size; // Total guilds the bot is in
+
+    message.reply(
+      `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023 \n\n**Servers:** ${totalGuilds} \n**Users:** ${totalUsers}`
+    );
   }
 });
 
