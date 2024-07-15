@@ -179,13 +179,12 @@ let totalGuilds = 0;
 client.on("ready", async () => {
   try {
     // Calculate total users and total guilds
-    const guilds = client.guilds.cache.array(); // Get an array of guilds
-    for (const guild of guilds) {
-      const members = await guild.members.fetch();
+    for (const guild of client.guilds.cache) {
+      const members = await guild[1].members.fetch(); // guild[1] gives the Guild object
       const nonBotMembers = members.filter((member) => !member.user.bot);
       totalUsers += nonBotMembers.size;
     }
-    totalGuilds = guilds.length; // Update total guilds count
+    totalGuilds = client.guilds.cache.size; // Update total guilds count
     console.log(`Fetched total users and guilds.`);
   } catch (error) {
     console.error(`Failed to fetch total users and guilds:`, error);
