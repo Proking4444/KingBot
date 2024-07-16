@@ -121,23 +121,19 @@ const client = new Client({
 
 client.setMaxListeners(Infinity);
 
+client.on("ready", async () => {
+    let totalUsers = 0;
+    let totalGuilds = 0;
+
+    for (const guild of client.guilds.cache) {
+      const members = await guild[1].members.fetch();
+      const nonBotMembers = members.filter((member) => !member.user.bot);
+      totalUsers += nonBotMembers.size;
+    }
+    totalGuilds = client.guilds.cache.size;
+});
+
 client.on("ready", async (c) => {
-  const guilds = client.guilds.cache;
-  const promiseArr = [];
-
-  guilds.forEach((guild) => {
-    promiseArr.push(
-      new Promise(async (resolve, _reject) => {
-        let members = await guild.members.fetch();
-        members = members.filter((m) => !m.user.bot);
-        resolve(members.size);
-      })
-    );
-  });
-
-  let results = await Promise.all(promiseArr);
-  let totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal);
-
   let status = [
     {
       name: "$help",
@@ -160,7 +156,7 @@ client.on("ready", async (c) => {
     },
 
     {
-      name: `${client.guilds.cache.size} servers!`,
+      name: `${totalGuilds} servers!`,
       type: ActivityType.Watching,
     },
   ];
@@ -171,18 +167,6 @@ client.on("ready", async (c) => {
     let random = Math.floor(Math.random() * status.length);
     client.user.setActivity(status[random]);
   }, 10000);
-});
-
-let totalUsers = 0;
-let totalGuilds = 0;
-
-client.on("ready", async () => {
-    for (const guild of client.guilds.cache) {
-      const members = await guild[1].members.fetch();
-      const nonBotMembers = members.filter((member) => !member.user.bot);
-      totalUsers += nonBotMembers.size;
-    }
-    totalGuilds = client.guilds.cache.size;
 });
 
 //Information/Management
