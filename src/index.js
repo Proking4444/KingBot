@@ -121,12 +121,12 @@ const client = new Client({
 
 client.setMaxListeners(Infinity);
 
-client.on("ready", async () => {
+client.on("ready", () => {
     let totalUsers = 0;
     let totalGuilds = 0;
 
     for (const guild of client.guilds.cache) {
-      const members = await guild[1].members.fetch();
+      const members = guild[1].members.fetch();
       const nonBotMembers = members.filter((member) => !member.user.bot);
       totalUsers += nonBotMembers.size;
     }
