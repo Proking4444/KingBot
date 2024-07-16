@@ -177,12 +177,12 @@ let totalUsers = 0;
 let totalGuilds = 0;
 
 client.on("ready", async () => {
-    for (const guild of client.guilds.cache) {
-      const members = await guild[1].members.fetch();
-      const nonBotMembers = members.filter((member) => !member.user.bot);
-      totalUsers += nonBotMembers.size;
-    }
-    totalGuilds = client.guilds.cache.size;
+  for (const guild of client.guilds.cache) {
+    const members = await guild[1].members.fetch();
+    const nonBotMembers = members.filter((member) => !member.user.bot);
+    totalUsers += nonBotMembers.size;
+  }
+  totalGuilds = client.guilds.cache.size;
 });
 
 //Information/Management
@@ -198,7 +198,7 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", (message) => {
   if (message.content === "$kingbot") {
     message.reply(
-      `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023 \n\n**Servers:** ${totalGuilds} \n**Users:** ${totalUsers}`
+      `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently an advanced economy, entertainment, and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023 \n\n**Servers:** ${totalGuilds} \n**Users:** ${totalUsers}`
     );
   }
 });
@@ -1897,7 +1897,7 @@ client.on("interactionCreate", (interaction) => {
 
   if (interaction.commandName === "kingbot") {
     return interaction.reply(
-      `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently entertainment and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:**November 25, 2023** \n\n**Servers:** ${client.guilds.cache.size} \n**Users:** ${totalUsers}`
+      `Hello. My name is KingBot, and I was a multipurpose Discord Bot created by Ari Khan. My main features are currently an advanced economy, entertainment, and media sharing. I am currently in active development. If you want information about the bot or have suggestions, please contact our lead developer, Ari Khan (<@786745378212282368>). \n\n **Creation Date:** October 29, 2023 \n**Made Public:** November 25, 2023 \n\n**Servers:** ${totalGuilds} \n**Users:** ${totalUsers}`
     );
   }
 });
