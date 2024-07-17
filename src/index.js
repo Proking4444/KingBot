@@ -970,42 +970,7 @@ client.on("messageCreate", async (message) => {
   if (!message.guild) return;
 
   if (message.content.startsWith("$kick")) {
-    if (!message.member.permissions.has("KICK_MEMBERS")) {
-      return message.reply("You don't have permissions to kick members.");
-    }
-
-    let args = message.content.split(" ");
-    if (args.length < 2) {
-      return message.reply(
-        "Please use `$kick (user) (reason)` to kick a member."
-      );
-    }
-
-    let userId = resolveUser(args[1], message);
-    if (!userId) {
-      return message.reply("User not found.");
-    }
-
-    let user = await message.guild.members.fetch(userId).catch(() => null);
-    if (!user) {
-      return message.reply("User not found in the guild.");
-    }
-
-    if (!user.kickable) {
-      return message.reply("I cannot kick this user.");
-    }
-
-    let reason = args.slice(2).join(" ") || "No reason provided.";
-
-    try {
-      await user.kick({ reason });
-      message.reply(`Kicked ${user.user.tag} for: ${reason}`);
-    } catch (error) {
-      console.error("Error kicking user:", error);
-      message.reply(
-        "Failed to kick the user. Ensure the bot has the appropriate permissions and role hierarchy."
-      );
-    }
+    
   }
 });
 
