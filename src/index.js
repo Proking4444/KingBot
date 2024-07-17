@@ -4,6 +4,7 @@ dotenv.config();
 import {
   Client,
   IntentsBitField,
+  PermissionsBitField ,
   ActivityType,
   EmbedBuilder,
 } from "discord.js";
