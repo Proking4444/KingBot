@@ -4,7 +4,6 @@ dotenv.config();
 import {
   Client,
   IntentsBitField,
-  Permissions,
   ActivityType,
   EmbedBuilder,
 } from "discord.js";
@@ -975,7 +974,7 @@ client.on('messageCreate', async (message) => {
     const memberId = await resolveUser(args[0], message);
     const reason = args.slice(1).join(' ') || 'No reason provided';
 
-    if (!message.member || !message.member.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
+    if (!message.member || !message.member.permissions.has('KICK_MEMBERS')) {
       return message.reply("You don't have permissions to kick members.");
     }
 
@@ -985,7 +984,7 @@ client.on('messageCreate', async (message) => {
       return message.reply("User not found.");
     }
 
-    if (!message.guild.me || !message.guild.me.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
+    if (!message.guild.me || !message.guild.me.permissions.has('KICK_MEMBERS')) {
       return message.reply("I don't have permission to kick members!");
     }
 
