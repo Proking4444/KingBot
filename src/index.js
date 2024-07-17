@@ -975,21 +975,22 @@ client.on('messageCreate', async (message) => {
     const userId = await resolveUser(args[0], message);
     const reason = args.slice(1).join(' ') || 'No reason provided';
 
-    if (!message.member.permissions.has(PermissionsBitField.Flags.KickMembers)) {
+    if (!message.member || !message.member.permissions.has(PermissionsBitField.Flags.KickMembers)) {
       return message.reply("You don't have permissions to kick members.");
     }
 
     if (!userId) {
-      return message.reply("Please mention a valid member to kick, provide a valid user ID, or username.");
+      return message.reply("Please use `$kick (user) (reason)` to kick a member.");
     }
 
     const member = message.guild.members.cache.get(userId);
 
+    // Check if the member exists
     if (!member) {
       return message.reply("User not found.");
     }
 
-    if (!message.guild.me.permissions.has(PermissionsBitField.Flags.KickMembers)) {
+    if (!message.guild.me || !message.guild.me.permissions.has(PermissionsBitField.Flags.KickMembers)) {
       return message.reply("I don't have permission to kick members.");
     }
 
