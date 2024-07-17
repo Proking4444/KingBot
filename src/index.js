@@ -990,6 +990,8 @@ client.on('messageCreate', async (message) => {
       return message.reply("User not found.");
     }
 
+    console.log("Bot Permissions:", message.guild.me.permissions.toArray());
+
     if (!message.guild.me || !message.guild.me.permissions.has(PermissionsBitField.Flags.KickMembers)) {
       return message.reply("I don't have permission to kick members.");
     }
