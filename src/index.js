@@ -966,11 +966,39 @@ client.on("messageCreate", (message) => {
 
 //Moderation
 
-client.on("messageCreate", async (message) => {
-  if (!message.guild) return;
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
 
   if (message.content.startsWith("$kick")) {
-    
+    const args = message.content.slice(5).trim().split(/ +/); // Remove the "$kick" part
+    const userId = await resolveUser(args[0], message);
+    const reason = args.slice(1).join(' ') || 'No reason provided';
+
+    if (!message.member.permissions.has(PermissionsBitField.Flags.KickMembers)) {
+      return message.reply("You don't have permissions to kick members.");
+    }
+
+    if (!userId) {
+      return message.reply("Please mention a valid member to kick, provide a valid user ID, or username.");
+    }
+
+    const member = message.guild.members.cache.get(userId);
+
+    if (!member) {
+      return message.reply("User not found.");
+    }
+
+    if (!message.guild.me.permissions.has(PermissionsBitField.Flags.KickMembers)) {
+      return message.reply("I don't have permission to kick members.");
+    }
+
+    try {
+      await member.kick(reason);
+      message.channel.send(`${member.user.tag} has been kicked. Reason: ${reason}`);
+    } catch (error) {
+      console.error(error);
+      message.channel.send("An error occurred. I was unable to kick the member.");
+    }
   }
 });
 
