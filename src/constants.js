@@ -566,7 +566,19 @@ const randomFactList = [
   "A day on Venus lasts longer than a year on Venus.",
   "The eighth power of a number is a zenzizenzizenzic.",
   '"Buffalo buffalo Buffalo buffalo buffalo buffalo Buffalo buffalo" is a grammatically correct sentence.',
-  "One teaspoon of neutron star material weighs six billion tons."
+  "One teaspoon of neutron star material weighs six billion tons.",
+  "The shortest war in history, between Britain and Zanzibar in 1896, lasted only 38 minutes before Zanzibar surrendered.",
+  "The inventor of the microwave oven, Percy Spencer, was only paid $2 for his discovery, despite the device revolutionizing cooking.",
+  "Sharks have existed for over 400 million years, predating trees by about 50 million years and surviving multiple mass extinctions.",
+  "Cleopatra lived closer in time to the moon landing than to the construction of the Great Pyramid of Giza, highlighting the vast span of ancient Egyptian history.",
+  "Oxford University is older than the Aztec Empire. Teaching existed at Oxford as early as 1096, while the Aztec Empire was founded in 1428.",
+  "Before erasers were invented, people used bread to remove pencil marks from paper.",
+  "The shortest commercial flight in the world is between two Scottish islands, Westray and Papa Westray, with a flight time of just 1.5 minutes.",
+  "In 2008, a man in the UK was arrested for making a YouTube video that featured a live kitten in a microwave. The incident led to significant media attention and legal action.",
+  "Vending machines were first invented in Ancient Greece. They dispensed holy water and were operated by inserting a coin.",
+  'The word "nerd" was first coined by Dr. Seuss in his 1950 book If I Ran the Zoo.',
+  "More people have walked on the Moon than have ever dived to the deepest part of the ocean, the Mariana Trench, which is nearly 36,000 feet deep.",
+  "J.K. Rowling, the author of the *Harry Potter* series, was rejected by 12 publishers before finally finding one willing to print the first book."
 ];
 export { randomFactList };
 
