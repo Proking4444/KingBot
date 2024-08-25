@@ -951,7 +951,7 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", (message) => {
   if (message.content === "$movie") {
     message.reply(
-      "**Watching Movies** \nPlease use `$movie (code)` to watch a movie. \n\n**Movie Codes:** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV) \n\nBoehlke 2023 \n- Happy Little Accidents (HLA) \n- King's Crypt (KC) \n- Monkey Murder (MM) \n- Mount Foreverrest (MF) \n- The Wild Jeffois (TWJ) \n- Thirst For Clout (TFC) \n- Recnac!! (The Miracle Drug) (RTMD) \n\nDeluca 2024 \n- 90 Days of Different (90DOD) \n- Ella vs Sohpie (Gun Version) (EVSGV) \n- Graffiti Day (GD) \n- Paint Ballistic (PB) \n- Sophie and Ella Travel the World (SAETTW) \n- The Mask (TM) \n- Thomas, Baron, Alice (TBA) \n- W Rube Goldberg (WRG) \n- Fire Rube Goldberg (FRG) \n\nGibson 2024 \n- 90 Days of Different: Day 40 (90DODD40) \n- A Ruff Day (ARD) \n- The Horror Movie (THM) \n- Epic Ice Cream Movie (EICM) \n- Every Fast Food Worker's Dream (EFFWD) \n- Slay 49 (S49) \n- Snowy Paintball Fight (SPF)"
+      "**Watching Movies** \nPlease use `$movie (code)` to watch a movie. \n\n**Movie Codes:** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV) \n\nBoehlke 2023 \n- Happy Little Accidents (HLA) \n- King's Crypt (KC) \n- Monkey Murder (MM) \n- Mount Foreverrest (MF) \n- The Wild Jeffois (TWJ) \n- Thirst For Clout (TFC) \n- Recnac!! (The Miracle Drug) (RTMD) \n\nDeluca 2024 \n- 90 Days of Different (90DOD) \n- Ella vs Sohpie (Gun Version) (EVSGV) \n- Graffiti Day (GD) \n- Paint Ballistic (PB) \n- Sophie and Ella Travel the World (SAETTW) \n- The Mask (TM) \n- Thomas, Baron, Alice (TBA) \n- W Rube Goldberg (WRG) \n- Fire Rube Goldberg (FRG) \n\nGibson 2024 \n- 90 Days of Different: Day 40 (90DODD40) \n- A Ruff Day (ARD) \n- The Horror Movie (THM) \n- Epic Ice Cream Movie (EICM) \n- Every Fast Food Worker's Dream (EFFWD) \n- Slay 49 (S49) \n- Snowy Paintball Fight (SPF) \n\nOther \n- Donut Animation in Blender (DAIB) \n- The CN Tower (TCNT)"
     );
   }
 });
@@ -965,118 +965,6 @@ client.on("messageCreate", (message) => {
 });
 
 //Moderation
-
-client.on('messageCreate', async (message) => {
-  if (message.author.bot) return;
-
-  if (message.content.startsWith('$kick')) {
-  }
-});
-
-client.on("messageCreate", async (message) => {
-  if (!message.guild) return;
-
-  if (message.content.startsWith("$ban")) {
-    if (!message.member.permissions.has("BAN_MEMBERS")) {
-      return message.reply("You don't have permissions to ban members.");
-    }
-
-    let args = message.content.split(" ");
-    if (args.length < 2) {
-      return message.reply(
-        "Please use `$ban (user) (reason)` to ban a member."
-      );
-    }
-
-    let userId = resolveUser(args[1], message);
-    if (!userId) {
-      return message.reply("User not found.");
-    }
-
-    let user;
-    try {
-      user = await message.guild.members.fetch(userId);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      return message.reply("User not found in the guild.");
-    }
-
-    if (!user) {
-      return message.reply("User not found in the guild.");
-    }
-
-    // Check if roles exist
-    if (!user.roles || !user.roles.cache || user.roles.cache.size === 0) {
-      console.error("User roles not properly fetched:", user);
-      return message.reply("Cannot determine the user's roles.");
-    }
-
-    // Check if the bot has a role higher than the user
-    const botMember = message.guild.members.me;
-    if (!botMember) {
-      return message.reply(
-        "I am not fully initialized. Please try again later."
-      );
-    }
-
-    const botHighestRole = botMember.roles.highest;
-    const userHighestRole = user.roles.highest;
-
-    if (botHighestRole.position <= userHighestRole.position) {
-      return message.reply(
-        "I cannot ban this user because their role is higher or equal to mine."
-      );
-    }
-
-    let reason = args.slice(2).join(" ") || "No reason provided.";
-
-    try {
-      await user.ban({ reason });
-      message.reply(`Banned ${user.user.tag} for: ${reason}`);
-    } catch (error) {
-      console.error("Error banning user:", error);
-      message.reply(
-        "Failed to ban the user. Ensure the bot has the appropriate permissions and role hierarchy."
-      );
-    }
-  }
-});
-
-client.on("messageCreate", async (message) => {
-  if (!message.guild) return;
-
-  if (message.content.startsWith("$unban")) {
-    if (!message.member.permissions.has("BAN_MEMBERS")) {
-      return message.reply("You don't have permissions to unban members.");
-    }
-
-    let args = message.content.split(" ");
-    if (args.length < 2) {
-      return message.reply("Please use `$unban (user)` to unban a user.");
-    }
-
-    let userId = resolveUser(args[1], message);
-    if (!userId) {
-      return message.reply("User not found or invalid ID.");
-    }
-
-    let bannedUser = await message.guild.bans.fetch(userId).catch(() => null);
-    if (!bannedUser) {
-      return message.reply("User not found in the ban list.");
-    }
-
-    try {
-      await message.guild.bans.remove(userId);
-      message.reply(`Unbanned user with ID: ${userId}`);
-    } catch (error) {
-      console.error("Error unbanning user:", error);
-      message.reply(
-        "Failed to unban the user. Ensure the bot has the appropriate permissions and role hierarchy."
-      );
-    }
-  }
-});
-
 client.on("messageCreate", async (message) => {
   if (!message.guild) return;
 
@@ -1601,6 +1489,25 @@ client.on("messageCreate", (message) => {
     );
   }
 });
+
+//Other
+
+client.on("messageCreate", (message) => {
+  if (message.content === "$movie DAIB") {
+    message.reply(
+      "https://www.youtube.com/watch?v=YWRkH3fX0Jc"
+    );
+  }
+});
+
+client.on("messageCreate", (message) => {
+  if (message.content === "$movie TCNT") {
+    message.reply(
+      "https://www.youtube.com/watch?v=ZdWVo82Kx2k"
+    );
+  }
+});
+
 
 //Class Memes
 
@@ -2135,7 +2042,7 @@ client.on("interactionCreate", (interaction) => {
 
   if (interaction.commandName === "movie") {
     return interaction.reply(
-      "**Watching Movies** \nPlease use `$movie (code)` to watch a movie. \n\n**Movie Codes:** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV) \n\nBoehlke 2023 \n- Happy Little Accidents (HLA) \n- King's Crypt (KC) \n- Monkey Murder (MM) \n- Mount Foreverrest (MF) \n- The Wild Jeffois (TWJ) \n- Thirst For Clout (TFC) \n- Recnac!! (The Miracle Drug) (RTMD) \n\nDeluca 2024 \n- 90 Days of Different (90DOD) \n- Ella vs Sohpie (Gun Version) (EVSGV) \n- Graffiti Day (GD) \n- Paint Ballistic (PB) \n- Sophie and Ella Travel the World (SAETTW) \n- The Mask (TM) \n- Thomas, Baron, Alice (TBA) \n- W Rube Goldberg (WRG) \n- Fire Rube Goldberg (FRG) \n\nGibson 2024 \n- 90 Days of Different: Day 40 (90DODD40) \n- A Ruff Day (ARD) \n- The Horror Movie (THM) \n- Epic Ice Cream Movie (EICM) \n- Every Fast Food Worker's Dream (EFFWD) \n- Slay 49 (S49) \n- Snowy Paintball Fight (SPF)"
+      "**Watching Movies** \nPlease use `$movie (code)` to watch a movie. \n\n**Movie Codes:** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV) \n\nBoehlke 2023 \n- Happy Little Accidents (HLA) \n- King's Crypt (KC) \n- Monkey Murder (MM) \n- Mount Foreverrest (MF) \n- The Wild Jeffois (TWJ) \n- Thirst For Clout (TFC) \n- Recnac!! (The Miracle Drug) (RTMD) \n\nDeluca 2024 \n- 90 Days of Different (90DOD) \n- Ella vs Sohpie (Gun Version) (EVSGV) \n- Graffiti Day (GD) \n- Paint Ballistic (PB) \n- Sophie and Ella Travel the World (SAETTW) \n- The Mask (TM) \n- Thomas, Baron, Alice (TBA) \n- W Rube Goldberg (WRG) \n- Fire Rube Goldberg (FRG) \n\nGibson 2024 \n- 90 Days of Different: Day 40 (90DODD40) \n- A Ruff Day (ARD) \n- The Horror Movie (THM) \n- Epic Ice Cream Movie (EICM) \n- Every Fast Food Worker's Dream (EFFWD) \n- Slay 49 (S49) \n- Snowy Paintball Fight (SPF) \n\nOther \n- Donut Animation in Blender (DAIB) \n- The CN Tower (TCNT)"
     );
   }
 });
