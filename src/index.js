@@ -282,37 +282,39 @@ client.on('messageCreate', async (message) => {
   if (message.content.startsWith('$typerace')) {
       const args = message.content.split(' ');
 
-      // Check if a valid number of words is provided
       const numWords = parseInt(args[1], 10);
-      if (![10, 25, 50, 100].includes(numWords)) {
-          return message.channel.send('Please specify the number of words (10, 25, 50, 100).');
+      if (![5, 10, 25, 50, 100].includes(numWords)) {
+          return message.channel.send('Please specify the number of words (5, 10, 25, 50, 100).');
       }
 
-      // Generate the random string with the specified number of words
       const randomString = getRandomWords(numWords);
 
-      // Send the random string as a typing challenge
       await message.channel.send(`Type this: \`${randomString}\``);
 
-      // Measure the time when the user starts typing
       const typingStartTime = Date.now();
 
-      // Listen for the user's response
       const filter = response => response.author.id === message.author.id;
-      const collector = message.channel.createMessageCollector({ filter, time: 60000 }); // 60 seconds max
+      const collector = message.channel.createMessageCollector({ filter, time: 300000 });
 
       collector.on('collect', (response) => {
           const typingEndTime = Date.now();
-          const timeTaken = (typingEndTime - typingStartTime) / 1000; // Time in seconds
-          const wpm = (numWords / timeTaken) * 60; // WPM calculation
+          const timeTaken = (typingEndTime - typingStartTime) / 1000;
+          const timeTakenMinutes = timeTaken / 60;
 
-          // Count the number of mistakes
-          const mistakes = calculateDifferences(randomString, response.content.trim());
+          const userResponse = response.content.trim();
+          const mistakes = calculateDifferences(randomString, userResponse);
+
+          const correctCharacters = userResponse.slice(0, randomString.length).length;
+          const totalCharacters = userResponse.length;
+
+          const wpm = (correctCharacters / 5) / timeTakenMinutes;
+          const rawWpm = (totalCharacters / 5) / timeTakenMinutes;
 
           message.channel.send(
-              `Time taken: ${timeTaken.toFixed(2)} seconds\n` +
-              `WPM: ${wpm.toFixed(2)}\n` +
-              `Mistakes: ${mistakes}`
+              `**Time taken:** ${timeTaken.toFixed(2)} seconds\n` +
+              `**Net WPM:** ${wpm.toFixed(2)}\n` +
+              `**Raw WPM:** ${rawWpm.toFixed(2)}\n` +
+              `**Mistakes:** ${mistakes}`
           );
 
           collector.stop();
