@@ -655,7 +655,7 @@ client.on("messageCreate", async (message) => {
         const playerValue = calculateValue(playerHand);
         const dealerValue = calculateValue(dealerHand);
 
-        let response = `**Your hand:** ${playerHand.join(" ")} **(Value: ${playerValue})** \n\n`;
+        let response = `**Your hand:** ${playerHand.join(" ")} **(Value: ${playerValue})** \n`;
         response += `**Dealer's hand:** ${dealerHand[0]} ? **(Value: ${dealerValue})** \n\n`;
 
         if (playerValue === 21) {
@@ -726,7 +726,7 @@ client.on("messageCreate", async (message) => {
             dealerResponse += `**Dealer's final hand:** \n${dealerHand.join(" ")} **(Value: ${finalDealerValue})**\n\n`;
 
             if (finalPlayerValue > 21) {
-              dealerResponse += "**Bust! You lose.**";
+              dealerResponse += `**Bust! You lose ${betAmount}! Your new balance is ${user.balance}.**`;
             } else if (
               finalDealerValue > 21 ||
               finalPlayerValue > finalDealerValue
@@ -734,10 +734,10 @@ client.on("messageCreate", async (message) => {
               dealerResponse += `**You win ${betAmount}! Your new balance is ${user.balance + betAmount * 2}.**`;
               user.balance += betAmount * 2;
             } else if (finalPlayerValue === finalDealerValue) {
-              dealerResponse += "**It's a tie!**";
+              dealerResponse += `**It's a tie! Your balance is ${user.balance + betAmount}.**`;
               user.balance += betAmount;
             } else {
-              dealerResponse += "**Dealer wins!**";
+              dealerResponse += `**You lose ${betAmount}! Your new balance is ${user.balance}.**`;
             }
 
             await message.reply(dealerResponse);
@@ -760,7 +760,6 @@ client.on("messageCreate", async (message) => {
     }
   }
 });
-
 
 //Stocks
 client.on("messageCreate", async (message) => {
