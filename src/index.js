@@ -681,13 +681,13 @@ client.on('messageCreate', async message => {
               dealerResponse += `**Dealer's final hand:** \n${dealerHand.join(' ')} **(Value: ${finalDealerValue})** \n\n`;
 
               if (finalPlayerValue > 21) {
-                  dealerResponse += 'Bust! Dealer wins.';
+                  dealerResponse += '**Bust! You lose.**';
               } else if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
-                  dealerResponse += 'You win!';
+                  dealerResponse += '**You win!**';
               } else if (finalPlayerValue === finalDealerValue) {
-                  dealerResponse += 'It\'s a tie!';
+                  dealerResponse += '**It\'s a tie!**';
               } else {
-                  dealerResponse += 'You lose!';
+                  dealerResponse += '**You lose!**';
               }
 
               await message.channel.send(dealerResponse);
