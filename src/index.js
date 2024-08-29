@@ -276,6 +276,54 @@ client.on("messageCreate", (message) => {
   }
 });
 
+client.on('messageCreate', async (message) => {
+  if (message.content.startsWith('$typerace')) {
+      const args = message.content.split(' ');
+
+      // Check if a valid number of words is provided
+      const numWords = parseInt(args[1], 10);
+      if (![10, 25, 50, 100].includes(numWords)) {
+          return message.channel.send('Please specify the number of words (10, 25, 50, 100).');
+      }
+
+      // Generate the random string with the specified number of words
+      const randomString = randomWords({ exactly: numWords, join: ' ' });
+
+      // Send the random string as a typing challenge
+      await message.channel.send(`Type this: \`${randomString}\``);
+
+      // Measure the time when the user starts typing
+      const typingStartTime = Date.now();
+
+      // Listen for the user's response
+      const filter = response => response.author.id === message.author.id;
+      const collector = message.channel.createMessageCollector({ filter, time: 60000 }); // 60 seconds max
+
+      collector.on('collect', (response) => {
+          const typingEndTime = Date.now();
+          const timeTaken = (typingEndTime - typingStartTime) / 1000; // Time in seconds
+          const wpm = (numWords / timeTaken) * 60; // WPM calculation
+
+          // Count the number of mistakes
+          const mistakes = calculateDifferences(randomString, response.content.trim());
+
+          message.channel.send(
+              `Time taken: ${timeTaken.toFixed(2)} seconds\n` +
+              `WPM: ${wpm.toFixed(2)}\n` +
+              `Mistakes: ${mistakes}`
+          );
+
+          collector.stop();
+      });
+
+      collector.on('end', collected => {
+          if (collected.size === 0) {
+              message.channel.send(`${message.author.username}, you didn't type the string!`);
+          }
+      });
+  }
+});
+
 //Economy
 
 client.on("messageCreate", async (message) => {
@@ -2303,6 +2351,19 @@ async function fetchExchangeRate(fromCurrency, toCurrency) {
     console.error("Error fetching exchange rate:", error);
     return null;
   }
+}
+
+function calculateDifferences(str1, str2) {
+  const length = Math.max(str1.length, str2.length);
+  let differences = 0;
+
+  for (let i = 0; i < length; i++) {
+      if (str1[i] !== str2[i]) {
+          differences++;
+      }
+  }
+
+  return differences;
 }
 
 //Temporary
