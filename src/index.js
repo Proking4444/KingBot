@@ -119,7 +119,7 @@ const client = new Client({
   ],
 });
 
-import randomWords from 'random-words';
+import * as randomWords from 'random-words';
 
 client.setMaxListeners(Infinity);
 
