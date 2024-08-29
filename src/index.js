@@ -620,7 +620,7 @@ client.on("messageCreate", async (message) => {
 });
 
 client.on('messageCreate', async message => {
-  if (message.content.startsWith(`$blackjack`)) {
+  if (message.content === '$blackjack') {
       const deck = createDeck();
       shuffleDeck(deck);
 
@@ -643,18 +643,18 @@ client.on('messageCreate', async message => {
               response += 'You busted! Dealer wins.';
               gameActive = false;
           } else {
-              response += 'Type `!hit` to draw another card or `!stand` to end your turn.';
+              response += 'Type `$hit` to draw another card or `$stand` to end your turn.';
               await message.channel.send(response);
               const filter = m => m.author.id === message.author.id;
               const collected = await message.channel.awaitMessages({ filter, max: 1, time: 30000, errors: ['time'] });
               const responseMessage = collected.first().content.toLowerCase();
 
-              if (responseMessage === '!hit') {
+              if (responseMessage === '$hit') {
                   playerHand.push(deck.pop());
-              } else if (responseMessage === '!stand') {
+              } else if (responseMessage === '$stand') {
                   gameActive = false;
               } else {
-                  await message.channel.send('Invalid response. Please use `!hit` or `!stand`.');
+                  await message.channel.send('Invalid response. Please use `$hit` or `$stand`.');
               }
           }
       }
@@ -680,7 +680,7 @@ client.on('messageCreate', async message => {
           response += 'Dealer wins!';
       }
 
-      await message.reply(response);
+      await message.channel.send(response);
   }
 });
 
@@ -2474,7 +2474,6 @@ function createDeck() {
   return cards;
 }
 
-// Shuffle the deck
 function shuffleDeck(deck) {
   for (let i = deck.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -2482,7 +2481,6 @@ function shuffleDeck(deck) {
   }
 }
 
-// Calculate hand value
 function calculateValue(hand) {
   let value = 0;
   let aceCount = 0;
