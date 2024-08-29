@@ -283,8 +283,8 @@ client.on('messageCreate', async (message) => {
       const args = message.content.split(' ');
 
       const numWords = parseInt(args[1], 10);
-      if (![5, 10, 25, 50, 100].includes(numWords)) {
-          return message.channel.send('Please specify the number of words (5, 10, 25, 50, 100).');
+      if (![10, 25, 50, 100].includes(numWords)) {
+          return message.channel.send('Please specify the number of words (10, 25, 50, 100).');
       }
 
       const randomString = getRandomWords(numWords);
@@ -304,11 +304,11 @@ client.on('messageCreate', async (message) => {
           const userResponse = response.content.trim();
           const correctWords = splitString(randomString);
           const userWords = splitString(userResponse);
-          
-          const isCorrect = correctWords.length === userWords.length &&
-                            correctWords.every((word, index) => word === userWords[index]);
 
-          const correctCharacters = isCorrect ? userResponse.length : 0;
+          const wordMistakes = correctWords.filter((word, index) => word !== userWords[index]).length;
+
+          const characterMistakes = calculateDifferences(randomString, userResponse);
+          const correctCharacters = userResponse.length - characterMistakes;
           const totalCharacters = userResponse.length;
 
           const wpm = (correctCharacters / 5) / timeTakenMinutes;
@@ -317,7 +317,9 @@ client.on('messageCreate', async (message) => {
           message.channel.send(
               `**Time taken:** ${timeTaken.toFixed(2)} seconds\n` +
               `**Net WPM:** ${wpm.toFixed(2)}\n` +
-              `**Raw WPM:** ${rawWpm.toFixed(2)}\n`
+              `**Raw WPM:** ${rawWpm.toFixed(2)}\n` +
+              `**Word Mistakes:** ${wordMistakes}\n` +
+              `**Character Mistakes:** ${characterMistakes}`
           );
 
           collector.stop();
@@ -2376,6 +2378,10 @@ function calculateDifferences(str1, str2) {
 function getRandomWords(numWords) {
   const shuffled = wordBank.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, numWords).join(' ');
+}
+
+function splitString(str) {
+  return str.split(' ');
 }
 
 //Temporary
