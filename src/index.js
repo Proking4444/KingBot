@@ -119,6 +119,8 @@ const client = new Client({
   ],
 });
 
+import randomWords from 'random-words';
+
 client.setMaxListeners(Infinity);
 
 client.on("ready", async (c) => {
