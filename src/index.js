@@ -13,6 +13,8 @@ import fetch from "node-fetch";
 import Count from "./schemas/global.js";
 import User from "./schemas/users.js";
 
+import { wordBank } from './constants.js';
+
 import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -119,7 +121,9 @@ const client = new Client({
   ],
 });
 
-import { wordBank } from './constants.js';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+const execPromise = promisify(exec);
 
 client.setMaxListeners(Infinity);
 
@@ -278,58 +282,70 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.on('messageCreate', async (message) => {
-  if (message.content.startsWith('$typerace')) {
-      const args = message.content.split(' ');
+client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$typerace")) {
+    const args = message.content.split(" ");
 
-      const numWords = parseInt(args[1], 10);
-      if (![5, 10, 25, 50, 75, 100].includes(numWords)) {
-          return message.channel.send('Please specify the number of words (5, 10, 25, 50, 75, 100).');
+    const numWords = parseInt(args[1], 10);
+    if (![5, 10, 25, 50, 75, 100].includes(numWords)) {
+      return message.channel.send(
+        "Please specify the number of words (5, 10, 25, 50, 75, 100)."
+      );
+    }
+
+    const randomString = getRandomWords(numWords);
+
+    await message.channel.send(`Type this: \`${randomString}\``);
+
+    const typingStartTime = Date.now();
+
+    const filter = (response) => response.author.id === message.author.id;
+    const collector = message.channel.createMessageCollector({
+      filter,
+      time: 300000,
+    });
+
+    collector.on("collect", (response) => {
+      const typingEndTime = Date.now();
+      const timeTaken = (typingEndTime - typingStartTime) / 1000;
+      const timeTakenMinutes = timeTaken / 60;
+
+      const userResponse = response.content.trim();
+      const correctWords = splitString(randomString);
+      const userWords = splitString(userResponse);
+
+      const wordMistakes = correctWords.filter(
+        (word, index) => word !== userWords[index]
+      ).length;
+
+      const characterMistakes = calculateDifferences(
+        randomString,
+        userResponse
+      );
+      const correctCharacters = userResponse.length - characterMistakes;
+      const totalCharacters = userResponse.length;
+
+      const wpm = correctCharacters / 5 / timeTakenMinutes;
+      const rawWpm = totalCharacters / 5 / timeTakenMinutes;
+
+      message.channel.send(
+        `**Time taken:** ${timeTaken.toFixed(2)} seconds\n` +
+          `**Net WPM:** ${wpm.toFixed(2)}\n` +
+          `**Raw WPM:** ${rawWpm.toFixed(2)}\n` +
+          `**Word Mistakes:** ${wordMistakes}\n` +
+          `**Character Mistakes:** ${characterMistakes}`
+      );
+
+      collector.stop();
+    });
+
+    collector.on("end", (collected) => {
+      if (collected.size === 0) {
+        message.channel.send(
+          `${message.author.username}, you didn't type the string!`
+        );
       }
-
-      const randomString = getRandomWords(numWords);
-
-      await message.channel.send(`Type this: \`${randomString}\``);
-
-      const typingStartTime = Date.now();
-
-      const filter = response => response.author.id === message.author.id;
-      const collector = message.channel.createMessageCollector({ filter, time: 300000 });
-
-      collector.on('collect', (response) => {
-          const typingEndTime = Date.now();
-          const timeTaken = (typingEndTime - typingStartTime) / 1000;
-          const timeTakenMinutes = timeTaken / 60;
-
-          const userResponse = response.content.trim();
-          const correctWords = splitString(randomString);
-          const userWords = splitString(userResponse);
-
-          const wordMistakes = correctWords.filter((word, index) => word !== userWords[index]).length;
-
-          const characterMistakes = calculateDifferences(randomString, userResponse);
-          const correctCharacters = userResponse.length - characterMistakes;
-          const totalCharacters = userResponse.length;
-
-          const wpm = (correctCharacters / 5) / timeTakenMinutes;
-          const rawWpm = (totalCharacters / 5) / timeTakenMinutes;
-
-          message.channel.send(
-              `**Time taken:** ${timeTaken.toFixed(2)} seconds\n` +
-              `**Net WPM:** ${wpm.toFixed(2)}\n` +
-              `**Raw WPM:** ${rawWpm.toFixed(2)}\n` +
-              `**Word Mistakes:** ${wordMistakes}\n` +
-              `**Character Mistakes:** ${characterMistakes}`
-          );
-
-          collector.stop();
-      });
-
-      collector.on('end', collected => {
-          if (collected.size === 0) {
-              message.channel.send(`${message.author.username}, you didn't type the string!`);
-          }
-      });
+    });
   }
 });
 
@@ -1242,6 +1258,30 @@ client.on("messageCreate", async (message) => {
       console.error("Error with Ollama API:", error);
       message.reply("There was an error processing your request.");
     }
+  }
+});
+
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
+
+  if (message.content.startsWith('$paragraph')) {
+      const args = message.content.split(' ');
+      const numSentences = args[1] || 10;
+      const prompt = args.slice(2).join(' ') || 'Your research topic here';
+
+      try {
+          const { stdout, stderr } = await execPromise(`pgoogle -n ${numSentences} -a "${prompt}"`);
+
+          if (stderr) {
+              console.error('Error executing pgoogle:', stderr);
+              return message.channel.send('Sorry, I encountered an error while generating the paragraph.');
+          }
+
+          message.channel.send(stdout.trim());
+      } catch (error) {
+          console.error('Error executing command:', error);
+          message.channel.send('Sorry, an unexpected error occurred.');
+      }
   }
 });
 
@@ -2367,9 +2407,9 @@ function calculateDifferences(str1, str2) {
   let differences = 0;
 
   for (let i = 0; i < length; i++) {
-      if (str1[i] !== str2[i]) {
-          differences++;
-      }
+    if (str1[i] !== str2[i]) {
+      differences++;
+    }
   }
 
   return differences;
@@ -2377,11 +2417,11 @@ function calculateDifferences(str1, str2) {
 
 function getRandomWords(numWords) {
   const shuffled = wordBank.sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, numWords).join(' ');
+  return shuffled.slice(0, numWords).join(" ");
 }
 
 function splitString(str) {
-  return str.split(' ');
+  return str.split(" ");
 }
 
 //Temporary
