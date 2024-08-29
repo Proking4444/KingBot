@@ -15,6 +15,8 @@ import User from "./schemas/users.js";
 
 import { wordBank } from './constants.js';
 
+import { values } from './constants.js';
+
 import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -120,10 +122,6 @@ const client = new Client({
     IntentsBitField.Flags.DirectMessagePolls,
   ],
 });
-
-import { exec } from 'child_process';
-import { promisify } from 'util';
-const execPromise = promisify(exec);
 
 client.setMaxListeners(Infinity);
 
@@ -618,6 +616,71 @@ client.on("messageCreate", async (message) => {
         message.reply("That user was not found.");
       }
     }
+  }
+});
+
+client.on('messageCreate', async message => {
+  if (message.content.startsWith(`$blackjack`)) {
+      const deck = createDeck();
+      shuffleDeck(deck);
+
+      let playerHand = [deck.pop(), deck.pop()];
+      let dealerHand = [deck.pop(), deck.pop()];
+
+      let gameActive = true;
+
+      while (gameActive) {
+          const playerValue = calculateValue(playerHand);
+          const dealerValue = calculateValue(dealerHand);
+
+          let response = `Your hand: ${playerHand.join(' ')} (Value: ${playerValue})\n`;
+          response += `Dealer's hand: ${dealerHand[0]} ?\n`;
+
+          if (playerValue === 21) {
+              response += 'Blackjack! You win!';
+              gameActive = false;
+          } else if (playerValue > 21) {
+              response += 'You busted! Dealer wins.';
+              gameActive = false;
+          } else {
+              response += 'Type `!hit` to draw another card or `!stand` to end your turn.';
+              await message.channel.send(response);
+              const filter = m => m.author.id === message.author.id;
+              const collected = await message.channel.awaitMessages({ filter, max: 1, time: 30000, errors: ['time'] });
+              const responseMessage = collected.first().content.toLowerCase();
+
+              if (responseMessage === '!hit') {
+                  playerHand.push(deck.pop());
+              } else if (responseMessage === '!stand') {
+                  gameActive = false;
+              } else {
+                  await message.channel.send('Invalid response. Please use `!hit` or `!stand`.');
+              }
+          }
+      }
+
+      // Dealer's turn
+      while (calculateValue(dealerHand) < 17) {
+          dealerHand.push(deck.pop());
+      }
+
+      const finalPlayerValue = calculateValue(playerHand);
+      const finalDealerValue = calculateValue(dealerHand);
+
+      response = `Your final hand: ${playerHand.join(' ')} (Value: ${finalPlayerValue})\n`;
+      response += `Dealer's final hand: ${dealerHand.join(' ')} (Value: ${finalDealerValue})\n`;
+
+      if (finalPlayerValue > 21) {
+          response += 'You busted! Dealer wins.';
+      } else if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
+          response += 'You win!';
+      } else if (finalPlayerValue === finalDealerValue) {
+          response += 'It\'s a tie!';
+      } else {
+          response += 'Dealer wins!';
+      }
+
+      await message.reply(response);
   }
 });
 
@@ -1258,30 +1321,6 @@ client.on("messageCreate", async (message) => {
       console.error("Error with Ollama API:", error);
       message.reply("There was an error processing your request.");
     }
-  }
-});
-
-client.on('messageCreate', async (message) => {
-  if (message.author.bot) return;
-
-  if (message.content.startsWith('$paragraph')) {
-      const args = message.content.split(' ');
-      const numSentences = args[1] || 10;
-      const prompt = args.slice(2).join(' ') || 'Your research topic here';
-
-      try {
-          const { stdout, stderr } = await execPromise(`pgoogle -n ${numSentences} -a "${prompt}"`);
-
-          if (stderr) {
-              console.error('Error executing pgoogle:', stderr);
-              return message.channel.send('Sorry, I encountered an error while generating the paragraph.');
-          }
-
-          message.channel.send(stdout.trim());
-      } catch (error) {
-          console.error('Error executing command:', error);
-          message.channel.send('Sorry, an unexpected error occurred.');
-      }
   }
 });
 
@@ -2422,6 +2461,41 @@ function getRandomWords(numWords) {
 
 function splitString(str) {
   return str.split(" ");
+}
+
+function createDeck() {
+  const suits = ['♠', '♥', '♦', '♣'];
+  const cards = [];
+  for (const suit of suits) {
+      for (const value in values) {
+          cards.push(value + suit);
+      }
+  }
+  return cards;
+}
+
+// Shuffle the deck
+function shuffleDeck(deck) {
+  for (let i = deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+}
+
+// Calculate hand value
+function calculateValue(hand) {
+  let value = 0;
+  let aceCount = 0;
+  for (const card of hand) {
+      const cardValue = values[card.slice(0, -1)];
+      value += cardValue;
+      if (cardValue === 11) aceCount++;
+  }
+  while (value > 21 && aceCount) {
+      value -= 10;
+      aceCount--;
+  }
+  return value;
 }
 
 //Temporary
