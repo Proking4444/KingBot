@@ -286,14 +286,14 @@ client.on("messageCreate", async (message) => {
 
     const numWords = parseInt(args[1], 10);
     if (![5, 10, 25, 50, 75, 100].includes(numWords)) {
-      return message.channel.send(
+      return message.reply(
         "Please specify the number of words (5, 10, 25, 50, 75, 100)."
       );
     }
 
     const randomString = getRandomWords(numWords);
 
-    await message.channel.send(`Type this: \`${randomString}\``);
+    await message.reply(`Type this: \`${randomString}\``);
 
     const typingStartTime = Date.now();
 
@@ -326,7 +326,7 @@ client.on("messageCreate", async (message) => {
       const wpm = correctCharacters / 5 / timeTakenMinutes;
       const rawWpm = totalCharacters / 5 / timeTakenMinutes;
 
-      message.channel.send(
+      message.reply(
         `**Time taken:** ${timeTaken.toFixed(2)} seconds\n` +
           `**Net WPM:** ${wpm.toFixed(2)}\n` +
           `**Raw WPM:** ${rawWpm.toFixed(2)}\n` +
@@ -339,7 +339,7 @@ client.on("messageCreate", async (message) => {
 
     collector.on("end", (collected) => {
       if (collected.size === 0) {
-        message.channel.send(
+        message.reply(
           `${message.author.username}, you didn't type the string!`
         );
       }
@@ -619,8 +619,29 @@ client.on("messageCreate", async (message) => {
   }
 });
 
-client.on('messageCreate', async message => {
-  if (message.content === '$blackjack') {
+client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$blackjack")) {
+    const args = message.content.split(" ");
+    const betAmount = parseFloat(args[1]);
+
+    if (isNaN(betAmount) || betAmount <= 0) {
+      return message.reply("Please use `$blackjack (bet amount)` to play blackjack.");
+    }
+
+    try {
+      const user = await User.findOne({ username: message.author.username });
+
+      if (!user) {
+        return message.reply("User not found.");
+      }
+
+      if (user.balance < betAmount) {
+        return message.reply("Insufficient balance.");
+      }
+
+      user.balance -= betAmount;
+      await user.save();
+
       const deck = createDeck();
       shuffleDeck(deck);
 
@@ -628,78 +649,118 @@ client.on('messageCreate', async message => {
       let dealerHand = [deck.pop(), deck.pop()];
 
       let gameActive = true;
+      let gameOutcome = "";
 
       while (gameActive) {
-          const playerValue = calculateValue(playerHand);
-          const dealerValue = calculateValue(dealerHand);
+        const playerValue = calculateValue(playerHand);
+        const dealerValue = calculateValue(dealerHand);
 
-          let response = `**Your hand:** \n${playerHand.join(' ')} **(Value: ${playerValue})**\n\n`;
-          response += `**Dealer's hand:** \n${dealerHand[0]} ? **(Value: ${dealerValue})**\n\n`;
+        let response = `**Your hand:** ${playerHand.join(" ")} **(Value: ${playerValue})** \n\n`;
+        response += `**Dealer's hand:** ${dealerHand[0]} ? **(Value: ${dealerValue})** \n\n`;
 
-          if (playerValue === 21) {
-              response += 'Blackjack! You win!';
+        if (playerValue === 21) {
+          response += "**Blackjack! You win!**";
+          user.balance += betAmount * 2;
+          gameOutcome = "win";
+          gameActive = false;
+        } else if (playerValue > 21) {
+          response += "**Bust! Dealer wins.**";
+          gameOutcome = "lose";
+          gameActive = false;
+        } else {
+          response +=
+            "Type `$hit` to draw another card or `$stand` to end your turn.";
+          await message.reply(response);
+
+          try {
+            const filter = (m) => m.author.id === message.author.id;
+            const collected = await message.channel.awaitMessages({
+              filter,
+              max: 1,
+              time: 30000,
+              errors: ["time"],
+            });
+            const playerResponse = collected.first()?.content.toLowerCase();
+
+            if (playerResponse === "$hit") {
+              playerHand.push(deck.pop());
+            } else if (playerResponse === "$stand") {
+              // Exit the loop to proceed to dealer's turn
               gameActive = false;
-          } else if (playerValue > 21) {
-              response += 'Bust! You lose.';
-              gameActive = false;
-          } else {
-              response += 'Type `$hit` to draw another card or `$stand` to end your turn.';
-              await message.channel.send(response);
-
-              try {
-                  const filter = m => m.author.id === message.author.id;
-                  const collected = await message.channel.awaitMessages({ filter, max: 1, time: 60000, errors: ['time'] });
-                  const playerResponse = collected.first()?.content.toLowerCase();
-
-                  if (playerResponse === '$hit') {
-                      playerHand.push(deck.pop());
-                  } else if (playerResponse === '$stand') {
-                      gameActive = false;
-                  } else {
-                      await message.channel.send('Please use `$hit` or `$stand` to play your turn.');
-                  }
-              } catch (error) {
-                  await message.channel.send('You took too long to respond. The game has been cancelled.');
-                  gameActive = false;
-              }
+            } else {
+              await message.reply(
+                "Invalid response. Please use `$hit` or `$stand`."
+              );
+            }
+          } catch (error) {
+            await message.reply(
+              "You took too long to respond. The game has been cancelled."
+            );
+            gameActive = false;
           }
+        }
       }
 
-      await message.channel.send('The dealer will now play.');
+      // Notify game termination and dealer's turn
+      await message.reply("The dealer will now play.");
 
-      let dealerResponse = '';
-      try {
+      if (gameOutcome === "win") {
+        await message.reply(
+          `**You win!** You won ${betAmount}. Your new balance is ${user.balance + betAmount * 2}.`
+        );
+      } else if (gameOutcome === "lose") {
+        await message.reply(
+          `**You lose!** You lost ${betAmount}. Your new balance is ${user.balance}.`
+        );
+      } else {
+        try {
           if (calculateValue(playerHand) <= 21) {
-              while (calculateValue(dealerHand) < 17) {
-                  dealerHand.push(deck.pop());
-              }
+            while (calculateValue(dealerHand) < 17) {
+              dealerHand.push(deck.pop());
+            }
 
-              const finalPlayerValue = calculateValue(playerHand);
-              const finalDealerValue = calculateValue(dealerHand);
+            const finalPlayerValue = calculateValue(playerHand);
+            const finalDealerValue = calculateValue(dealerHand);
 
-              dealerResponse = `**Your final hand:** \n${playerHand.join(' ')} **(Value: ${finalPlayerValue})** \n\n`;
-              dealerResponse += `**Dealer's final hand:** \n${dealerHand.join(' ')} **(Value: ${finalDealerValue})** \n\n`;
+            let dealerResponse = `**Your final hand:** \n${playerHand.join(" ")} **(Value: ${finalPlayerValue})**\n\n`;
+            dealerResponse += `**Dealer's final hand:** \n${dealerHand.join(" ")} **(Value: ${finalDealerValue})**\n\n`;
 
-              if (finalPlayerValue > 21) {
-                  dealerResponse += '**Bust! You lose.**';
-              } else if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
-                  dealerResponse += '**You win!**';
-              } else if (finalPlayerValue === finalDealerValue) {
-                  dealerResponse += '**It\'s a tie!**';
-              } else {
-                  dealerResponse += '**You lose!**';
-              }
+            if (finalPlayerValue > 21) {
+              dealerResponse += "**Bust! You lose.**";
+            } else if (
+              finalDealerValue > 21 ||
+              finalPlayerValue > finalDealerValue
+            ) {
+              dealerResponse += `**You win ${betAmount}! Your new balance is ${user.balance + betAmount * 2}.**`;
+              user.balance += betAmount * 2;
+            } else if (finalPlayerValue === finalDealerValue) {
+              dealerResponse += "**It's a tie!**";
+              user.balance += betAmount;
+            } else {
+              dealerResponse += "**Dealer wins!**";
+            }
 
-              await message.channel.send(dealerResponse);
+            await message.reply(dealerResponse);
+            await user.save();
           } else {
-              await message.channel.send('Dealer will not play because you have busted.');
+            await message.reply(
+              "Dealer will not play because you have busted."
+            );
           }
-      } catch (error) {
-          console.error('Error processing dealer\'s turn:', error);
-          await message.channel.send('There was an error processing the dealer\'s turn.');
+        } catch (error) {
+          console.error("Error processing dealer\'s turn:", error);
+          await message.reply(
+            "There was an error processing the dealer\'s turn."
+          );
+        }
       }
+    } catch (error) {
+      console.error("Error processing the game:", error);
+      message.reply("There was an error processing your game.");
+    }
   }
 });
+
 
 //Stocks
 client.on("messageCreate", async (message) => {
@@ -1247,7 +1308,7 @@ client.on("messageCreate", async (message) => {
     const prompt = message.content.slice(9).trim();
 
     if (!prompt) {
-      message.channel.send(
+      message.reply(
         "Please use `$chatgpt (prompt)` to send ChatGPT a prompt."
       );
       return;
@@ -1266,7 +1327,7 @@ client.on("messageCreate", async (message) => {
       message.reply(response.choices[0].message.content);
     } catch (error) {
       console.error("Error:", error);
-      message.channel.send("Failed to generate a response.");
+      message.reply("Failed to generate a response.");
     }
   }
 });
@@ -1276,7 +1337,7 @@ client.on("messageCreate", async (message) => {
     const prompt = message.content.slice("$gemini".length).trim();
 
     if (!prompt) {
-      message.channel.send(
+      message.reply(
         "Please use `$gemini (prompt)` to send Gemini a prompt."
       );
       return;
@@ -1290,7 +1351,7 @@ client.on("messageCreate", async (message) => {
       message.reply(text);
     } catch (error) {
       console.error("Error:", error);
-      message.channel.send("Failed to generate a response.");
+      message.reply("Failed to generate a response.");
     }
   }
 });
@@ -2543,7 +2604,7 @@ client.on("messageCreate", async (message) => {
       const pingedUserId = usersToPing[currentIndex];
       const pingedUser = client.users.cache.get(pingedUserId);
       if (pingedUser) {
-        message.channel.send(`${pingedUser} you've been pinged!`);
+        message.reply(`${pingedUser} you've been pinged!`);
       }
 
       //Move to the next user
@@ -2557,7 +2618,7 @@ client.on("messageCreate", async (message) => {
       ) {
         pinging = false;
         clearInterval(pingIntervalId);
-        message.channel.send("Stopped pinging users.");
+        message.reply("Stopped pinging users.");
       }
     });
   }
