@@ -119,7 +119,7 @@ const client = new Client({
   ],
 });
 
-import { randomWords } from 'random-words';
+import { wordBank } from './constants.js';
 
 client.setMaxListeners(Infinity);
 
@@ -289,7 +289,7 @@ client.on('messageCreate', async (message) => {
       }
 
       // Generate the random string with the specified number of words
-      const randomString = randomWords({ exactly: numWords, join: ' ' });
+      const randomString = getRandomWords(numWords);
 
       // Send the random string as a typing challenge
       await message.channel.send(`Type this: \`${randomString}\``);
@@ -2366,6 +2366,11 @@ function calculateDifferences(str1, str2) {
   }
 
   return differences;
+}
+
+function getRandomWords(numWords) {
+  const shuffled = wordBank.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, numWords).join(' ');
 }
 
 //Temporary

@@ -21,7 +21,6 @@
     "npm": "^10.8.2",
     "ollama": "^0.5.8",
     "openai": "^4.56.1",
-    "random-words": "^2.0.1",
     "yahoo-finance2": "^2.11.3"
   }
 }

@@ -308,7 +308,7 @@ export { ClassMeme40 };
 
 //Lists
 
-const randomJokeList = [
+export const randomJokeList = [
   "**Why don't scientists trust atoms?** \nBecause they make up everything.",
   '**Why do we tell actors to "break a leg?"** \nBecause every play has a cast!',
   "**Where did the music teacher leave her keys?** \nIn the piano!",
@@ -335,9 +335,8 @@ const randomJokeList = [
   "**Why were the fish's grades so bad?** \nIt was below sea level.",
   "**Why did the gym close down?** \nIt just didn't work out!",
 ];
-export { randomJokeList };
 
-const randomLongJokeList = [
+export const randomLongJokeList = [
   'A pair of cows were talking in the field. One says, "Have you heard about the mad cow disease that\'s going around?" \n"Yeah," the other cow says. \n"Makes me glad I\'m a penguin."',
   'Two Hollywood stars ran into each other at the door of their psychiatrist\'s office.\n"Hello, there," said one. "Are you coming or going?" \n"If I knew that," said the other, "I wouldn\'t be here."',
   'At a party, a young wife admonished her husband, "That\'s the fourth time you\'ve gone back for ice cream and cake. Doesn\'t it embarrass you?" \n"Why should it?" answered her spouse. "I keep telling them it\'s for you."',
@@ -357,9 +356,8 @@ const randomLongJokeList = [
   'A cruise ship passes by a remote island, and all the passengers see a bearded man running around and waving his arms wildly. \n"Captain," one passenger asks, "who is that man over there?" \n"I have no idea," the captain says, "but he goes nuts every year when we pass him."',
   'A man is late for an important meeting. \nBut he can\'t find a place to park. In desperation, he begins to pray. "Please Lord, if you help me find a parking stall right now, I promise to go to church every Sunday and never drink vodka again!" \nA moment later, he sees a beautiful empty spot right next to the entrance. \n"Never mind. Found one!"',
 ];
-export { randomLongJokeList };
 
-const randomFactList = [
+export const randomFactList = [
   'The scientific term for brain freeze is "sphenopalatine ganglioneuralgia."',
   'Canadians say "sorry" so much that a law was passed in 2009 declaring that an apology can\'t be used as evidence of admission to guilt.',
   "Back when dinosaurs existed, there used to be volcanoes that were erupting on the moon.",
@@ -580,9 +578,8 @@ const randomFactList = [
   "More people have walked on the Moon than have ever dived to the deepest part of the ocean, the Mariana Trench, which is nearly 36,000 feet deep.",
   "J.K. Rowling, the author of the *Harry Potter* series, was rejected by 12 publishers before finally finding one willing to print the first book."
 ];
-export { randomFactList };
 
-const randomAriQuoteList = [
+export const randomAriQuoteList = [
   '**"WOW OMG! It\'s a United Arab Emirates Airbus A380, and it has two floors!"** \n(Ari, pointing to the sky. November 2023.)',
   '**"i tryed playing an airplane game \nbut its p2w \nand it suks \nnot even that realistic \ni hit the ground at 50 kmph and my 2 passengers were still intact enought to get off the plane and pay me 10 grand"** \n(Ari, random blurb. September 2022.)',
   '**"is this jade or candice or chloe"** \n(Ari, asking question. September 2022.)',
@@ -609,4 +606,9 @@ const randomAriQuoteList = [
   "**Tyler! \n That's blatantly innapropriate!** \n(Ari, shouting at Tyler for innapropriate behaviour. May 2024.)",
   "**Indoor basketball courts are for running in!** \n(Ari, debating with Yiming. June 2024.)",
 ];
-export { randomAriQuoteList };
+
+export const wordBank = [
+  'apple', 'banana', 'cherry', 'date', 'elderberry', 'fig', 'grape', 'honeydew',
+  'kiwi', 'lemon', 'mango', 'nectarine', 'orange', 'pear', 'quince', 'raspberry',
+  'strawberry', 'tangerine', 'ugli', 'voavanga', 'watermelon', 'xylocarp', 'yam', 'zucchini'
+];
