@@ -633,54 +633,71 @@ client.on('messageCreate', async message => {
           const playerValue = calculateValue(playerHand);
           const dealerValue = calculateValue(dealerHand);
 
-          let response = `Your hand: ${playerHand.join(' ')} (Value: ${playerValue})\n`;
-          response += `Dealer's hand: ${dealerHand[0]} ?\n`;
+          let response = `**Your hand:** \n${playerHand.join(' ')} **(Value: ${playerValue})**\n\n`;
+          response += `**Dealer's hand:** \n${dealerHand[0]} ? **(Value: ${dealerValue})**\n\n`;
 
           if (playerValue === 21) {
               response += 'Blackjack! You win!';
               gameActive = false;
           } else if (playerValue > 21) {
-              response += 'You busted! Dealer wins.';
+              response += 'Bust! You lose.';
               gameActive = false;
           } else {
               response += 'Type `$hit` to draw another card or `$stand` to end your turn.';
               await message.channel.send(response);
-              const filter = m => m.author.id === message.author.id;
-              const collected = await message.channel.awaitMessages({ filter, max: 1, time: 30000, errors: ['time'] });
-              const responseMessage = collected.first().content.toLowerCase();
 
-              if (responseMessage === '$hit') {
-                  playerHand.push(deck.pop());
-              } else if (responseMessage === '$stand') {
+              try {
+                  const filter = m => m.author.id === message.author.id;
+                  const collected = await message.channel.awaitMessages({ filter, max: 1, time: 60000, errors: ['time'] });
+                  const playerResponse = collected.first()?.content.toLowerCase();
+
+                  if (playerResponse === '$hit') {
+                      playerHand.push(deck.pop());
+                  } else if (playerResponse === '$stand') {
+                      gameActive = false;
+                  } else {
+                      await message.channel.send('Please use `$hit` or `$stand` to play your turn.');
+                  }
+              } catch (error) {
+                  await message.channel.send('You took too long to respond. The game has been cancelled.');
                   gameActive = false;
-              } else {
-                  await message.channel.send('Invalid response. Please use `$hit` or `$stand`.');
               }
           }
       }
 
-      // Dealer's turn
-      while (calculateValue(dealerHand) < 17) {
-          dealerHand.push(deck.pop());
+      await message.channel.send('The dealer will now play.');
+
+      let dealerResponse = '';
+      try {
+          if (calculateValue(playerHand) <= 21) {
+              while (calculateValue(dealerHand) < 17) {
+                  dealerHand.push(deck.pop());
+              }
+
+              const finalPlayerValue = calculateValue(playerHand);
+              const finalDealerValue = calculateValue(dealerHand);
+
+              dealerResponse = `**Your final hand:** \n${playerHand.join(' ')} **(Value: ${finalPlayerValue})** \n\n`;
+              dealerResponse += `**Dealer's final hand:** \n${dealerHand.join(' ')} **(Value: ${finalDealerValue})** \n\n`;
+
+              if (finalPlayerValue > 21) {
+                  dealerResponse += 'Bust! Dealer wins.';
+              } else if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
+                  dealerResponse += 'You win!';
+              } else if (finalPlayerValue === finalDealerValue) {
+                  dealerResponse += 'It\'s a tie!';
+              } else {
+                  dealerResponse += 'You lose!';
+              }
+
+              await message.channel.send(dealerResponse);
+          } else {
+              await message.channel.send('Dealer will not play because you have busted.');
+          }
+      } catch (error) {
+          console.error('Error processing dealer\'s turn:', error);
+          await message.channel.send('There was an error processing the dealer\'s turn.');
       }
-
-      const finalPlayerValue = calculateValue(playerHand);
-      const finalDealerValue = calculateValue(dealerHand);
-
-      response = `Your final hand: ${playerHand.join(' ')} (Value: ${finalPlayerValue})\n`;
-      response += `Dealer's final hand: ${dealerHand.join(' ')} (Value: ${finalDealerValue})\n`;
-
-      if (finalPlayerValue > 21) {
-          response += 'You busted! Dealer wins.';
-      } else if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
-          response += 'You win!';
-      } else if (finalPlayerValue === finalDealerValue) {
-          response += 'It\'s a tie!';
-      } else {
-          response += 'Dealer wins!';
-      }
-
-      await message.channel.send(response);
   }
 });
 
