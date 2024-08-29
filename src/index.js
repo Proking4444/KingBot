@@ -302,9 +302,13 @@ client.on('messageCreate', async (message) => {
           const timeTakenMinutes = timeTaken / 60;
 
           const userResponse = response.content.trim();
-          const mistakes = calculateDifferences(randomString, userResponse);
+          const correctWords = splitString(randomString);
+          const userWords = splitString(userResponse);
+          
+          const isCorrect = correctWords.length === userWords.length &&
+                            correctWords.every((word, index) => word === userWords[index]);
 
-          const correctCharacters = userResponse.slice(0, randomString.length).length;
+          const correctCharacters = isCorrect ? userResponse.length : 0;
           const totalCharacters = userResponse.length;
 
           const wpm = (correctCharacters / 5) / timeTakenMinutes;
@@ -313,8 +317,7 @@ client.on('messageCreate', async (message) => {
           message.channel.send(
               `**Time taken:** ${timeTaken.toFixed(2)} seconds\n` +
               `**Net WPM:** ${wpm.toFixed(2)}\n` +
-              `**Raw WPM:** ${rawWpm.toFixed(2)}\n` +
-              `**Mistakes:** ${mistakes}`
+              `**Raw WPM:** ${rawWpm.toFixed(2)}\n`
           );
 
           collector.stop();
