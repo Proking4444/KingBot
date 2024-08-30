@@ -660,7 +660,7 @@ client.on("messageCreate", async (message) => {
       let response = `**Your hand:** ${playerHand.join(
         " "
       )} **(Value: ${playerValue})** \n`;
-      response += `**Dealer's hand:** ${dealerHand[0]} ? **(Value: ${dealerValue})** \n\n`;
+      response += `**Dealer's hand:** ${dealerHand[0]} ? **(Value: ?)** \n\n`;
 
       if (playerValue === 21) {
         response += "**Blackjack! You win!**";
@@ -716,19 +716,20 @@ client.on("messageCreate", async (message) => {
       await message.reply("The dealer will now play.");
 
       if (calculateValue(playerHand) <= 21) {
+        // Reveal the dealer's full hand
+        let dealerResponse = `**Your final hand:** \n${playerHand.join(
+          " "
+        )} **(Value: ${calculateValue(playerHand)})**\n\n`;
+        dealerResponse += `**Dealer's final hand:** \n${dealerHand.join(
+          " "
+        )} **(Value: ${calculateValue(dealerHand)})**\n\n`;
+
         while (calculateValue(dealerHand) < 17) {
           dealerHand.push(deck.pop());
         }
 
         const finalPlayerValue = calculateValue(playerHand);
         const finalDealerValue = calculateValue(dealerHand);
-
-        let dealerResponse = `**Your final hand:** \n${playerHand.join(
-          " "
-        )} **(Value: ${finalPlayerValue})**\n\n`;
-        dealerResponse += `**Dealer's final hand:** \n${dealerHand.join(
-          " "
-        )} **(Value: ${finalDealerValue})**\n\n`;
 
         if (finalPlayerValue > 21) {
           dealerResponse += `**Bust! You lose ${betAmount.toFixed(
