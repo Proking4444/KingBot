@@ -1018,7 +1018,7 @@ client.on("messageCreate", async (message) => {
     const currency = await fetchStockCurrency(symbol);
 
     if (!price || !currency) {
-      return message.reply("Invalid symbol or error fetching data.");
+      return message.reply("Please use `$stock (symbol)` to view information on a stock.");
     }
 
     message.reply(
