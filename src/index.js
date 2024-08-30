@@ -625,9 +625,7 @@ client.on("messageCreate", async (message) => {
     const betAmount = parseFloat(args[1]);
 
     if (isNaN(betAmount) || betAmount <= 0) {
-      return message.reply(
-        "Please use `$blackjack (bet amount)` to play blackjack."
-      );
+      return message.reply("Please use `$blackjack (bet amount)` to play blackjack.");
     }
 
     const user = await User.findOne({ username: message.author.username });
@@ -659,7 +657,7 @@ client.on("messageCreate", async (message) => {
       let response = `**Your hand:** ${playerHand.join(
         " "
       )} **(Value: ${playerValue})** \n`;
-      response += `**Dealer's hand:** ${dealerHand[0]} ? **(Value: ${dealerValue})** \n\n`;
+      response += `**Dealer's hand:** ${dealerHand[0]} ? \n\n`;
 
       if (playerValue === 21) {
         response += "**Blackjack! You win!**";
@@ -671,8 +669,7 @@ client.on("messageCreate", async (message) => {
         gameOutcome = "lose";
         gameActive = false;
       } else {
-        response +=
-          "Type `$hit` to draw another card or `$stand` to end your turn.";
+        response += "Type `$hit` to draw another card or `$stand` to end your turn.";
         await message.reply(response);
 
         const filter = (m) => m.author.id === message.author.id;
@@ -680,17 +677,37 @@ client.on("messageCreate", async (message) => {
           filter,
           max: 1,
           time: 30000,
+          errors: ["time"],
         });
         const playerResponse = collected.first()?.content.toLowerCase();
 
         if (playerResponse === "$hit") {
           playerHand.push(deck.pop());
+          // Re-check for bust or blackjack after hitting
+          const newPlayerValue = calculateValue(playerHand);
+          if (newPlayerValue === 21) {
+            response = `**Your hand:** ${playerHand.join(
+              " "
+            )} **(Value: ${newPlayerValue})** \n**Blackjack! You win!**`;
+            user.balance += betAmount * 2; // Blackjack payout (2x bet)
+            gameOutcome = "win";
+            gameActive = false;
+          } else if (newPlayerValue > 21) {
+            response = `**Your hand:** ${playerHand.join(
+              " "
+            )} **(Value: ${newPlayerValue})** \n**Bust! Dealer wins.**`;
+            gameOutcome = "lose";
+            gameActive = false;
+          } else {
+            response = `**Your hand:** ${playerHand.join(
+              " "
+            )} **(Value: ${newPlayerValue})** \nType \`$hit\` to draw another card or \`$stand\` to end your turn.`;
+            await message.reply(response);
+          }
         } else if (playerResponse === "$stand") {
           gameActive = false;
         } else {
-          await message.reply(
-            "Invalid response. Please use `$hit` or `$stand`."
-          );
+          await message.reply("Invalid response. Please use `$hit` or `$stand`.");
         }
       }
     }
@@ -705,9 +722,7 @@ client.on("messageCreate", async (message) => {
         );
       } else if (gameOutcome === "lose") {
         await message.reply(
-          `**You lose!** You lost ${betAmount.toFixed(
-            2
-          )}. Your new balance is ${user.balance.toFixed(2)}.`
+          `**You lose!** You lost ${betAmount.toFixed(2)}. Your new balance is ${user.balance.toFixed(2)}.`
         );
       }
     } else {
