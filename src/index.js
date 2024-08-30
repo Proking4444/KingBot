@@ -293,7 +293,7 @@ client.on("messageCreate", async (message) => {
 
     const randomString = getRandomWords(numWords);
 
-    await message.reply(`Type this: \`${randomString}\``);
+    await message.reply(`**Type this:** \n\n## ${randomString}`);
 
     const typingStartTime = Date.now();
 
