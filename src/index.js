@@ -654,12 +654,10 @@ client.on("messageCreate", async (message) => {
 
     while (gameActive) {
       const playerValue = calculateValue(playerHand);
-      const dealerValue = calculateValue(dealerHand);
-
       let response = `**Your hand:** ${playerHand.join(
         " "
       )} **(Value: ${playerValue})** \n`;
-      response += `**Dealer's hand:** ${dealerHand[0]} ? **(Value: ${dealerValue})** \n\n`;
+      response += `**Dealer's hand:** ${dealerHand[0]} ? \n\n`;
 
       if (playerValue === 21) {
         response += "**Blackjack! You win!**";
@@ -695,71 +693,56 @@ client.on("messageCreate", async (message) => {
       }
     }
 
-    if (gameOutcome === "win" || gameOutcome === "lose") {
-      if (gameOutcome === "win") {
-        await message.reply(
-          `**You win!** You won ${betAmount.toFixed(2)}. Your new balance is ${(
-            user.balance +
-            betAmount * 2
-          ).toFixed(2)}.`
-        );
-      } else if (gameOutcome === "lose") {
-        await message.reply(
-          `**You lose!** You lost ${betAmount.toFixed(
-            2
-          )}. Your new balance is ${user.balance.toFixed(2)}.`
-        );
-      }
-    } else {
-      // Notify only if the game is not already won or lost
-      await message.reply("The dealer will now play.");
-
-      if (calculateValue(playerHand) <= 21) {
-        while (calculateValue(dealerHand) < 17) {
-          dealerHand.push(deck.pop());
-        }
-
-        const finalPlayerValue = calculateValue(playerHand);
-        const finalDealerValue = calculateValue(dealerHand);
-
-        let dealerResponse = `**Your final hand:** \n${playerHand.join(
-          " "
-        )} **(Value: ${finalPlayerValue})**\n\n`;
-        dealerResponse += `**Dealer's final hand:** \n${dealerHand.join(
-          " "
-        )} **(Value: ${finalDealerValue})**\n\n`;
-
-        if (finalPlayerValue > 21) {
-          dealerResponse += `**Bust! You lose ${betAmount.toFixed(
-            2
-          )}! Your new balance is ${user.balance.toFixed(2)}.**`;
-        } else if (
-          finalDealerValue > 21 ||
-          finalPlayerValue > finalDealerValue
-        ) {
-          dealerResponse += `**You win ${betAmount.toFixed(
-            2
-          )}! Your new balance is ${(user.balance + betAmount * 2).toFixed(
-            2
-          )}.**`;
-          user.balance += betAmount * 2;
-        } else if (finalPlayerValue === finalDealerValue) {
-          dealerResponse += `**It's a tie! Your balance is ${(
-            user.balance + betAmount
-          ).toFixed(2)}.**`;
-          user.balance += betAmount;
-        } else {
-          dealerResponse += `**You lose ${betAmount.toFixed(
-            2
-          )}! Your new balance is ${user.balance.toFixed(2)}.**`;
-        }
-
-        await message.reply(dealerResponse);
-        await user.save();
-      } else {
-        await message.reply("Dealer will not play because you have busted.");
-      }
+    if (gameOutcome === "win") {
+      await message.reply(
+        `**You win!** You won ${betAmount.toFixed(2)}. Your new balance is ${(
+          user.balance +
+          betAmount * 2
+        ).toFixed(2)}.`
+      );
+      await user.save();
+      return;
+    } else if (gameOutcome === "lose") {
+      await message.reply(
+        `**You lose!** You lost ${betAmount.toFixed(2)}. Your new balance is ${user.balance.toFixed(2)}.`
+      );
+      await user.save();
+      return;
     }
+
+    // Notify only if the game is not already won or lost
+    await message.reply("The dealer will now play.");
+
+    while (calculateValue(dealerHand) < 17) {
+      dealerHand.push(deck.pop());
+    }
+
+    const finalPlayerValue = calculateValue(playerHand);
+    const finalDealerValue = calculateValue(dealerHand);
+
+    let dealerResponse = `**Your final hand:** \n${playerHand.join(
+      " "
+    )} **(Value: ${finalPlayerValue})**\n\n`;
+    dealerResponse += `**Dealer's final hand:** \n${dealerHand.join(
+      " "
+    )} **(Value: ${finalDealerValue})**\n\n`;
+
+    if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
+      dealerResponse += `**You win ${betAmount.toFixed(
+        2
+      )}! Your new balance is ${(user.balance + betAmount * 2).toFixed(2)}.**`;
+      user.balance += betAmount * 2;
+    } else if (finalPlayerValue === finalDealerValue) {
+      dealerResponse += `**It's a tie! Your balance is ${(user.balance + betAmount).toFixed(2)}.**`;
+      user.balance += betAmount;
+    } else {
+      dealerResponse += `**You lose ${betAmount.toFixed(
+        2
+      )}! Your new balance is ${user.balance.toFixed(2)}.**`;
+    }
+
+    await message.reply(dealerResponse);
+    await user.save();
   }
 });
 
