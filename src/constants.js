@@ -961,7 +961,6 @@ export const wordBank = [
   "backup",
   "cache",
   "driver",
-  "end-user",
   "file",
   "graphics",
   "hash",

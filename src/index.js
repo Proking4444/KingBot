@@ -285,9 +285,9 @@ client.on("messageCreate", async (message) => {
     const args = message.content.split(" ");
 
     const numWords = parseInt(args[1], 10);
-    if (![5, 10, 25, 50, 75, 100].includes(numWords)) {
+    if (![1, 3, 5, 10, 25, 50, 75, 100].includes(numWords)) {
       return message.reply(
-        "Please specify the number of words (5, 10, 25, 50, 75, 100)."
+        "Please specify the number of words (1, 3, 5, 10, 25, 50, 75, 100)."
       );
     }
 
