@@ -695,22 +695,25 @@ client.on("messageCreate", async (message) => {
       }
     }
 
-    await message.reply("The dealer will now play.");
-
-    if (gameOutcome === "win") {
-      await message.reply(
-        `**You win!** You won ${betAmount.toFixed(2)}. Your new balance is ${(
-          user.balance +
-          betAmount * 2
-        ).toFixed(2)}.`
-      );
-    } else if (gameOutcome === "lose") {
-      await message.reply(
-        `**You lose!** You lost ${betAmount.toFixed(
-          2
-        )}. Your new balance is ${user.balance.toFixed(2)}.`
-      );
+    if (gameOutcome === "win" || gameOutcome === "lose") {
+      if (gameOutcome === "win") {
+        await message.reply(
+          `**You win!** You won ${betAmount.toFixed(2)}. Your new balance is ${(
+            user.balance +
+            betAmount * 2
+          ).toFixed(2)}.`
+        );
+      } else if (gameOutcome === "lose") {
+        await message.reply(
+          `**You lose!** You lost ${betAmount.toFixed(
+            2
+          )}. Your new balance is ${user.balance.toFixed(2)}.`
+        );
+      }
     } else {
+      // Notify only if the game is not already won or lost
+      await message.reply("The dealer will now play.");
+
       if (calculateValue(playerHand) <= 21) {
         while (calculateValue(dealerHand) < 17) {
           dealerHand.push(deck.pop());
