@@ -13,7 +13,8 @@ import fetch from "node-fetch";
 import Count from "./schemas/global.js";
 import User from "./schemas/users.js";
 
-import { wordBank } from './constants.js';
+import { raceWordBank } from './constants.js';
+import { testWordBank } from './constants.js';
 
 import { values } from './constants.js';
 
@@ -194,7 +195,7 @@ client.on("ready", async () => {
 client.on("messageCreate", (message) => {
   if (message.content === "$help") {
     message.reply(
-      "**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n($)topgg = Check out the bot's top.gg page \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n($)typerace = Test your typing speed \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)coinflip = Bet money on a coin flip \n($)pay = Transfer funds to another user \n($)leaderboard = View the global leaderboard \n\n**Stocks** \n($)buy = Purchase a stock at its market price (24/7) \n($)sell = Sell a stock at its market price (24/7) \n($)portfolio = View your stock portfolio \n($)stock = View information on a stock \n($)exchange = Exchange a currency at its current rate \n($)currency = View all of your currency balances \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n\n**Miscellaneous** \n($)topgg = Check out the bot's top.gg page \n($)count = Adds 1 to the Count"
+      "**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n($)topgg = Check out the bot's top.gg page \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n($)typetest = Test your typing speed \n($)typerace = Challenge your typing skills \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)coinflip = Bet money on a coin flip \n($)pay = Transfer funds to another user \n($)leaderboard = View the global leaderboard \n\n**Stocks** \n($)buy = Purchase a stock at its market price (24/7) \n($)sell = Sell a stock at its market price (24/7) \n($)portfolio = View your stock portfolio \n($)stock = View information on a stock \n($)exchange = Exchange a currency at its current rate \n($)currency = View all of your currency balances \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n\n**Miscellaneous** \n($)topgg = Check out the bot's top.gg page \n($)count = Adds 1 to the Count"
     );
   }
 });
@@ -237,7 +238,7 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", (message) => {
   if (message.content === "$version") {
     message.reply(
-      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.10.10.6 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4 \n\n**Mongoose Version** \n8.5.4 \n\n**Yahoo Finance (2)** \n2.11.3"
+      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.10.11.6 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.3 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4 \n\n**Mongoose Version** \n8.6.0 \n\n**Yahoo Finance (2)** \n2.11.3"
     );
   }
 });
@@ -291,9 +292,76 @@ client.on("messageCreate", async (message) => {
       );
     }
 
-    const randomString = getRandomWords(numWords);
+    const randomString = getRandomRaceWords(numWords);
 
-    await message.reply(`**Type this:** \n\n## ${randomString}`);
+    await message.reply(`**Type this:** \n## ${randomString}`);
+
+    const typingStartTime = Date.now();
+
+    const filter = (response) => response.author.id === message.author.id;
+    const collector = message.channel.createMessageCollector({
+      filter,
+      time: 300000,
+    });
+
+    collector.on("collect", (response) => {
+      const typingEndTime = Date.now();
+      const timeTaken = (typingEndTime - typingStartTime) / 1000;
+      const timeTakenMinutes = timeTaken / 60;
+
+      const userResponse = response.content.trim();
+      const correctWords = splitString(randomString);
+      const userWords = splitString(userResponse);
+
+      const wordMistakes = correctWords.filter(
+        (word, index) => word !== userWords[index]
+      ).length;
+
+      const characterMistakes = calculateDifferences(
+        randomString,
+        userResponse
+      );
+      const correctCharacters = userResponse.length - characterMistakes;
+      const totalCharacters = userResponse.length;
+
+      const wpm = correctCharacters / 5 / timeTakenMinutes;
+      const rawWpm = totalCharacters / 5 / timeTakenMinutes;
+
+      message.reply(
+        `**Time taken:** ${timeTaken.toFixed(2)} seconds\n` +
+          `**Net WPM:** ${wpm.toFixed(2)}\n` +
+          `**Raw WPM:** ${rawWpm.toFixed(2)}\n` +
+          `**Word Mistakes:** ${wordMistakes}\n` +
+          `**Character Mistakes:** ${characterMistakes}`
+      );
+
+      collector.stop();
+    });
+
+    collector.on("end", (collected) => {
+      if (collected.size === 0) {
+        message.reply(
+          `${message.author.username}, you didn't type the string!`
+        );
+      }
+    });
+  }
+});
+
+client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$typetest")) {
+    const args = message.content.split(" ");
+
+    const numWords = parseInt(args[1], 10);
+    if (![1, 3, 5, 10, 25, 50, 75, 100].includes(numWords)) {
+      return message.reply(
+        "Please specify the number of words (1, 3, 5, 10, 25, 50, 75, 100)."
+      );
+    }
+
+    const randomString = getRandomTestWords(numWords);
+
+    await message.reply(`**Type this:** \n## ${randomString}`);
 
     const typingStartTime = Date.now();
 
@@ -1023,7 +1091,7 @@ client.on("messageCreate", async (message) => {
 
     message.reply(
       `**${stockName} (${symbol}):** \n**Current Price:** $${price.toFixed(
-        3
+        4
       )} (${currency})`
     );
   }
@@ -1947,7 +2015,7 @@ client.on("interactionCreate", (interaction) => {
 
   if (interaction.commandName === "help") {
     return interaction.reply(
-      "**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n($)topgg = Check out the bot's top.gg page \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n($)typerace = Test your typing speed \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)coinflip = Bet money on a coin flip \n($)pay = Transfer funds to another user \n($)leaderboard = View the global leaderboard \n\n**Stocks** \n($)buy = Purchase a stock at its market price (24/7) \n($)sell = Sell a stock at its market price (24/7) \n($)portfolio = View your stock portfolio \n($)stock = View information on a stock \n($)exchange = Exchange a currency at its current rate \n($)currency = View all of your currency balances \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n\n**Miscellaneous** \n($)topgg = Check out the bot's top.gg page \n($)count = Adds 1 to the Count"
+      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.10.11.6 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.3 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4 \n\n**Mongoose Version** \n8.6.0 \n\n**Yahoo Finance (2)** \n2.11.3"
     );
   }
 });
@@ -2507,8 +2575,13 @@ function calculateDifferences(str1, str2) {
   return differences;
 }
 
-function getRandomWords(numWords) {
-  const shuffled = wordBank.sort(() => 0.5 - Math.random());
+function getRandomRaceWords(numWords) {
+  const shuffled = raceWordBank.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, numWords).join(" ");
+}
+
+function getRandomTestWords(numWords) {
+  const shuffled = testWordBank.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, numWords).join(" ");
 }
 
