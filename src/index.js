@@ -1061,11 +1061,22 @@ client.on("messageCreate", async (message) => {
         portfolioMessage += ` + ${amount.toFixed(2)} ${currency}`;
       });
 
-      const messageChunks = portfolioMessage.match(/[\s\S]{1,2000}/g);
+      const messageLines = portfolioMessage.split("\n");
+      let currentChunk = "";
 
-      for (const chunk of messageChunks) {
-        await message.channel.send(chunk);
+      for (const line of messageLines) {
+        if (currentChunk.length + line.length + 1 > 2000) {
+          await message.channel.send(currentChunk);  // Send the current chunk
+          currentChunk = "";  // Reset the chunk
+        }
+
+        currentChunk += line + "\n";
       }
+
+      if (currentChunk) {
+        await message.channel.send(currentChunk);
+      }
+      
     } catch (error) {
       console.error("Error fetching portfolio:", error);
       message.reply("Error fetching portfolio. Please try again later.");
