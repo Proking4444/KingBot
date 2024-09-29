@@ -238,7 +238,7 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", (message) => {
   if (message.content === "$version") {
     message.reply(
-      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.10.11.6 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.3 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4 \n\n**Mongoose Version** \n8.6.0 \n\n**Yahoo Finance (2)** \n2.11.3"
+      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.10.11.7 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.3 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4 \n\n**Mongoose Version** \n8.6.0 \n\n**Yahoo Finance (2)** \n2.11.3"
     );
   }
 });
@@ -2030,7 +2030,7 @@ client.on("interactionCreate", (interaction) => {
 
   if (interaction.commandName === "help") {
     return interaction.reply(
-      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.10.11.6 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.3 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4 \n\n**Mongoose Version** \n8.6.0 \n\n**Yahoo Finance (2)** \n2.11.3"
+      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.10.11.7 \n\n**Discord.js Version** \n14.15.3 \n\n**NPM Version** \n10.8.3 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.4 \n\n**Mongoose Version** \n8.6.0 \n\n**Yahoo Finance (2)** \n2.11.3"
     );
   }
 });
