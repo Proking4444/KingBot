@@ -1061,7 +1061,11 @@ client.on("messageCreate", async (message) => {
         portfolioMessage += ` + ${amount.toFixed(2)} ${currency}`;
       });
 
-      message.reply(portfolioMessage);
+      const messageChunks = portfolioMessage.match(/[\s\S]{1,2000}/g);
+
+      for (const chunk of messageChunks) {
+        await message.channel.send(chunk);
+      }
     } catch (error) {
       console.error("Error fetching portfolio:", error);
       message.reply("Error fetching portfolio. Please try again later.");
