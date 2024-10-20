@@ -1241,6 +1241,40 @@ client.on("messageCreate", (message) => {
   }
 });
 
+client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$news")) {
+    const args = message.content.split(" ").slice(1);
+    const topic = args.join(" ") || "latest"; // Default to latest news if no topic is provided
+
+    try {
+      const response = await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(topic)}&apiKey=${process.env.NEWS_API_KEY}&pageSize=5`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const articles = data.articles;
+
+      if (articles.length === 0) {
+        return message.reply("No news articles found for that topic.");
+      }
+
+      let newsMessage = `**Latest News about ${topic}:**\n\n`;
+      articles.forEach((article, index) => {
+        newsMessage += `**${index + 1}. ${article.title}**\n`;
+        newsMessage += `*Source:* ${article.source.name}\n`;
+        newsMessage += `[Read more](${article.url})\n\n`;
+      });
+
+      message.reply(newsMessage);
+    } catch (error) {
+      console.error("Error fetching news:", error);
+      message.reply("There was an error fetching the news. Please try again later.");
+    }
+  }
+});
+
 //Moderation
 client.on("messageCreate", async (message) => {
   if (!message.guild) return;
