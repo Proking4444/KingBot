@@ -1247,7 +1247,7 @@ client.on("messageCreate", async (message) => {
     const category = args.join(" ");
 
     if (!category) {
-      return message.reply("Please use `$news (category)` to display the news. \n\n **Categories:** \n- General \n- Business \n- Entertainment \n- Health \n- Science \n- Sports \n- Technology");
+      return message.reply("Please use `$news (category)` to display the news. \n\n **Categories:** \n- General \n- Latest \n- Business \n- Entertainment \n- Health \n- Science \n- Sports \n- Technology");
     }
 
     try {
@@ -1261,12 +1261,12 @@ client.on("messageCreate", async (message) => {
       const articles = data.articles;
 
       if (articles.length === 0) {
-        return message.reply(`No news articles found for the category "${category}".`);
+        return message.reply(`No news articles found for the category "${category}". \n`);
       }
 
       let newsMessage = `**Latest News in ${category.charAt(0).toUpperCase() + category.slice(1)}:**\n`;
       articles.forEach((article, index) => {
-        newsMessage += `**${index + 1}. ${article.title}**\n`;
+        newsMessage += `**${index + 1}. ${article.title}**`;
         newsMessage += `*Source:* ${article.source.name}\n`;
         newsMessage += `[Read more](${article.url})\n\n`;
       });
