@@ -1057,8 +1057,11 @@ client.on("messageCreate", async (message) => {
       portfolioMessage += `\n`;
 
       portfolioMessage += `**Balance:** ${user.balance.toFixed(2)} USD`;
+
       user.currencies.forEach((amount, currency) => {
-        portfolioMessage += ` + ${amount.toFixed(2)} ${currency}`;
+        if (amount >= 0.01) {
+          portfolioMessage += ` + ${amount.toFixed(2)} ${currency}`;
+        }
       });
 
       const messageLines = portfolioMessage.split("\n");
@@ -1199,7 +1202,9 @@ client.on("messageCreate", async (message) => {
       replyMessage += `**USD:** $${user.balance.toFixed(2)}\n`;
 
       user.currencies.forEach((amount, currency) => {
-        replyMessage += `**${currency}:** $${amount.toFixed(2)}\n`;
+        if (amount >= 0.01) {
+          replyMessage += `**${currency}:** $${amount.toFixed(2)}\n`;
+        }
       });
 
       message.reply(replyMessage);
