@@ -1244,10 +1244,14 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$news")) {
     const args = message.content.split(" ").slice(1);
-    const topic = args.join(" ") || "latest"; // Default to latest news if no topic is provided
+    const category = args.join(" ");
+
+    if (!category) {
+      return message.reply("Please use `$news (category)` to display the news. \n\n **Categories:** \n- General \n- Business \n- Entertainment \n- Health \n- Science \n- Sports \n- Technology");
+    }
 
     try {
-      const response = await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(topic)}&apiKey=${process.env.NEWS_API_KEY}&pageSize=5`);
+      const response = await fetch(`https://newsapi.org/v2/top-headlines?category=${encodeURIComponent(category)}&apiKey=${process.env.NEWS_API_KEY}&pageSize=5`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -1257,10 +1261,10 @@ client.on("messageCreate", async (message) => {
       const articles = data.articles;
 
       if (articles.length === 0) {
-        return message.reply("No news articles found for that topic.");
+        return message.reply(`No news articles found for the category "${category}".`);
       }
 
-      let newsMessage = `**Latest News about ${topic}:**\n\n`;
+      let newsMessage = `**Latest News in ${category.charAt(0).toUpperCase() + category.slice(1)}:**\n`;
       articles.forEach((article, index) => {
         newsMessage += `**${index + 1}. ${article.title}**\n`;
         newsMessage += `*Source:* ${article.source.name}\n`;
