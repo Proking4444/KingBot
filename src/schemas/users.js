@@ -51,5 +51,14 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+userSchema.pre('save', function (next) {
+  this.currencies.forEach((value, key) => {
+    if (value < 0.01) {
+      this.currencies.delete(key);
+    }
+  });
+  next();
+});
+
 const User = model("User", userSchema);
 export default User;
