@@ -787,6 +787,10 @@ client.on("messageCreate", async (message) => {
     while (true) {
       const result = await getPlayerResponse();
       if (result) break; // Exit if player wins, loses, or game is cancelled
+      if (result === false) {
+        // Player has stood, break out of the loop to proceed to the dealer's turn
+        break;
+      }
     }
 
     // Dealer's turn if player didn't bust or win
