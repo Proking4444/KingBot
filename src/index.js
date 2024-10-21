@@ -1268,7 +1268,7 @@ client.on("messageCreate", async (message) => {
       articles.forEach((article, index) => {
         newsMessage += `**${index + 1}. ${article.title}**`;
         newsMessage += `*Source:* ${article.source.name}\n`;
-        newsMessage += `[Read more](${article.url})\n\n`;
+        newsMessage += `[Read More](${article.url})\n\n`;
       });
 
       message.reply(newsMessage);
