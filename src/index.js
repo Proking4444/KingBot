@@ -2391,7 +2391,7 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isCommand()) return;
+  if (!interaction.isChatInputCommand()) return;
 
   const { commandName, options } = interaction;
 
