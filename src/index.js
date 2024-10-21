@@ -238,7 +238,7 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", (message) => {
   if (message.content === "$version") {
     message.reply(
-      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.11.12.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.9.0 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.7.2 \n\n**Yahoo Finance (2)** \n2.13.2"
+      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.11.13.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.9.0 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.7.2 \n\n**Yahoo Finance (2)** \n2.13.2"
     );
   }
 });
@@ -2140,7 +2140,7 @@ client.on("interactionCreate", (interaction) => {
 
   if (interaction.commandName === "version") {
     return interaction.reply(
-      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.11.12.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.5.4 \n\n**Yahoo Finance (2)** \n2.13.2"
+      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.11.13.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.5.4 \n\n**Yahoo Finance (2)** \n2.13.2"
     );
   }
 });
@@ -2518,16 +2518,19 @@ async function handlePayCommand(message, args) {
   }
 
   const sender = await User.findOne({ discordId: senderId });
-  const recipient = await User.findOne({ discordId: targetUserId });
 
   if (!sender) {
     message.reply("You need to create an account first with `$start`.");
     return;
   }
+
+  const recipient = await User.findOne({ discordId: targetUserId });
+
   if (!recipient) {
     message.reply("The recipient has not created an account yet.");
     return;
   }
+
   if (sender.balance < payAmount) {
     message.reply("Insufficient funds.");
     return;
