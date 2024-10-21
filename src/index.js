@@ -692,7 +692,7 @@ client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$pay")) {
     const args = message.content.split(" ").slice(1);
 
-    handlePayCommand(message, args);
+    await handlePayCommand(message, args);
   }
 });
 
@@ -2497,7 +2497,7 @@ async function handlePayCommand(message, args) {
     return;
   }
 
-  const targetUserId = resolveUser(args[0], message);
+  const targetUserId = await resolveUser(args[0], message);
   const payAmount = parseInt(args[1]);
 
   if (!targetUserId) {
@@ -2518,19 +2518,16 @@ async function handlePayCommand(message, args) {
   }
 
   const sender = await User.findOne({ discordId: senderId });
+  const recipient = await User.findOne({ discordId: targetUserId });
 
   if (!sender) {
     message.reply("You need to create an account first with `$start`.");
     return;
   }
-
-  const recipient = await User.findOne({ discordId: targetUserId });
-
   if (!recipient) {
     message.reply("The recipient has not created an account yet.");
     return;
   }
-
   if (sender.balance < payAmount) {
     message.reply("Insufficient funds.");
     return;
