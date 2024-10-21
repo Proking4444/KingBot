@@ -815,7 +815,8 @@ client.on("messageCreate", async (message) => {
     // Dealer's turn if the game is still active
     await message.reply("The dealer will now play.");
 
-    while (calculateValue(dealerHand) < 17) {
+    // Dealer will hit until their value is 17 or higher, or until their value is greater than the player's value
+    while (calculateValue(dealerHand) < 17 && calculateValue(dealerHand) <= calculateValue(playerHand)) {
       dealerHand.push(deck.pop());
     }
 
