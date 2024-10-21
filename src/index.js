@@ -288,7 +288,7 @@ client.on("messageCreate", async (message) => {
     const numWords = parseInt(args[1], 10);
     if (![1, 3, 5, 10, 25, 50, 75, 100].includes(numWords)) {
       return message.reply(
-        "Please specify the number of words (1, 3, 5, 10, 25, 50, 75, 100)."
+        "Please use `$typerace (1, 3, 5, 10, 25, 50, 75, 100)` to begin a typerace."
       );
     }
 
@@ -313,14 +313,30 @@ client.on("messageCreate", async (message) => {
       const correctWords = splitString(randomString);
       const userWords = splitString(userResponse);
 
-      const wordMistakes = correctWords.filter(
-        (word, index) => word !== userWords[index]
-      ).length;
+      let wordMistakes = 0;
+      let characterMistakes = 0;
 
-      const characterMistakes = calculateDifferences(
-        randomString,
-        userResponse
-      );
+      correctWords.forEach((correctWord, index) => {
+        const userWord = userWords[index] || ""; // Handle missing words
+
+        if (correctWord !== userWord) {
+          wordMistakes++;
+
+          // Compare character by character within the word
+          const minLength = Math.min(correctWord.length, userWord.length);
+          for (let i = 0; i < minLength; i++) {
+            if (correctWord[i] !== userWord[i]) {
+              characterMistakes++;
+            }
+          }
+
+          // Add extra character mistakes for length differences
+          if (correctWord.length !== userWord.length) {
+            characterMistakes += Math.abs(correctWord.length - userWord.length);
+          }
+        }
+      });
+
       const correctCharacters = userResponse.length - characterMistakes;
       const totalCharacters = userResponse.length;
 
