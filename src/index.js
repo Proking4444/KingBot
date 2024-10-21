@@ -742,7 +742,6 @@ client.on("messageCreate", async (message) => {
       return message.reply("Insufficient balance.");
     }
 
-    // Deduct the bet amount from the user's balance
     user.balance -= betAmount;
     await user.save();
 
@@ -757,19 +756,17 @@ client.on("messageCreate", async (message) => {
 
     while (gameActive) {
       const playerValue = calculateValue(playerHand);
-      const dealerValue = calculateValue(dealerHand);
 
-      let response = `**Your hand:** ${playerHand.join(" ")} **(Value: ${playerValue})** \n`;
-      response += `**Dealer's hand:** ${dealerHand[0]} ? **(Value: ?)** \n\n`;
+      let response = `**Your hand:** \n${playerHand.join(" ")} **(Value: ${playerValue})** \n\n`;
+      response += `**Dealer's hand:** \n${dealerHand[0]} ? **(Value: ?)** \n\n`;
 
       if (playerValue === 21) {
-        response += "**Blackjack! You win!**";
-        user.balance += betAmount * 2; // Blackjack payout (2x bet)
+        response +=  `**Your final hand:** \n${playerHand.join(" ")} **(Value: ${calculateValue(playerHand)})** \n\n**Dealer's final hand:** \n${dealerHand.join(" ")} **(Value: ${calculateValue(dealerHand)})** \n\n**Blackjack! You win!** Your new balance is ${(user.balance).toFixed(2)}.`;
+        user.balance += betAmount * 2;
         gameOutcome = "win";
         gameActive = false;
       } else if (playerValue > 21) {
-        // Include the player's final hand and value in the response
-        response += `**Bust! You lose.** Your final hand: ${playerHand.join(" ")} **(Value: ${playerValue})**`;
+        response += `**Your final hand:** \n${playerHand.join(" ")} **(Value: ${calculateValue(playerHand)})** \n\n**Dealer's final hand:** \n${dealerHand.join(" ")} **(Value: ${calculateValue(dealerHand)})** \n\n**Bust! You lose!** Your new balance is ${(user.balance).toFixed(2)}.`;
         gameOutcome = "lose";
         gameActive = false;
       } else {
@@ -781,7 +778,7 @@ client.on("messageCreate", async (message) => {
           const collected = await message.channel.awaitMessages({
             filter,
             max: 1,
-            time: 30000,
+            time: 60000,
             errors: ["time"],
           });
           const playerResponse = collected.first()?.content.toLowerCase();
@@ -794,28 +791,24 @@ client.on("messageCreate", async (message) => {
             await message.reply("Invalid response. Please use `$hit` or `$stand`.");
           }
         } catch {
-          // No refund is given if the user doesn't respond in time
           await message.reply("You took too long to respond. The game has been cancelled.");
-          return; // Exit the function without refunding
+          return;
         }
       }
     }
 
-    // Check for game outcome after the loop ends
     if (gameOutcome === "win" || gameOutcome === "lose") {
       if (gameOutcome === "win") {
-        await message.reply(`**You win!** You won ${betAmount.toFixed(2)}. Your new balance is ${(user.balance).toFixed(2)}.`);
+        await message.reply(`**Your final hand:** \n${playerHand.join(" ")} **(Value: ${calculateValue(playerHand)})** \n\n**Dealer's final hand:** \n${dealerHand.join(" ")} **(Value: ${calculateValue(dealerHand)})** \n\n**You win!** Your new balance is ${(user.balance).toFixed(2)}.`);
       } else if (gameOutcome === "lose") {
-        await message.reply(`**You lose!** Your final hand was: ${playerHand.join(" ")} **(Value: ${calculateValue(playerHand)})**. Your new balance is ${(user.balance).toFixed(2)}.`);
+        await message.reply(`**Your final hand:** \n${playerHand.join(" ")} **(Value: ${calculateValue(playerHand)})** \n\n**Dealer's final hand:** \n${dealerHand.join(" ")} **(Value: ${calculateValue(dealerHand)})** \n\n**You lose!** Your new balance is ${(user.balance).toFixed(2)}.`);
       }
       await user.save();
       return;
     }
 
-    // Dealer's turn if the game is still active
     await message.reply("The dealer will now play.");
 
-    // Dealer will hit until their value is 17 or higher, or until their value is greater than the player's value
     while (calculateValue(dealerHand) < 17 && calculateValue(dealerHand) <= calculateValue(playerHand)) {
       dealerHand.push(deck.pop());
     }
@@ -827,15 +820,15 @@ client.on("messageCreate", async (message) => {
     dealerResponse += `**Dealer's final hand:** \n${dealerHand.join(" ")} **(Value: ${finalDealerValue})**\n\n`;
 
     if (finalPlayerValue > 21) {
-      dealerResponse += `**Bust! You lose ${betAmount.toFixed(2)}! Your new balance is ${user.balance.toFixed(2)}.**`;
+      dealerResponse += `**Bust! You lose!** Your new balance is ${user.balance.toFixed(2)}.`;
     } else if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
-      dealerResponse += `**You win ${betAmount.toFixed(2)}! Your new balance is ${(user.balance + betAmount * 2).toFixed(2)}.**`;
-      user.balance += betAmount * 2; // Blackjack payout (2x bet)
+      user.balance += betAmount * 2;
+      dealerResponse += `**You win!** Your new balance is ${(user.balance).toFixed(2)}.`;
     } else if (finalPlayerValue === finalDealerValue) {
-      dealerResponse += `**It's a tie! Your balance is ${user.balance.toFixed(2)}.**`;
-      user.balance += betAmount; // Refund the bet amount in case of a tie
+      user.balance += betAmount;
+      dealerResponse += `**It's a tie!** Your balance is ${user.balance.toFixed(2)}.`;
     } else {
-      dealerResponse += `**You lose ${betAmount.toFixed(2)}! Your new balance is ${user.balance.toFixed(2)}.**`;
+      dealerResponse += `**You lose!** Your new balance is ${user.balance.toFixed(2)}.`;
     }
 
     await message.reply(dealerResponse);
