@@ -2657,7 +2657,7 @@ async function checkUserNetWorth(userId, message) {
     message.reply(`<@${userId}> has a net worth of $${netWorth.toFixed(2)}.`);
   } catch (error) {
     console.error("Error fetching net worth:", error);
-    message.reply("User not found.");
+    message.reply("That user was not found.");
   }
 }
 
