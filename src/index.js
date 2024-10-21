@@ -705,17 +705,19 @@ client.on("messageCreate", async (message) => {
 
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$net")) {
-    let args = message.content.split(" ");
+    const args = message.content.split(" ");
+    let userId;
 
     if (args.length < 2) {
-      await checkSelfNetWorth(message);
+      userId = message.author.id;
     } else {
-      let userId = resolveUser(args[1], message);
-      if (userId) {
-        await checkUserNetWorth(userId, message);
-      } else {
-        message.reply("That user was not found.");
-      }
+      userId = await resolveUser(args[1], message);
+    }
+
+    if (userId) {
+      await checkUserNetWorth(userId, message);
+    } else {
+      await checkSelfNetWorth(message);
     }
   }
 });
@@ -2636,7 +2638,7 @@ async function checkSelfNetWorth(message) {
 
 async function checkUserNetWorth(userId, message) {
   try {
-    let user = await User.findOne({ discordId: userId });
+    const user = await User.findOne({ discordId: userId });
 
     if (!user) {
       message.reply("This user has not created an account yet.");
@@ -2657,7 +2659,7 @@ async function checkUserNetWorth(userId, message) {
     message.reply(`<@${userId}> has a net worth of $${netWorth.toFixed(2)}.`);
   } catch (error) {
     console.error("Error fetching net worth:", error);
-    message.reply("That user was not found.");
+    message.reply("Error fetching net worth. Please try again later.");
   }
 }
 
