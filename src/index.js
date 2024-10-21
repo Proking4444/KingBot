@@ -711,6 +711,9 @@ client.on("messageCreate", async (message) => {
       await checkSelfNetWorth(message);
     } else {
       let userId = resolveUser(args[1], message);
+      
+      userId = await userId;
+      
       if (userId) {
         await checkUserNetWorth(userId, message);
       } else {
