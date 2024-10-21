@@ -542,7 +542,7 @@ client.on("messageCreate", async (message) => {
     if (args.length < 2) {
       await checkSelfBalance(message);
     } else {
-      let userId = resolveUser(args[1], message);
+      let userId = await resolveUser(args[1], message);
       if (userId) {
         await checkBalance(userId, message);
       } else {
