@@ -19,11 +19,12 @@ KingBot is a multipurpose Discord Bot created by Ari Khan. Its main features are
 * Local random joke/long joke selectors
 * Local random quote selectors
 
-#### Media-Sharing
+#### Media
 
 * Local meme databases with classmeme support
 * Local video finders with player support
 * Local image viewers
+* Latest news stories globally
 
 #### Miscellaneous
 
