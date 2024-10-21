@@ -2391,7 +2391,7 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+  if (!interaction.isCommand()) return;
 
   const { commandName, options } = interaction;
 
@@ -2623,16 +2623,14 @@ async function getStockName(symbol) {
   }
 }
 
-async function checkSelfNetWorthSlash(interaction) {
-  await interaction.deferReply();
-
-  const userId = interaction.user.id;
+async function checkSelfNetWorth(message) {
+  const userId = message.author.id;
 
   try {
     const user = await User.findOne({ discordId: userId });
 
     if (!user) {
-      await interaction.editReply("You need to create an account first with `$start`.");
+      message.reply("You need to create an account first with `$start`.");
       return;
     }
 
@@ -2647,10 +2645,10 @@ async function checkSelfNetWorthSlash(interaction) {
       }
     }
 
-    await interaction.editReply(`Your current net worth is $${netWorth.toFixed(2)}.`);
+    message.reply(`Your current net worth is $${netWorth.toFixed(2)}.`);
   } catch (error) {
     console.error("Error fetching net worth:", error);
-    await interaction.editReply("Error fetching net worth. Please try again later.");
+    message.reply("Error fetching net worth. Please try again later.");
   }
 }
 
@@ -2682,13 +2680,15 @@ async function checkUserNetWorth(userId, message) {
 }
 
 async function checkSelfNetWorthSlash(interaction) {
+  await interaction.deferReply();
+
   const userId = interaction.user.id;
 
   try {
     const user = await User.findOne({ discordId: userId });
 
     if (!user) {
-      await interaction.reply("You need to create an account first with `/start`.");
+      await interaction.editReply("You need to create an account first with `$start`.");
       return;
     }
 
@@ -2703,10 +2703,10 @@ async function checkSelfNetWorthSlash(interaction) {
       }
     }
 
-    await interaction.reply(`Your current net worth is $${netWorth.toFixed(2)}.`);
+    await interaction.editReply(`Your current net worth is $${netWorth.toFixed(2)}.`);
   } catch (error) {
     console.error("Error fetching net worth:", error);
-    await interaction.reply("Error fetching net worth. Please try again later.");
+    await interaction.editReply("Error fetching net worth. Please try again later.");
   }
 }
 
