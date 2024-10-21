@@ -195,7 +195,7 @@ client.on("ready", async () => {
 client.on("messageCreate", (message) => {
   if (message.content === "$help") {
     message.reply(
-      "**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n($)topgg = Check out the bot's top.gg page \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n($)typetest = Test your typing speed \n($)typerace = Challenge your typing skills \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)coinflip = Bet money on a coin flip \n($)pay = Transfer funds to another user \n($)leaderboard = View the global leaderboard \n($)net = Check the net worth of yourself or another user \n($)blackjack = Bet money on blackjack \n\n**Stocks** \n($)buy = Purchase a stock at its market price (24/7) \n($)sell = Sell a stock at its market price (24/7) \n($)portfolio = View your stock portfolio \n($)stock = View information on a stock \n($)exchange = Exchange a currency at its current rate \n($)currency = View all of your currency balances \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n($)news = View the latest news stories worldwide \n\n**Miscellaneous** \n($)topgg = Check out the bot's top.gg page \n($)count = Adds 1 to the Count"
+      "**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n($)topgg = Check out the bot's top.gg page \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n($)typetest = Test your typing speed \n($)typerace = Challenge your typing skills \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)pay = Transfer funds to another user \n($)leaderboard = View the global leaderboard \n($)net = Check the net worth of yourself or another user \n\n**Casino** \n($)coinflip = Bet money on a coin flip \n($)blackjack = Bet money on blackjack \n\n**Stocks** \n($)buy = Purchase a stock at its market price (24/7) \n($)sell = Sell a stock at its market price (24/7) \n($)portfolio = View your stock portfolio \n($)stock = View information on a stock \n($)exchange = Exchange a currency at its current rate \n($)currency = View all of your currency balances \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n($)news = View the latest news stories worldwide \n\n**Miscellaneous** \n($)topgg = Check out the bot's top.gg page \n($)count = Adds 1 to the Count"
     );
   }
 });
@@ -553,84 +553,6 @@ client.on("messageCreate", async (message) => {
 });
 
 client.on("messageCreate", async (message) => {
-  if (message.content.startsWith("$coinflip")) {
-    let args = message.content.split(" ");
-
-    if (args.length < 3) {
-      message.reply(
-        "Please use `$coinflip (bet amount) (choice)` (heads or tails) to place a bet."
-      );
-      return;
-    }
-
-    let betAmount = parseInt(args[1], 10);
-    let choice = args[2].toLowerCase();
-
-    if (isNaN(betAmount) || betAmount <= 0) {
-      message.reply("Please enter a valid bet amount.");
-      return;
-    }
-
-    if (!["heads", "tails"].includes(choice)) {
-      message.reply("Please choose either heads or tails.");
-      return;
-    }
-
-    let user = await User.findOne({ discordId: message.author.id });
-
-    if (!user) {
-      message.reply("You need to create an account first with $start.");
-      return;
-    }
-
-    if (user.balance < betAmount) {
-      message.reply("You do not have enough balance to place this bet.");
-      return;
-    }
-
-    let coinFlip = Math.random() < 0.5;
-
-    if ((coinFlip && choice === "heads") || (!coinFlip && choice === "tails")) {
-      user.balance += betAmount;
-      const coinflipWinEmbed = new EmbedBuilder()
-        .setColor("#00FF00")
-        .setTitle("Coinflip Result")
-        .setDescription(
-          `**You won!** \nThe coin landed on ${
-            coinFlip ? "heads" : "tails"
-          }. Your new balance is $${user.balance.toFixed(2)}.`
-        )
-        .setImage(
-          coinFlip
-            ? "https://i.postimg.cc/Hs41KL0M/heads.png"
-            : "https://i.postimg.cc/Mp6J88tF/tails.png"
-        );
-
-      message.reply({ embeds: [coinflipWinEmbed] });
-    } else {
-      user.balance -= betAmount;
-      const coinflipLossEmbed = new EmbedBuilder()
-        .setColor("#FF0000")
-        .setTitle("Coinflip Result")
-        .setDescription(
-          `**You lost!** \nThe coin landed on ${
-            coinFlip ? "heads" : "tails"
-          }. Your new balance is $${user.balance.toFixed(2)}.`
-        )
-        .setImage(
-          coinFlip
-            ? "https://i.postimg.cc/Hs41KL0M/heads.png"
-            : "https://i.postimg.cc/Mp6J88tF/tails.png"
-        );
-
-      message.reply({ embeds: [coinflipLossEmbed] });
-    }
-
-    await user.save();
-  }
-});
-
-client.on("messageCreate", async (message) => {
   if (message.content === "$vote") {
     let user = await User.findOne({ discordId: message.author.id });
 
@@ -720,6 +642,86 @@ client.on("messageCreate", async (message) => {
         message.reply("That user was not found.");
       }
     }
+  }
+});
+
+//Casino
+
+client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$coinflip")) {
+    let args = message.content.split(" ");
+
+    if (args.length < 3) {
+      message.reply(
+        "Please use `$coinflip (bet amount) (choice)` (heads or tails) to place a bet."
+      );
+      return;
+    }
+
+    let betAmount = parseInt(args[1], 10);
+    let choice = args[2].toLowerCase();
+
+    if (isNaN(betAmount) || betAmount <= 0) {
+      message.reply("Please enter a valid bet amount.");
+      return;
+    }
+
+    if (!["heads", "tails"].includes(choice)) {
+      message.reply("Please choose either heads or tails.");
+      return;
+    }
+
+    let user = await User.findOne({ discordId: message.author.id });
+
+    if (!user) {
+      message.reply("You need to create an account first with $start.");
+      return;
+    }
+
+    if (user.balance < betAmount) {
+      message.reply("You do not have enough balance to place this bet.");
+      return;
+    }
+
+    let coinFlip = Math.random() < 0.5;
+
+    if ((coinFlip && choice === "heads") || (!coinFlip && choice === "tails")) {
+      user.balance += betAmount;
+      const coinflipWinEmbed = new EmbedBuilder()
+        .setColor("#00FF00")
+        .setTitle("Coinflip Result")
+        .setDescription(
+          `**You won!** \nThe coin landed on ${
+            coinFlip ? "heads" : "tails"
+          }. Your new balance is $${user.balance.toFixed(2)}.`
+        )
+        .setImage(
+          coinFlip
+            ? "https://i.postimg.cc/Hs41KL0M/heads.png"
+            : "https://i.postimg.cc/Mp6J88tF/tails.png"
+        );
+
+      message.reply({ embeds: [coinflipWinEmbed] });
+    } else {
+      user.balance -= betAmount;
+      const coinflipLossEmbed = new EmbedBuilder()
+        .setColor("#FF0000")
+        .setTitle("Coinflip Result")
+        .setDescription(
+          `**You lost!** \nThe coin landed on ${
+            coinFlip ? "heads" : "tails"
+          }. Your new balance is $${user.balance.toFixed(2)}.`
+        )
+        .setImage(
+          coinFlip
+            ? "https://i.postimg.cc/Hs41KL0M/heads.png"
+            : "https://i.postimg.cc/Mp6J88tF/tails.png"
+        );
+
+      message.reply({ embeds: [coinflipLossEmbed] });
+    }
+
+    await user.save();
   }
 });
 
@@ -2089,7 +2091,7 @@ client.on("interactionCreate", (interaction) => {
 
   if (interaction.commandName === "help") {
     return interaction.reply(
-      "**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n($)topgg = Check out the bot's top.gg page \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n($)typetest = Test your typing speed \n($)typerace = Challenge your typing skills \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)coinflip = Bet money on a coin flip \n($)pay = Transfer funds to another user \n($)leaderboard = View the global leaderboard \n($)net = Check the net worth of yourself or another user \n($)blackjack = Bet money on blackjack \n\n**Stocks** \n($)buy = Purchase a stock at its market price (24/7) \n($)sell = Sell a stock at its market price (24/7) \n($)portfolio = View your stock portfolio \n($)stock = View information on a stock \n($)exchange = Exchange a currency at its current rate \n($)currency = View all of your currency balances \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n($)news = View the latest news stories worldwide \n\n**Miscellaneous** \n($)topgg = Check out the bot's top.gg page \n($)count = Adds 1 to the Count"
+      "**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n($)topgg = Check out the bot's top.gg page \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n($)typetest = Test your typing speed \n($)typerace = Challenge your typing skills \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)pay = Transfer funds to another user \n($)leaderboard = View the global leaderboard \n($)net = Check the net worth of yourself or another user \n\n**Casino** \n($)coinflip = Bet money on a coin flip \n($)blackjack = Bet money on blackjack \n\n**Stocks** \n($)buy = Purchase a stock at its market price (24/7) \n($)sell = Sell a stock at its market price (24/7) \n($)portfolio = View your stock portfolio \n($)stock = View information on a stock \n($)exchange = Exchange a currency at its current rate \n($)currency = View all of your currency balances \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n($)news = View the latest news stories worldwide \n\n**Miscellaneous** \n($)topgg = Check out the bot's top.gg page \n($)count = Adds 1 to the Count"
     );
   }
 });
@@ -2447,6 +2449,49 @@ client.on("interactionCreate", async (interaction) => {
 
 //Functions
 
+//Information/Management Functions
+
+async function resolveUser(query, message) {
+  //Check for a mention
+  if (message.mentions.users.size) {
+    return message.mentions.users.first().id;
+  }
+
+  //Check for a user ID
+  if (query.match(/^\d{17,19}$/)) {
+    return query;
+  }
+
+  //Check for a username
+  const guild = message.guild;
+  const member = guild.members.cache.find(
+    (member) => member.user.username === query
+  );
+  if (member) {
+    return member.user.id;
+  }
+
+  return null; //Return if user not found
+}
+
+//Entertainment Functions
+
+function getRandomRaceWords(numWords) {
+  const shuffled = raceWordBank.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, numWords).join(" ");
+}
+
+function getRandomTestWords(numWords) {
+  const shuffled = testWordBank.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, numWords).join(" ");
+}
+
+function splitString(str) {
+  return str.split(" ");
+}
+
+//Economy Functions
+
 async function checkSelfBalance(message) {
   let user = await User.findOne({ discordId: message.author.id });
 
@@ -2464,28 +2509,6 @@ async function checkBalance(userId, message) {
     message.reply("This user has not created an account yet.");
   } else {
     message.reply(
-      `<@${userId}> has $${user.balance.toFixed(2)} in their account.`
-    );
-  }
-}
-
-async function checkSelfBalanceSlash(interaction) {
-  let user = await User.findOne({ discordId: interaction.user.id });
-
-  if (!user) {
-    await interaction.reply("You need to create an account first with `$start`.");
-  } else {
-    await interaction.reply(`Your current balance is $${user.balance.toFixed(2)}.`);
-  }
-}
-
-async function checkBalanceSlash(userId, interaction) {
-  let user = await User.findOne({ discordId: userId });
-
-  if (!user) {
-    await interaction.reply("This user has not created an account yet.");
-  } else {
-    await interaction.reply(
       `<@${userId}> has $${user.balance.toFixed(2)} in their account.`
     );
   }
@@ -2544,29 +2567,6 @@ async function handlePayCommand(message, args) {
   );
 }
 
-async function resolveUser(query, message) {
-  //Check for a mention
-  if (message.mentions.users.size) {
-    return message.mentions.users.first().id;
-  }
-
-  //Check for a user ID
-  if (query.match(/^\d{17,19}$/)) {
-    return query;
-  }
-
-  //Check for a username
-  const guild = message.guild;
-  const member = guild.members.cache.find(
-    (member) => member.user.username === query
-  );
-  if (member) {
-    return member.user.id;
-  }
-
-  return null; //Return if user not found
-}
-
 async function getBalanceLeaderboard() {
   const leaderboard = await User.find().sort({ balance: -1 }).limit(10);
 
@@ -2579,28 +2579,6 @@ async function getBalanceLeaderboard() {
   });
 
   return leaderboardString;
-}
-
-async function fetchStockPrice(symbol) {
-  try {
-    const quote = await yahooFinance.quote(symbol);
-    const price = quote.regularMarketPrice;
-
-    return price;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return null;
-  }
-}
-
-async function getStockName(symbol) {
-  try {
-    const stockInfo = await yahooFinance.quote(symbol);
-    return stockInfo.longName || stockInfo.shortName || symbol;
-  } catch (error) {
-    console.error("Error fetching stock name:", error);
-    return symbol;
-  }
 }
 
 async function checkSelfNetWorth(message) {
@@ -2656,6 +2634,119 @@ async function checkUserNetWorth(userId, message) {
   } catch (error) {
     console.error("Error fetching net worth:", error);
     message.reply("Error fetching net worth. Please try again later.");
+  }
+}
+
+//Casino Functions
+
+function createDeck() {
+  const suits = ['♠', '♥', '♦', '♣'];
+  const cards = [];
+  for (const suit of suits) {
+      for (const value in values) {
+          cards.push(value + suit);
+      }
+  }
+  return cards;
+}
+
+function shuffleDeck(deck) {
+  for (let i = deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+}
+
+function calculateValue(hand) {
+  let value = 0;
+  let aceCount = 0;
+  for (const card of hand) {
+      const cardValue = values[card.slice(0, -1)];
+      value += cardValue;
+      if (cardValue === 11) aceCount++;
+  }
+  while (value > 21 && aceCount) {
+      value -= 10;
+      aceCount--;
+  }
+  return value;
+}
+
+//Stock Functions
+
+async function fetchStockPrice(symbol) {
+  try {
+    const quote = await yahooFinance.quote(symbol);
+    const price = quote.regularMarketPrice;
+
+    return price;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
+async function getStockName(symbol) {
+  try {
+    const stockInfo = await yahooFinance.quote(symbol);
+    return stockInfo.longName || stockInfo.shortName || symbol;
+  } catch (error) {
+    console.error("Error fetching stock name:", error);
+    return symbol;
+  }
+}
+
+async function fetchStockCurrency(symbol) {
+  try {
+    const quote = await yahooFinance.quote(symbol);
+    if (quote && quote.currency) {
+      return quote.currency;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching stock currency:", error);
+    return null;
+  }
+}
+
+async function fetchExchangeRate(fromCurrency, toCurrency) {
+  try {
+    const result = await yahooFinance.quote(`${fromCurrency}${toCurrency}=X`);
+    if (result && result.regularMarketPrice) {
+      return result.regularMarketPrice;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching exchange rate:", error);
+    return null;
+  }
+}
+
+//Slash Functions
+
+//Slash Economy Functions
+
+async function checkSelfBalanceSlash(interaction) {
+  let user = await User.findOne({ discordId: interaction.user.id });
+
+  if (!user) {
+    await interaction.reply("You need to create an account first with `$start`.");
+  } else {
+    await interaction.reply(`Your current balance is $${user.balance.toFixed(2)}.`);
+  }
+}
+
+async function checkBalanceSlash(userId, interaction) {
+  let user = await User.findOne({ discordId: userId });
+
+  if (!user) {
+    await interaction.reply("This user has not created an account yet.");
+  } else {
+    await interaction.reply(
+      `<@${userId}> has $${user.balance.toFixed(2)} in their account.`
+    );
   }
 }
 
@@ -2715,81 +2806,6 @@ async function checkUserNetWorthSlash(userId, interaction) {
     console.error("Error fetching net worth:", error);
     await interaction.reply("Error fetching net worth. Please try again later.");
   }
-}
-
-async function fetchStockCurrency(symbol) {
-  try {
-    const quote = await yahooFinance.quote(symbol);
-    if (quote && quote.currency) {
-      return quote.currency;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching stock currency:", error);
-    return null;
-  }
-}
-
-async function fetchExchangeRate(fromCurrency, toCurrency) {
-  try {
-    const result = await yahooFinance.quote(`${fromCurrency}${toCurrency}=X`);
-    if (result && result.regularMarketPrice) {
-      return result.regularMarketPrice;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Error fetching exchange rate:", error);
-    return null;
-  }
-}
-
-function getRandomRaceWords(numWords) {
-  const shuffled = raceWordBank.sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, numWords).join(" ");
-}
-
-function getRandomTestWords(numWords) {
-  const shuffled = testWordBank.sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, numWords).join(" ");
-}
-
-function splitString(str) {
-  return str.split(" ");
-}
-
-function createDeck() {
-  const suits = ['♠', '♥', '♦', '♣'];
-  const cards = [];
-  for (const suit of suits) {
-      for (const value in values) {
-          cards.push(value + suit);
-      }
-  }
-  return cards;
-}
-
-function shuffleDeck(deck) {
-  for (let i = deck.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [deck[i], deck[j]] = [deck[j], deck[i]];
-  }
-}
-
-function calculateValue(hand) {
-  let value = 0;
-  let aceCount = 0;
-  for (const card of hand) {
-      const cardValue = values[card.slice(0, -1)];
-      value += cardValue;
-      if (cardValue === 11) aceCount++;
-  }
-  while (value > 21 && aceCount) {
-      value -= 10;
-      aceCount--;
-  }
-  return value;
 }
 
 //Temporary
