@@ -106,6 +106,19 @@ const commands = [
       },
     ],
   },
+
+  {
+    name: "net",
+    description: "Check the net worth of yourself or another user ",
+    options: [
+      {
+        name: "user",
+        description: "The user whose net worth you want to check",
+        type: 6,
+        required: false,
+      },
+    ],
+  },
 ];
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);

@@ -2390,6 +2390,21 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isCommand()) return;
+
+  const { commandName, options } = interaction;
+
+  if (commandName === 'net') {
+    const userOption = options.getUser('user');
+    if (userOption) {
+      await checkUserNetWorthSlash(userOption.id, interaction);
+    } else {
+      await checkSelfNetWorthSlash(interaction);
+    }
+  }
+});
+
 //Media Slash Command Listeners
 
 client.on("interactionCreate", (interaction) => {
@@ -2572,7 +2587,7 @@ async function resolveUser(query, message) {
   return null; //Return if user not found
 }
 
-async function getBalanceLeaderboard(message) {
+async function getBalanceLeaderboard() {
   const leaderboard = await User.find().sort({ balance: -1 }).limit(10);
 
   let leaderboardString = "";
@@ -2661,6 +2676,62 @@ async function checkUserNetWorth(userId, message) {
   } catch (error) {
     console.error("Error fetching net worth:", error);
     message.reply("Error fetching net worth. Please try again later.");
+  }
+}
+
+async function checkSelfNetWorthSlash(interaction) {
+  const userId = interaction.user.id;
+
+  try {
+    const user = await User.findOne({ discordId: userId });
+
+    if (!user) {
+      await interaction.reply("You need to create an account first with `/start`.");
+      return;
+    }
+
+    let netWorth = user.balance;
+
+    if (user.stocks && user.stocks.length > 0) {
+      for (const stock of user.stocks) {
+        const currentPrice = await fetchStockPrice(stock.symbol);
+        if (currentPrice !== null) {
+          netWorth += currentPrice * stock.amount;
+        }
+      }
+    }
+
+    await interaction.reply(`Your current net worth is $${netWorth.toFixed(2)}.`);
+  } catch (error) {
+    console.error("Error fetching net worth:", error);
+    await interaction.reply("Error fetching net worth. Please try again later.");
+  }
+}
+
+async function checkUserNetWorthSlash(userId, interaction) {
+  try {
+    const user = await User.findOne({ discordId: userId });
+
+    if (!user) {
+      await interaction.reply("This user has not created an account yet.");
+      return;
+    }
+
+    let netWorth = user.balance;
+
+    if (user.stocks && user.stocks.length > 0) {
+      for (const stock of user.stocks) {
+        const currentPrice = await fetchStockPrice(stock.symbol);
+        if (currentPrice !== null) {
+          netWorth += currentPrice * stock.amount;
+        }
+      }
+    }
+
+    await interaction.reply(`<@${userId}> has a net worth of $${netWorth.toFixed(2)}.`);
+  } catch (error) {
+    console.error("Error fetching net worth:", error);
+    await interaction.reply("Error fetching net worth. Please try again later.");
   }
 }
 
