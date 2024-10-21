@@ -747,15 +747,20 @@ client.on("messageCreate", async (message) => {
 
     const getPlayerResponse = async () => {
       const playerValue = calculateValue(playerHand);
+
       let response = `**Your hand:** \n${playerHand.join(" ")} **(Value: ${playerValue})** \n\n` +
                      `**Dealer's hand:** \n${dealerHand[0]} ? **(Value: ?)** \n\n`;
 
       if (playerValue === 21) {
         user.balance += betAmount * 2;
-        return await message.reply(`${response}**Blackjack! You win!** Your new balance is ${(user.balance).toFixed(2)}.`);
+        await message.reply(`${response}**Blackjack! You win!** Your new balance is ${(user.balance).toFixed(2)}.`);
+        await user.save();
+        return true; // Game ends
       } 
       if (playerValue > 21) {
-        return await message.reply(`${response}**Bust! You lose!** Your new balance is ${(user.balance).toFixed(2)}.`);
+        await message.reply(`${response}**Bust! You lose!** Your new balance is ${(user.balance).toFixed(2)}.`);
+        await user.save();
+        return true; // Game ends
       }
 
       response += "Type `$hit` to draw another card or `$stand` to end your turn.";
@@ -767,49 +772,51 @@ client.on("messageCreate", async (message) => {
         const playerResponse = collected.first()?.content.toLowerCase();
         if (playerResponse === "$hit") {
           playerHand.push(deck.pop());
-          return getPlayerResponse(); // Recur for next turn
+          return await getPlayerResponse(); // Continue the player's turn
         } else if (playerResponse === "$stand") {
-          return null; // End the player's turn
+          return false; // Player stands, end their turn
         }
         await message.reply("Invalid response. Please use `$hit` or `$stand`.");
       } catch {
         await message.reply("You took too long to respond. The game has been cancelled.");
-        return null; // Game cancelled
+        return true; // Game ends due to timeout
       }
     };
 
     // Player's turn
     while (true) {
       const result = await getPlayerResponse();
-      if (!result) break; // Exit if player stands or game is cancelled
+      if (result) break; // Exit if player wins, loses, or game is cancelled
     }
 
-    // Dealer's turn
-    await message.reply("The dealer will now play.");
-    while (calculateValue(dealerHand) < 17) {
-      dealerHand.push(deck.pop());
+    // Dealer's turn if player didn't bust or win
+    if (calculateValue(playerHand) <= 21) {
+      await message.reply("The dealer will now play.");
+      while (calculateValue(dealerHand) < 17) {
+        dealerHand.push(deck.pop());
+      }
+
+      const finalPlayerValue = calculateValue(playerHand);
+      const finalDealerValue = calculateValue(dealerHand);
+
+      let dealerResponse = `**Your final hand:** \n${playerHand.join(" ")} **(Value: ${finalPlayerValue})**\n\n` +
+                           `**Dealer's final hand:** \n${dealerHand.join(" ")} **(Value: ${finalDealerValue})**\n\n`;
+
+      if (finalPlayerValue > 21) {
+        dealerResponse += `**Bust! You lose!** Your new balance is ${user.balance.toFixed(2)}.`;
+      } else if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
+        user.balance += betAmount * 2;
+        dealerResponse += `**You win!** Your new balance is ${(user.balance).toFixed(2)}.`;
+      } else if (finalPlayerValue === finalDealerValue) {
+        user.balance += betAmount; // Refund bet amount on tie
+        dealerResponse += `**It's a tie!** Your balance is ${user.balance.toFixed(2)}.`;
+      } else {
+        dealerResponse += `**You lose!** Your new balance is ${user.balance.toFixed(2)}.`;
+      }
+
+      await message.reply(dealerResponse);
+      await user.save();
     }
-
-    const finalPlayerValue = calculateValue(playerHand);
-    const finalDealerValue = calculateValue(dealerHand);
-
-    let dealerResponse = `**Your final hand:** \n${playerHand.join(" ")} **(Value: ${finalPlayerValue})**\n\n` +
-                         `**Dealer's final hand:** \n${dealerHand.join(" ")} **(Value: ${finalDealerValue})**\n\n`;
-
-    if (finalPlayerValue > 21) {
-      dealerResponse += `**Bust! You lose!** Your new balance is ${user.balance.toFixed(2)}.`;
-    } else if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
-      user.balance += betAmount * 2;
-      dealerResponse += `**You win!** Your new balance is ${(user.balance).toFixed(2)}.`;
-    } else if (finalPlayerValue === finalDealerValue) {
-      user.balance += betAmount; // Refund bet amount on tie
-      dealerResponse += `**It's a tie!** Your balance is ${user.balance.toFixed(2)}.`;
-    } else {
-      dealerResponse += `**You lose!** Your new balance is ${user.balance.toFixed(2)}.`;
-    }
-
-    await message.reply(dealerResponse);
-    await user.save();
   }
 });
 
