@@ -705,19 +705,17 @@ client.on("messageCreate", async (message) => {
 
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$net")) {
-    const args = message.content.split(" ");
-    let userId;
+    let args = message.content.split(" ");
 
     if (args.length < 2) {
-      userId = message.author.id;
-    } else {
-      userId = await resolveUser(args[1], message);
-    }
-
-    if (userId) {
-      await checkUserNetWorth(userId, message);
-    } else {
       await checkSelfNetWorth(message);
+    } else {
+      let userId = resolveUser(args[1], message);
+      if (userId) {
+        await checkUserNetWorth(userId, message);
+      } else {
+        message.reply("That user was not found.");
+      }
     }
   }
 });
