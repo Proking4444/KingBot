@@ -96,7 +96,7 @@ const commands = [
 
   {
     name: "bal",
-    description: "Check your KingBot Account balance",
+    description: "Check the balance of yourself or another user ",
     options: [
       {
         name: "user",
@@ -106,10 +106,14 @@ const commands = [
       },
     ],
   },
-  
 ];
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
+
+async function deleteSlashCommand(commandId) {
+  await rest.delete(Routes.applicationCommands(process.env.CLIENT_ID, commandId));
+  console.log(`Deleted command with ID: ${commandId}`);
+}
 
 (async () => {
   try {
@@ -120,6 +124,9 @@ const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
     });
 
     console.log("Slash commands were registered successfully!");
+
+    await deleteSlashCommand(''); // Enter command ID here to delete the command
+
   } catch (error) {
     console.log(`There was an error: ${error}`);
   }
