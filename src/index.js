@@ -755,12 +755,12 @@ client.on("messageCreate", async (message) => {
         user.balance += betAmount * 2;
         await message.reply(`${response}**Blackjack! You win!** Your new balance is ${(user.balance).toFixed(2)}.`);
         await user.save();
-        return true; // Game ends
+        return true; // End game after blackjack
       } 
       if (playerValue > 21) {
         await message.reply(`${response}**Bust! You lose!** Your new balance is ${(user.balance).toFixed(2)}.`);
         await user.save();
-        return true; // Game ends
+        return true; // End game after bust
       }
 
       response += "Type `$hit` to draw another card or `$stand` to end your turn.";
@@ -779,21 +779,18 @@ client.on("messageCreate", async (message) => {
         await message.reply("Invalid response. Please use `$hit` or `$stand`.");
       } catch {
         await message.reply("You took too long to respond. The game has been cancelled.");
-        return true; // Game ends due to timeout
+        return true; // End game due to timeout
       }
     };
 
     // Player's turn
     while (true) {
       const result = await getPlayerResponse();
-      if (result) break; // Exit if player wins, loses, or game is cancelled
-      if (result === false) {
-        // Player has stood, break out of the loop to proceed to the dealer's turn
-        break;
-      }
+      if (result) return; // Exit if player wins, loses, or game is cancelled
+      if (result === false) break; // Player stands, proceed to dealer's turn
     }
 
-    // Dealer's turn if player didn't bust or win
+    // Dealer's turn only if player didn't bust or win
     if (calculateValue(playerHand) <= 21) {
       await message.reply("The dealer will now play.");
       while (calculateValue(dealerHand) < 17) {
