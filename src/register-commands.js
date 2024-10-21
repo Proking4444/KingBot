@@ -93,6 +93,19 @@ const commands = [
     name: "vote",
     description: "Vote for KingBot on Top.gg",
   },
+
+  {
+    name: "bal",
+    description: "Check your KingBot Account balance",
+    options: [
+      {
+        name: "user",
+        description: "The user whose balance you want to check",
+        type: 6,
+        required: false,
+      },
+    ],
+  },
 ];
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);

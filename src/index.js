@@ -2234,6 +2234,27 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+
+  const { commandName, options } = interaction;
+
+  if (commandName === 'bal') {
+    const user = options.getUser('user');
+
+    if (!user) {
+      await checkSelfBalance(interaction);
+    } else {
+      const userId = resolveUser(user.id, interaction);
+      if (userId) {
+        await checkBalance(userId, interaction);
+      } else {
+        await interaction.reply('That user was not found.');
+      }
+    }
+  }
+});
+
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
