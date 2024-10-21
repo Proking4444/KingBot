@@ -2234,23 +2234,16 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-client.on('interactionCreate', async interaction => {
+client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  const { commandName, options } = interaction;
+  if (interaction.commandName === "bal") {
+    const userId = interaction.options.getUser("user")?.id || interaction.user.id;
 
-  if (commandName === 'bal') {
-    const user = options.getUser('user');
-
-    if (!user) {
-      await checkSelfBalance(interaction);
+    if (userId === interaction.user.id) {
+      await checkSelfBalanceSlash(interaction);
     } else {
-      const userId = resolveUser(user.id, interaction);
-      if (userId) {
-        await checkBalance(userId, interaction);
-      } else {
-        await interaction.reply('That user was not found.');
-      }
+      await checkBalanceSlash(userId, interaction);
     }
   }
 });
@@ -2478,6 +2471,28 @@ async function checkBalance(userId, message) {
   }
 }
 
+async function checkSelfBalanceSlash(interaction) {
+  let user = await User.findOne({ discordId: interaction.user.id });
+
+  if (!user) {
+    await interaction.reply("You need to create an account first with `$start`.");
+  } else {
+    await interaction.reply(`Your current balance is $${user.balance.toFixed(2)}.`);
+  }
+}
+
+async function checkBalanceSlash(userId, interaction) {
+  let user = await User.findOne({ discordId: userId });
+
+  if (!user) {
+    await interaction.reply("This user has not created an account yet.");
+  } else {
+    await interaction.reply(
+      `<@${userId}> has $${user.balance.toFixed(2)} in their account.`
+    );
+  }
+}
+
 async function handlePayCommand(message, args) {
   if (args.length !== 2) {
     message.reply("Please use `$pay (user) (amount)` to transfer funds.");
@@ -2672,19 +2687,6 @@ async function fetchExchangeRate(fromCurrency, toCurrency) {
     console.error("Error fetching exchange rate:", error);
     return null;
   }
-}
-
-function calculateDifferences(str1, str2) {
-  const length = Math.max(str1.length, str2.length);
-  let differences = 0;
-
-  for (let i = 0; i < length; i++) {
-    if (str1[i] !== str2[i]) {
-      differences++;
-    }
-  }
-
-  return differences;
 }
 
 function getRandomRaceWords(numWords) {
