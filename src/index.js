@@ -2623,14 +2623,16 @@ async function getStockName(symbol) {
   }
 }
 
-async function checkSelfNetWorth(message) {
-  const userId = message.author.id;
+async function checkSelfNetWorthSlash(interaction) {
+  await interaction.deferReply();
+
+  const userId = interaction.user.id;
 
   try {
     const user = await User.findOne({ discordId: userId });
 
     if (!user) {
-      message.reply("You need to create an account first with `$start`.");
+      await interaction.editReply("You need to create an account first with `$start`.");
       return;
     }
 
@@ -2645,10 +2647,10 @@ async function checkSelfNetWorth(message) {
       }
     }
 
-    message.reply(`Your current net worth is $${netWorth.toFixed(2)}.`);
+    await interaction.editReply(`Your current net worth is $${netWorth.toFixed(2)}.`);
   } catch (error) {
     console.error("Error fetching net worth:", error);
-    message.reply("Error fetching net worth. Please try again later.");
+    await interaction.editReply("Error fetching net worth. Please try again later.");
   }
 }
 
