@@ -768,7 +768,8 @@ client.on("messageCreate", async (message) => {
         gameOutcome = "win";
         gameActive = false;
       } else if (playerValue > 21) {
-        response += "**Bust! Dealer wins.**";
+        // Include the player's final hand and value in the response
+        response += `**Bust! You lose.** Your final hand: ${playerHand.join(" ")} **(Value: ${playerValue})**`;
         gameOutcome = "lose";
         gameActive = false;
       } else {
@@ -805,7 +806,7 @@ client.on("messageCreate", async (message) => {
       if (gameOutcome === "win") {
         await message.reply(`**You win!** You won ${betAmount.toFixed(2)}. Your new balance is ${(user.balance).toFixed(2)}.`);
       } else if (gameOutcome === "lose") {
-        await message.reply(`**You lose!** You lost ${betAmount.toFixed(2)}. Your new balance is ${(user.balance).toFixed(2)}.`);
+        await message.reply(`**You lose!** Your final hand was: ${playerHand.join(" ")} **(Value: ${calculateValue(playerHand)})**. Your new balance is ${(user.balance).toFixed(2)}.`);
       }
       await user.save();
       return;
