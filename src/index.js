@@ -14,10 +14,10 @@ import fetch from "node-fetch";
 import Count from "./schemas/global.js";
 import User from "./schemas/users.js";
 
-import { raceWordBank } from './constants.js';
-import { testWordBank } from './constants.js';
+import { raceWordBank } from "./constants.js";
+import { testWordBank } from "./constants.js";
 
-import { values } from './constants.js';
+import { values } from "./constants.js";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
@@ -634,9 +634,9 @@ client.on("messageCreate", async (message) => {
       await checkSelfNetWorth(message);
     } else {
       let userId = resolveUser(args[1], message);
-      
+
       userId = await userId;
-      
+
       if (userId) {
         await checkUserNetWorth(userId, message);
       } else {
@@ -732,12 +732,18 @@ client.on("messageCreate", async (message) => {
     const betAmount = parseFloat(args[1]);
 
     if (isNaN(betAmount) || betAmount <= 0) {
-      return message.reply("Please use `$blackjack (bet amount)` to play blackjack.");
+      return message.reply(
+        "Please use `$blackjack (bet amount)` to play blackjack."
+      );
     }
 
     const user = await User.findOne({ username: message.author.username });
-    if (!user) return message.reply("You need to create an account first with `$start`.");
-    if (user.balance < betAmount) return message.reply("You do not have enough balance to place this bet.");
+    if (!user)
+      return message.reply(
+        "You need to create an account first with `$start`."
+      );
+    if (user.balance < betAmount)
+      return message.reply("You do not have enough balance to place this bet.");
 
     user.balance -= betAmount;
     await user.save();
@@ -751,27 +757,44 @@ client.on("messageCreate", async (message) => {
     const getPlayerResponse = async () => {
       const playerValue = calculateValue(playerHand);
 
-      let response = `**Your hand:** \n${playerHand.join(" ")} **(Value: ${playerValue})** \n\n` +
-                     `**Dealer's hand:** \n${dealerHand[0]} ? **(Value: ?)** \n\n`;
+      let response =
+        `**Your hand:** \n${playerHand.join(
+          " "
+        )} **(Value: ${playerValue})** \n\n` +
+        `**Dealer's hand:** \n${dealerHand[0]} ? **(Value: ?)** \n\n`;
 
       if (playerValue === 21) {
         user.balance += betAmount * 2;
-        await message.reply(`${response}**Blackjack! You won $${betAmount}!** Your new balance is ${(user.balance).toFixed(2)}.`);
+        await message.reply(
+          `${response}**Blackjack! You won $${betAmount}!** Your new balance is ${user.balance.toFixed(
+            2
+          )}.`
+        );
         await user.save();
         return true; // End game after blackjack
-      } 
+      }
       if (playerValue > 21) {
-        await message.reply(`${response}**Bust! You lost $${betAmount}!** Your new balance is ${(user.balance).toFixed(2)}.`);
+        await message.reply(
+          `${response}**Bust! You lost $${betAmount}!** Your new balance is ${user.balance.toFixed(
+            2
+          )}.`
+        );
         await user.save();
         return true; // End game after bust
       }
 
-      response += "Type `$hit` to draw another card or `$stand` to end your turn.";
+      response +=
+        "Type `$hit` to draw another card or `$stand` to end your turn.";
       await message.reply(response);
 
       const filter = (m) => m.author.id === message.author.id;
       try {
-        const collected = await message.channel.awaitMessages({ filter, max: 1, time: 60000, errors: ["time"] });
+        const collected = await message.channel.awaitMessages({
+          filter,
+          max: 1,
+          time: 60000,
+          errors: ["time"],
+        });
         const playerResponse = collected.first()?.content.toLowerCase();
         if (playerResponse === "$hit") {
           playerHand.push(deck.pop());
@@ -781,7 +804,9 @@ client.on("messageCreate", async (message) => {
         }
         await message.reply("Invalid response. Please use `$hit` or `$stand`.");
       } catch {
-        await message.reply("You took too long to respond. The game has been cancelled.");
+        await message.reply(
+          "You took too long to respond. The game has been cancelled."
+        );
         return true; // End game due to timeout
       }
     };
@@ -803,19 +828,32 @@ client.on("messageCreate", async (message) => {
       const finalPlayerValue = calculateValue(playerHand);
       const finalDealerValue = calculateValue(dealerHand);
 
-      let dealerResponse = `**Your final hand:** \n${playerHand.join(" ")} **(Value: ${finalPlayerValue})**\n\n` +
-                           `**Dealer's final hand:** \n${dealerHand.join(" ")} **(Value: ${finalDealerValue})**\n\n`;
+      let dealerResponse =
+        `**Your final hand:** \n${playerHand.join(
+          " "
+        )} **(Value: ${finalPlayerValue})**\n\n` +
+        `**Dealer's final hand:** \n${dealerHand.join(
+          " "
+        )} **(Value: ${finalDealerValue})**\n\n`;
 
       if (finalPlayerValue > 21) {
-        dealerResponse += `**Bust! You lost $${betAmount}!** Your new balance is ${user.balance.toFixed(2)}.`;
+        dealerResponse += `**Bust! You lost $${betAmount}!** Your new balance is ${user.balance.toFixed(
+          2
+        )}.`;
       } else if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
         user.balance += betAmount * 2;
-        dealerResponse += `**You won $${betAmount}!** Your new balance is ${(user.balance).toFixed(2)}.`;
+        dealerResponse += `**You won $${betAmount}!** Your new balance is ${user.balance.toFixed(
+          2
+        )}.`;
       } else if (finalPlayerValue === finalDealerValue) {
         user.balance += betAmount; // Refund bet amount on tie
-        dealerResponse += `**It's a tie!** Your balance is ${user.balance.toFixed(2)}.`;
+        dealerResponse += `**It's a tie!** Your balance is ${user.balance.toFixed(
+          2
+        )}.`;
       } else {
-        dealerResponse += `**You lost $${betAmount}!** Your new balance is ${user.balance.toFixed(2)}.`;
+        dealerResponse += `**You lost $${betAmount}!** Your new balance is ${user.balance.toFixed(
+          2
+        )}.`;
       }
 
       await message.reply(dealerResponse);
@@ -824,7 +862,7 @@ client.on("messageCreate", async (message) => {
   }
 });
 
-client.on('messageCreate', async (message) => {
+client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$crash")) {
     let args = message.content.split(" ");
 
@@ -857,11 +895,13 @@ client.on('messageCreate', async (message) => {
     await user.save();
 
     // Calculate the crash multiplier beforehand
-    const crashPoint = 0.01 + (0.99 / Math.random());
+    const crashPoint = 0.01 + 0.99 / Math.random();
 
     // Send the initial message and add the checkmark reaction
-    const crashMessage = await message.reply(`💥 Crash game starting... Current multiplier: **1x** \n\nProfit: **$0**`);
-    await crashMessage.react('✅');
+    const crashMessage = await message.reply(
+      `💥 Crash game starting... Current multiplier: **1x** \n\nProfit: **$0**`
+    );
+    await crashMessage.react("✅");
 
     // Multiplier starts at 1x
     let multiplier = 1.0;
@@ -870,7 +910,9 @@ client.on('messageCreate', async (message) => {
 
     // Wait for the user to react with the checkmark
     const filter = (reaction, userReacted) => {
-      return reaction.emoji.name === '✅' && userReacted.id === message.author.id;
+      return (
+        reaction.emoji.name === "✅" && userReacted.id === message.author.id
+      );
     };
 
     const reactionCollector = crashMessage.createReactionCollector({
@@ -883,18 +925,28 @@ client.on('messageCreate', async (message) => {
       multiplier += 0.1;
 
       // Calculate potential profit: (multiplier * betAmount) - betAmount
-      let profit = (multiplier * betAmount) - betAmount;
+      let profit = multiplier * betAmount - betAmount;
 
       if (multiplier >= crashPoint) {
         crashed = true;
         reactionCollector.stop(); // Stop the reaction collector as game ends
-        crashMessage.edit(`💥 The game crashed at **${crashPoint.toFixed(2)}x**! \n\n**You lost $${betAmount}!** Your new balance is $${user.balance.toFixed(2)}.`);
+        crashMessage.edit(
+          `💥 The game crashed at **${crashPoint.toFixed(
+            2
+          )}x**! \n\n**You lost $${betAmount}!** Your new balance is $${user.balance.toFixed(
+            2
+          )}.`
+        );
         user.save();
         return;
       }
 
-      crashMessage.edit(`💥 Current multiplier: **${multiplier.toFixed(1)}x** \n\nProfit: **$${profit.toFixed(2)}**`);
-      
+      crashMessage.edit(
+        `💥 Current multiplier: **${multiplier.toFixed(
+          1
+        )}x** \n\nProfit: **$${profit.toFixed(2)}**`
+      );
+
       // Speed up the multiplier by 25% after every full 1.0x
       if (Math.floor(multiplier) !== Math.floor(multiplier - 0.1)) {
         intervalDuration *= 0.75;
@@ -907,17 +959,23 @@ client.on('messageCreate', async (message) => {
     // Start the multiplier increase loop
     setTimeout(increaseMultiplier, intervalDuration);
 
-    reactionCollector.on('collect', async () => {
+    reactionCollector.on("collect", async () => {
       if (!crashed) {
         let payout = betAmount * multiplier;
         let profit = payout - betAmount;
 
         // Add the initial investment back to the user's balance
-        user.balance += payout; 
+        user.balance += payout;
         await user.save();
-        
-        crashMessage.edit(`✅ You cashed out at **${multiplier.toFixed(1)}x**! \n\n**You won $${profit.toFixed(2)}. Your new balance is $${user.balance.toFixed(2)}.**`);
-        
+
+        crashMessage.edit(
+          `✅ You cashed out at **${multiplier.toFixed(
+            1
+          )}x**! \n\n**You won $${profit.toFixed(
+            2
+          )}. Your new balance is $${user.balance.toFixed(2)}.**`
+        );
+
         crashed = true; // Set crashed to true so the multiplier stops increasing
         reactionCollector.stop(); // Stop collecting reactions
       }
@@ -1189,8 +1247,8 @@ client.on("messageCreate", async (message) => {
 
       for (const line of messageLines) {
         if (currentChunk.length + line.length + 1 > 2000) {
-          await message.channel.send(currentChunk);  // Send the current chunk
-          currentChunk = "";  // Reset the chunk
+          await message.channel.send(currentChunk); // Send the current chunk
+          currentChunk = ""; // Reset the chunk
         }
 
         currentChunk += line + "\n";
@@ -1199,7 +1257,6 @@ client.on("messageCreate", async (message) => {
       if (currentChunk) {
         await message.channel.send(currentChunk);
       }
-      
     } catch (error) {
       console.error("Error fetching portfolio:", error);
       message.reply("Error fetching portfolio. Please try again later.");
@@ -1224,7 +1281,9 @@ client.on("messageCreate", async (message) => {
     const currency = await fetchStockCurrency(symbol);
 
     if (!price || !currency) {
-      return message.reply("Please use `$stock (symbol)` to view information on a stock.");
+      return message.reply(
+        "Please use `$stock (symbol)` to view information on a stock."
+      );
     }
 
     message.reply(
@@ -1367,11 +1426,17 @@ client.on("messageCreate", async (message) => {
     const category = args.join(" ");
 
     if (!category) {
-      return message.reply("Please use `$news (category)` to display the news. \n\n **Categories:** \n- General \n- Latest \n- Business \n- Entertainment \n- Health \n- Science \n- Sports \n- Technology");
+      return message.reply(
+        "Please use `$news (category)` to display the news. \n\n **Categories:** \n- General \n- Latest \n- Business \n- Entertainment \n- Health \n- Science \n- Sports \n- Technology"
+      );
     }
 
     try {
-      const response = await fetch(`https://newsapi.org/v2/top-headlines?category=${encodeURIComponent(category)}&apiKey=${process.env.NEWS_API_KEY}&pageSize=5`);
+      const response = await fetch(
+        `https://newsapi.org/v2/top-headlines?category=${encodeURIComponent(
+          category
+        )}&apiKey=${process.env.NEWS_API_KEY}&pageSize=5`
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -1381,10 +1446,14 @@ client.on("messageCreate", async (message) => {
       const articles = data.articles;
 
       if (articles.length === 0) {
-        return message.reply(`No news articles found for the category "${category}". \n`);
+        return message.reply(
+          `No news articles found for the category "${category}". \n`
+        );
       }
 
-      let newsMessage = `**Latest News in ${category.charAt(0).toUpperCase() + category.slice(1)}:**\n`;
+      let newsMessage = `**Latest News in ${
+        category.charAt(0).toUpperCase() + category.slice(1)
+      }:**\n`;
       articles.forEach((article, index) => {
         newsMessage += `**${index + 1}. ${article.title}**`;
         newsMessage += `*Source:* ${article.source.name}\n`;
@@ -1394,7 +1463,9 @@ client.on("messageCreate", async (message) => {
       message.reply(newsMessage);
     } catch (error) {
       console.error("Error fetching news:", error);
-      message.reply("There was an error fetching the news. Please try again later.");
+      message.reply(
+        "There was an error fetching the news. Please try again later."
+      );
     }
   }
 });
@@ -1529,9 +1600,7 @@ client.on("messageCreate", async (message) => {
     const prompt = message.content.slice(9).trim();
 
     if (!prompt) {
-      message.reply(
-        "Please use `$chatgpt (prompt)` to send ChatGPT a prompt."
-      );
+      message.reply("Please use `$chatgpt (prompt)` to send ChatGPT a prompt.");
       return;
     }
 
@@ -1572,7 +1641,7 @@ client.on("messageCreate", async (message) => {
       let currentChunk = "";
 
       // Split the text into lines
-      const lines = text.split('\n');
+      const lines = text.split("\n");
 
       for (const line of lines) {
         // If adding the line exceeds the chunk size
@@ -1953,20 +2022,15 @@ client.on("messageCreate", (message) => {
 
 client.on("messageCreate", (message) => {
   if (message.content === "$movie DAIB") {
-    message.reply(
-      "https://www.youtube.com/watch?v=YWRkH3fX0Jc"
-    );
+    message.reply("https://www.youtube.com/watch?v=YWRkH3fX0Jc");
   }
 });
 
 client.on("messageCreate", (message) => {
   if (message.content === "$movie TCNT") {
-    message.reply(
-      "https://www.youtube.com/watch?v=ZdWVo82Kx2k"
-    );
+    message.reply("https://www.youtube.com/watch?v=ZdWVo82Kx2k");
   }
 });
-
 
 //Class Memes
 
@@ -2349,7 +2413,8 @@ client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
   if (interaction.commandName === "bal") {
-    const userId = interaction.options.getUser("user")?.id || interaction.user.id;
+    const userId =
+      interaction.options.getUser("user")?.id || interaction.user.id;
 
     if (userId === interaction.user.id) {
       await checkSelfBalanceSlash(interaction);
@@ -2498,13 +2563,13 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-client.on('interactionCreate', async (interaction) => {
+client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return;
 
   const { commandName, options } = interaction;
 
-  if (commandName === 'net') {
-    const userOption = options.getUser('user');
+  if (commandName === "net") {
+    const userOption = options.getUser("user");
     if (userOption) {
       await checkUserNetWorthSlash(userOption.id, interaction);
     } else {
@@ -2766,20 +2831,20 @@ async function checkUserNetWorth(userId, message) {
 //Casino Functions
 
 function createDeck() {
-  const suits = ['♠', '♥', '♦', '♣'];
+  const suits = ["♠", "♥", "♦", "♣"];
   const cards = [];
   for (const suit of suits) {
-      for (const value in values) {
-          cards.push(value + suit);
-      }
+    for (const value in values) {
+      cards.push(value + suit);
+    }
   }
   return cards;
 }
 
 function shuffleDeck(deck) {
   for (let i = deck.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [deck[i], deck[j]] = [deck[j], deck[i]];
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
   }
 }
 
@@ -2787,13 +2852,13 @@ function calculateValue(hand) {
   let value = 0;
   let aceCount = 0;
   for (const card of hand) {
-      const cardValue = values[card.slice(0, -1)];
-      value += cardValue;
-      if (cardValue === 11) aceCount++;
+    const cardValue = values[card.slice(0, -1)];
+    value += cardValue;
+    if (cardValue === 11) aceCount++;
   }
   while (value > 21 && aceCount) {
-      value -= 10;
-      aceCount--;
+    value -= 10;
+    aceCount--;
   }
   return value;
 }
@@ -2858,9 +2923,13 @@ async function checkSelfBalanceSlash(interaction) {
   let user = await User.findOne({ discordId: interaction.user.id });
 
   if (!user) {
-    await interaction.reply("You need to create an account first with `$start`.");
+    await interaction.reply(
+      "You need to create an account first with `$start`."
+    );
   } else {
-    await interaction.reply(`Your current balance is $${user.balance.toFixed(2)}.`);
+    await interaction.reply(
+      `Your current balance is $${user.balance.toFixed(2)}.`
+    );
   }
 }
 
@@ -2885,7 +2954,9 @@ async function checkSelfNetWorthSlash(interaction) {
     const user = await User.findOne({ discordId: userId });
 
     if (!user) {
-      await interaction.editReply("You need to create an account first with `$start`.");
+      await interaction.editReply(
+        "You need to create an account first with `$start`."
+      );
       return;
     }
 
@@ -2900,10 +2971,14 @@ async function checkSelfNetWorthSlash(interaction) {
       }
     }
 
-    await interaction.editReply(`Your current net worth is $${netWorth.toFixed(2)}.`);
+    await interaction.editReply(
+      `Your current net worth is $${netWorth.toFixed(2)}.`
+    );
   } catch (error) {
     console.error("Error fetching net worth:", error);
-    await interaction.editReply("Error fetching net worth. Please try again later.");
+    await interaction.editReply(
+      "Error fetching net worth. Please try again later."
+    );
   }
 }
 
@@ -2927,10 +3002,14 @@ async function checkUserNetWorthSlash(userId, interaction) {
       }
     }
 
-    await interaction.reply(`<@${userId}> has a net worth of $${netWorth.toFixed(2)}.`);
+    await interaction.reply(
+      `<@${userId}> has a net worth of $${netWorth.toFixed(2)}.`
+    );
   } catch (error) {
     console.error("Error fetching net worth:", error);
-    await interaction.reply("Error fetching net worth. Please try again later.");
+    await interaction.reply(
+      "Error fetching net worth. Please try again later."
+    );
   }
 }
 
