@@ -736,7 +736,7 @@ client.on("messageCreate", async (message) => {
 
     const user = await User.findOne({ username: message.author.username });
     if (!user) return message.reply("You need to create an account first with `$start`.");
-    if (user.balance < betAmount) return message.reply("Insufficient balance.");
+    if (user.balance < betAmount) return message.reply("You do not have enough balance to place this bet.");
 
     user.balance -= betAmount;
     await user.save();
@@ -820,6 +820,100 @@ client.on("messageCreate", async (message) => {
       await message.reply(dealerResponse);
       await user.save();
     }
+  }
+});
+
+client.on('messageCreate', async (message) => {
+  if (message.content.startsWith("$crash")) {
+      let args = message.content.split(" ");
+
+      if (args.length < 2) {
+          message.reply("Please use `$crash (bet amount)` to place a bet.");
+          return;
+      }
+
+      let betAmount = parseInt(args[1], 10);
+
+      if (isNaN(betAmount) || betAmount <= 0) {
+          message.reply("Please enter a valid bet amount.");
+          return;
+      }
+
+      let user = await User.findOne({ discordId: message.author.id });
+
+      if (!user) {
+          message.reply("You need to create an account first with $start.");
+          return;
+      }
+
+      if (user.balance < betAmount) {
+          message.reply("You do not have enough balance to place this bet.");
+          return;
+      }
+
+      // Calculate the crash multiplier beforehand
+      const crashPoint = 0.01 + (0.99 / Math.random());
+
+      // Send the initial message and add the checkmark reaction
+      const crashMessage = await message.channel.send(`💥 Crash game starting... Current multiplier: 1x (Profit: $0)`);
+      await crashMessage.react('✅');
+
+      // Multiplier starts at 1x
+      let multiplier = 1.0;
+      let crashed = false;
+      let intervalDuration = 1000; // Start with 1 second interval for the multiplier increase
+
+      // Wait for the user to react with the checkmark
+      const filter = (reaction, userReacted) => {
+          return reaction.emoji.name === '✅' && userReacted.id === message.author.id;
+      };
+
+      const reactionCollector = crashMessage.createReactionCollector({
+          filter,
+      });
+
+      const increaseMultiplier = () => {
+          if (crashed) return;
+
+          multiplier += 0.1;
+
+          // Calculate potential profit: (multiplier * betAmount) - betAmount
+          let profit = (multiplier * betAmount) - betAmount;
+
+          if (multiplier >= crashPoint) {
+              crashed = true;
+              crashMessage.edit(`💥 The game crashed at **${crashPoint.toFixed(2)}x**!`);
+              reactionCollector.stop(); // Stop the reaction collector as game ends
+              user.balance -= betAmount;
+              message.reply(`You lost **${betAmount}**! Your new balance is $${user.balance.toFixed(2)}.`);
+              user.save();
+              return;
+          }
+
+          crashMessage.edit(`💥 Current multiplier: **${multiplier.toFixed(1)}x** (Profit: $${profit.toFixed(2)})`);
+
+          // Speed up the multiplier by 25% after every full 1.0x
+          if (Math.floor(multiplier) !== Math.floor(multiplier - 0.1)) {
+              intervalDuration *= 0.75;
+          }
+
+          // Schedule the next increase with the adjusted interval duration
+          setTimeout(increaseMultiplier, intervalDuration);
+      };
+
+      // Start the multiplier increase loop
+      setTimeout(increaseMultiplier, intervalDuration);
+
+      reactionCollector.on('collect', async () => {
+          if (!crashed) {
+              let payout = betAmount * multiplier;
+              let profit = payout - betAmount;
+              user.balance += payout;
+              await user.save();
+              crashMessage.edit(`✅ You cashed out at **${multiplier.toFixed(1)}x**! You won **$${payout.toFixed(2)}** (Profit: $${profit.toFixed(2)}). Your new balance is $${user.balance.toFixed(2)}.`);
+              reactionCollector.stop();
+          }
+      });
   }
 });
 
