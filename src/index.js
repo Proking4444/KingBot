@@ -860,7 +860,7 @@ client.on('messageCreate', async (message) => {
     const crashPoint = 0.01 + (0.99 / Math.random());
 
     // Send the initial message and add the checkmark reaction
-    const crashMessage = await message.reply(`💥 Crash game starting... Current multiplier: **1x** (Profit: $0)`);
+    const crashMessage = await message.reply(`💥 Crash game starting... Current multiplier: **1x** \n\nProfit: **$0**`);
     await crashMessage.react('✅');
 
     // Multiplier starts at 1x
@@ -888,12 +888,12 @@ client.on('messageCreate', async (message) => {
       if (multiplier >= crashPoint) {
         crashed = true;
         reactionCollector.stop(); // Stop the reaction collector as game ends
-        crashMessage.edit(`💥 The game crashed at **${crashPoint.toFixed(2)}x**! You lost $${betAmount}! Your new balance is $${user.balance.toFixed(2)}.`);
+        crashMessage.edit(`💥 The game crashed at **${crashPoint.toFixed(2)}x**! \n\n**You lost $${betAmount}!** Your new balance is $${user.balance.toFixed(2)}.`);
         user.save();
         return;
       }
 
-      crashMessage.edit(`💥 Current multiplier: **${multiplier.toFixed(1)}x** (Profit: $${profit.toFixed(2)})`);
+      crashMessage.edit(`💥 Current multiplier: **${multiplier.toFixed(1)}x** \n\nProfit: **$${profit.toFixed(2)}**`);
       
       // Speed up the multiplier by 25% after every full 1.0x
       if (Math.floor(multiplier) !== Math.floor(multiplier - 0.1)) {
