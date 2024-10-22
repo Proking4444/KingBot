@@ -318,7 +318,7 @@ client.on("messageCreate", async (message) => {
       let characterMistakes = 0;
 
       correctWords.forEach((correctWord, index) => {
-        const userWord = userWords[index] || ""; 
+        const userWord = userWords[index] || "";
 
         if (correctWord !== userWord) {
           wordMistakes++;
@@ -399,7 +399,7 @@ client.on("messageCreate", async (message) => {
       let characterMistakes = 0;
 
       correctWords.forEach((correctWord, index) => {
-        const userWord = userWords[index] || ""; 
+        const userWord = userWords[index] || "";
 
         if (correctWord !== userWord) {
           wordMistakes++;
@@ -654,7 +654,7 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
-    let betAmount = parseFloat(args[1]); 
+    let betAmount = parseFloat(args[1]);
     let choice = args[2].toLowerCase();
 
     if (isNaN(betAmount) || betAmount <= 0) {
@@ -766,7 +766,7 @@ client.on("messageCreate", async (message) => {
           )}.`
         );
         await user.save();
-        return true; 
+        return true;
       }
       if (playerValue > 21) {
         await message.reply(
@@ -775,7 +775,7 @@ client.on("messageCreate", async (message) => {
           )}.`
         );
         await user.save();
-        return true; 
+        return true;
       }
 
       response +=
@@ -793,23 +793,23 @@ client.on("messageCreate", async (message) => {
         const playerResponse = collected.first()?.content.toLowerCase();
         if (playerResponse === "$hit") {
           playerHand.push(deck.pop());
-          return await getPlayerResponse(); 
+          return await getPlayerResponse();
         } else if (playerResponse === "$stand") {
-          return false; 
+          return false;
         }
         await message.reply("Invalid response. Please use `$hit` or `$stand`.");
       } catch {
         await message.reply(
           "You took too long to respond. The game has been cancelled."
         );
-        return true; 
+        return true;
       }
     };
 
     while (true) {
       const result = await getPlayerResponse();
-      if (result) return; 
-      if (result === false) break; 
+      if (result) return;
+      if (result === false) break;
     }
 
     if (calculateValue(playerHand) <= 21) {
@@ -839,7 +839,7 @@ client.on("messageCreate", async (message) => {
           2
         )}.`;
       } else if (finalPlayerValue === finalDealerValue) {
-        user.balance += betAmount; 
+        user.balance += betAmount;
         dealerResponse += `**It's a tie!** Your balance is ${user.balance.toFixed(
           2
         )}.`;
@@ -895,7 +895,7 @@ client.on("messageCreate", async (message) => {
 
     let multiplier = 1.0;
     let crashed = false;
-    let intervalDuration = 1000; 
+    let intervalDuration = 1000;
 
     const filter = (reaction, userReacted) => {
       return (
@@ -916,7 +916,7 @@ client.on("messageCreate", async (message) => {
 
       if (multiplier >= crashPoint) {
         crashed = true;
-        reactionCollector.stop(); 
+        reactionCollector.stop();
         crashMessage.edit(
           `💥 The game crashed at **${crashPoint.toFixed(
             2
@@ -959,8 +959,8 @@ client.on("messageCreate", async (message) => {
           )}. Your new balance is $${user.balance.toFixed(2)}.**`
         );
 
-        crashed = true; 
-        reactionCollector.stop(); 
+        crashed = true;
+        reactionCollector.stop();
       }
     });
   }
@@ -1230,8 +1230,8 @@ client.on("messageCreate", async (message) => {
 
       for (const line of messageLines) {
         if (currentChunk.length + line.length + 1 > 2000) {
-          await message.channel.send(currentChunk); 
-          currentChunk = ""; 
+          await message.channel.send(currentChunk);
+          currentChunk = "";
         }
 
         currentChunk += line + "\n";
@@ -1600,7 +1600,9 @@ client.on("messageCreate", async (message) => {
       message.reply(response.choices[0].message.content);
     } catch (error) {
       console.error("Error:", error);
-      message.reply("KingBot ChatGPT is currently offline, has reached its token limit,or an error has occured.");
+      message.reply(
+        "KingBot ChatGPT is currently offline, has reached its token limit,or an error has occured."
+      );
     }
   }
 });
@@ -1626,13 +1628,11 @@ client.on("messageCreate", async (message) => {
       const lines = text.split("\n");
 
       for (const line of lines) {
-
         if (currentChunk.length + line.length > chunkSize) {
-
           chunks.push(currentChunk);
-          currentChunk = line; 
+          currentChunk = line;
         } else {
-          currentChunk += (currentChunk ? "\n" : "") + line; 
+          currentChunk += (currentChunk ? "\n" : "") + line;
         }
       }
 
@@ -1645,7 +1645,9 @@ client.on("messageCreate", async (message) => {
       }
     } catch (error) {
       console.error("Error:", error);
-      message.reply("KingBot Gemini is currently offline, has reached its maximum requests per minute, or an error has occured.");
+      message.reply(
+        "KingBot Gemini is currently offline, has reached its maximum requests per minute, or an error has occured."
+      );
     }
   }
 });
@@ -1668,7 +1670,9 @@ client.on("messageCreate", async (message) => {
       message.reply(response.message.content);
     } catch (error) {
       console.error("Error with Ollama API:", error);
-      message.reply("KingBot LLaMa is currently offline, or an error has occured.");
+      message.reply(
+        "KingBot LLaMa is currently offline, or an error has occured."
+      );
     }
   }
 });
@@ -1691,7 +1695,9 @@ client.on("messageCreate", async (message) => {
       message.reply(response.message.content);
     } catch (error) {
       console.error("Error with Ollama API:", error);
-      message.reply("KingBot Zephyr is currently offline, or an error has occured.");
+      message.reply(
+        "KingBot Zephyr is currently offline, or an error has occured."
+      );
     }
   }
 });
@@ -2623,7 +2629,6 @@ client.on("interactionCreate", async (interaction) => {
 //Information/Management Functions
 
 async function resolveUser(query, message) {
-
   if (message.mentions.users.size) {
     return message.mentions.users.first().id;
   }
@@ -2640,7 +2645,7 @@ async function resolveUser(query, message) {
     return member.user.id;
   }
 
-  return null; 
+  return null;
 }
 
 //Entertainment Functions
@@ -2994,7 +2999,11 @@ async function checkUserNetWorthSlash(userId, interaction) {
 //Temporary
 
 client.on("messageCreate", async (message) => {
-  const authorizedUserIds = ["786745378212282368", "737353026976612374", "811976354568208404"];
+  const authorizedUserIds = [
+    "786745378212282368",
+    "737353026976612374",
+    "811976354568208404",
+  ];
   const pingInterval = 1100;
 
   const usersToPing = [
