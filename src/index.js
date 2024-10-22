@@ -658,7 +658,7 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
-    let betAmount = parseInt(args[1], 10);
+    let betAmount = parseFloat(args[1]); // Allow decimal bets
     let choice = args[2].toLowerCase();
 
     if (isNaN(betAmount) || betAmount <= 0) {
@@ -691,7 +691,7 @@ client.on("messageCreate", async (message) => {
         .setColor("#00FF00")
         .setTitle("Coinflip Result")
         .setDescription(
-          `**You won $${betAmount}!** \nThe coin landed on ${
+          `**You won $${betAmount.toFixed(2)}!** \nThe coin landed on ${
             coinFlip ? "heads" : "tails"
           }. Your new balance is $${user.balance.toFixed(2)}.`
         )
@@ -708,7 +708,7 @@ client.on("messageCreate", async (message) => {
         .setColor("#FF0000")
         .setTitle("Coinflip Result")
         .setDescription(
-          `**You lost $${betAmount}!** \nThe coin landed on ${
+          `**You lost $${betAmount.toFixed(2)}!** \nThe coin landed on ${
             coinFlip ? "heads" : "tails"
           }. Your new balance is $${user.balance.toFixed(2)}.`
         )
@@ -832,7 +832,7 @@ client.on('messageCreate', async (message) => {
       return;
     }
 
-    let betAmount = parseInt(args[1], 10);
+    let betAmount = parseFloat(args[1]);
 
     if (isNaN(betAmount) || betAmount <= 0) {
       message.reply("Please enter a valid bet amount.");
@@ -851,11 +851,15 @@ client.on('messageCreate', async (message) => {
       return;
     }
 
+    // Deduct the bet amount at the start of the game
+    user.balance -= betAmount;
+    await user.save();
+
     // Calculate the crash multiplier beforehand
     const crashPoint = 0.01 + (0.99 / Math.random());
 
     // Send the initial message and add the checkmark reaction
-    const crashMessage = await message.channel.send(`💥 Crash game starting... Current multiplier: 1x (Profit: $0)`);
+    const crashMessage = await message.reply(`💥 Crash game starting... Current multiplier: **1x** (Profit: $0)`);
     await crashMessage.react('✅');
 
     // Multiplier starts at 1x
@@ -882,16 +886,14 @@ client.on('messageCreate', async (message) => {
 
       if (multiplier >= crashPoint) {
         crashed = true;
-        crashMessage.edit(`💥 The game crashed at **${crashPoint.toFixed(2)}x**!`);
         reactionCollector.stop(); // Stop the reaction collector as game ends
-        user.balance -= betAmount;
-        message.reply(`You lost $${betAmount}! Your new balance is $${user.balance.toFixed(2)}.`);
+        crashMessage.edit(`💥 The game crashed at **${crashPoint.toFixed(2)}x**! You lost $${betAmount}! Your new balance is $${user.balance.toFixed(2)}.`);
         user.save();
         return;
       }
 
       crashMessage.edit(`💥 Current multiplier: **${multiplier.toFixed(1)}x** (Profit: $${profit.toFixed(2)})`);
-
+      
       // Speed up the multiplier by 25% after every full 1.0x
       if (Math.floor(multiplier) !== Math.floor(multiplier - 0.1)) {
         intervalDuration *= 0.75;
@@ -908,9 +910,12 @@ client.on('messageCreate', async (message) => {
       if (!crashed) {
         let payout = betAmount * multiplier;
         let profit = payout - betAmount;
-        user.balance += payout;
+
+        // Add the initial investment back to the user's balance
+        user.balance += payout; 
         await user.save();
-        crashMessage.edit(`✅ You cashed out at **${multiplier.toFixed(1)}x**! You won **$${payout.toFixed(2)}** (Profit: $${profit.toFixed(2)}). Your new balance is $${user.balance.toFixed(2)}.`);
+        
+        crashMessage.edit(`✅ You cashed out at **${multiplier.toFixed(1)}x**! \n\n**You won $${profit.toFixed(2)}. Your new balance is $${user.balance.toFixed(2)}.**`);
         
         crashed = true; // Set crashed to true so the multiplier stops increasing
         reactionCollector.stop(); // Stop collecting reactions
