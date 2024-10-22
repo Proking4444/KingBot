@@ -889,7 +889,7 @@ client.on("messageCreate", async (message) => {
     const crashPoint = 0.01 + 0.99 / Math.random();
 
     const crashMessage = await message.reply(
-      `💥 Crash game starting... Current multiplier: **1x** \n\nProfit: **$0**`
+      `💥 Current multiplier: **1x** \n\nProfit: **$0** \n\nCrash game starting...`
     );
     await crashMessage.react("✅");
 
@@ -931,11 +931,11 @@ client.on("messageCreate", async (message) => {
       crashMessage.edit(
         `💥 Current multiplier: **${multiplier.toFixed(
           1
-        )}x** \n\nProfit: **$${profit.toFixed(2)}**`
+        )}x** \n\nProfit: **$${profit.toFixed(2)}** \n\nType \`$cashout\` to cash out your profits.`
       );
 
       if (Math.floor(multiplier) !== Math.floor(multiplier - 0.1)) {
-        intervalDuration *= 0.75;
+        intervalDuration *= 0.9;
       }
 
       setTimeout(increaseMultiplier, intervalDuration);
@@ -956,7 +956,7 @@ client.on("messageCreate", async (message) => {
             1
           )}x**! \n\n**You won $${profit.toFixed(
             2
-          )}. Your new balance is $${user.balance.toFixed(2)}.**`
+          )}!** Your new balance is $${user.balance.toFixed(2)}.`
         );
 
         crashed = true;
