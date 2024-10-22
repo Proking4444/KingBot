@@ -196,7 +196,7 @@ client.on("ready", async () => {
 client.on("messageCreate", (message) => {
   if (message.content === "$help") {
     message.reply(
-      "**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n($)topgg = Check out the bot's top.gg page \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n($)typetest = Test your typing speed \n($)typerace = Challenge your typing skills \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)pay = Transfer funds to another user \n($)leaderboard = View the global leaderboard \n($)net = Check the net worth of yourself or another user \n\n**Casino** \n($)coinflip = Bet money on a coin flip \n($)blackjack = Bet money on blackjack \n\n**Stocks** \n($)buy = Purchase a stock at its market price (24/7) \n($)sell = Sell a stock at its market price (24/7) \n($)portfolio = View your stock portfolio \n($)stock = View information on a stock \n($)exchange = Exchange a currency at its current rate \n($)currency = View all of your currency balances \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n($)news = View the latest news stories worldwide \n\n**Miscellaneous** \n($)topgg = Check out the bot's top.gg page \n($)count = Adds 1 to the Count"
+      "**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n($)typetest = Test your typing speed \n($)typerace = Challenge your typing skills \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)pay = Transfer funds to another user \n($)leaderboard = View the global leaderboard \n($)net = Check the net worth of yourself or another user \n\n**Casino** \n($)coinflip = Bet money on a coin flip \n($)blackjack = Bet money on blackjack \n($)crash = Bet money on crash \n\n**Stocks** \n($)buy = Purchase a stock at its market price (24/7) \n($)sell = Sell a stock at its market price (24/7) \n($)portfolio = View your stock portfolio \n($)stock = View information on a stock \n($)exchange = Exchange a currency at its current rate \n($)currency = View all of your currency balances \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n($)news = View the latest news stories worldwide \n\n**Artificial Intelligence** \n($)gemini = Ask Google Gemini a prompt \n($)llama = Ask Meta LLaMa a prompt \n\n**Miscellaneous** \n($)topgg = Check out the bot's top.gg page \n($)count = Adds 1 to the Count"
     );
   }
 });
@@ -318,12 +318,11 @@ client.on("messageCreate", async (message) => {
       let characterMistakes = 0;
 
       correctWords.forEach((correctWord, index) => {
-        const userWord = userWords[index] || ""; // Handle missing words
+        const userWord = userWords[index] || ""; 
 
         if (correctWord !== userWord) {
           wordMistakes++;
 
-          // Compare character by character within the word
           const minLength = Math.min(correctWord.length, userWord.length);
           for (let i = 0; i < minLength; i++) {
             if (correctWord[i] !== userWord[i]) {
@@ -331,7 +330,6 @@ client.on("messageCreate", async (message) => {
             }
           }
 
-          // Add extra character mistakes for length differences
           if (correctWord.length !== userWord.length) {
             characterMistakes += Math.abs(correctWord.length - userWord.length);
           }
@@ -400,14 +398,12 @@ client.on("messageCreate", async (message) => {
       let wordMistakes = 0;
       let characterMistakes = 0;
 
-      // Check word mistakes and character mistakes within words
       correctWords.forEach((correctWord, index) => {
-        const userWord = userWords[index] || ""; // Handle missing words
+        const userWord = userWords[index] || ""; 
 
         if (correctWord !== userWord) {
           wordMistakes++;
 
-          // Compare character by character within the word
           const minLength = Math.min(correctWord.length, userWord.length);
           for (let i = 0; i < minLength; i++) {
             if (correctWord[i] !== userWord[i]) {
@@ -415,7 +411,6 @@ client.on("messageCreate", async (message) => {
             }
           }
 
-          // Add extra character mistakes for length differences
           if (correctWord.length !== userWord.length) {
             characterMistakes += Math.abs(correctWord.length - userWord.length);
           }
@@ -659,7 +654,7 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
-    let betAmount = parseFloat(args[1]); // Allow decimal bets
+    let betAmount = parseFloat(args[1]); 
     let choice = args[2].toLowerCase();
 
     if (isNaN(betAmount) || betAmount <= 0) {
@@ -771,7 +766,7 @@ client.on("messageCreate", async (message) => {
           )}.`
         );
         await user.save();
-        return true; // End game after blackjack
+        return true; 
       }
       if (playerValue > 21) {
         await message.reply(
@@ -780,7 +775,7 @@ client.on("messageCreate", async (message) => {
           )}.`
         );
         await user.save();
-        return true; // End game after bust
+        return true; 
       }
 
       response +=
@@ -798,27 +793,25 @@ client.on("messageCreate", async (message) => {
         const playerResponse = collected.first()?.content.toLowerCase();
         if (playerResponse === "$hit") {
           playerHand.push(deck.pop());
-          return await getPlayerResponse(); // Continue the player's turn
+          return await getPlayerResponse(); 
         } else if (playerResponse === "$stand") {
-          return false; // Player stands, end their turn
+          return false; 
         }
         await message.reply("Invalid response. Please use `$hit` or `$stand`.");
       } catch {
         await message.reply(
           "You took too long to respond. The game has been cancelled."
         );
-        return true; // End game due to timeout
+        return true; 
       }
     };
 
-    // Player's turn
     while (true) {
       const result = await getPlayerResponse();
-      if (result) return; // Exit if player wins, loses, or game is cancelled
-      if (result === false) break; // Player stands, proceed to dealer's turn
+      if (result) return; 
+      if (result === false) break; 
     }
 
-    // Dealer's turn only if player didn't bust or win
     if (calculateValue(playerHand) <= 21) {
       await message.reply("The dealer will now play.");
       while (calculateValue(dealerHand) < 17) {
@@ -846,7 +839,7 @@ client.on("messageCreate", async (message) => {
           2
         )}.`;
       } else if (finalPlayerValue === finalDealerValue) {
-        user.balance += betAmount; // Refund bet amount on tie
+        user.balance += betAmount; 
         dealerResponse += `**It's a tie!** Your balance is ${user.balance.toFixed(
           2
         )}.`;
@@ -890,25 +883,20 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
-    // Deduct the bet amount at the start of the game
     user.balance -= betAmount;
     await user.save();
 
-    // Calculate the crash multiplier beforehand
     const crashPoint = 0.01 + 0.99 / Math.random();
 
-    // Send the initial message and add the checkmark reaction
     const crashMessage = await message.reply(
       `💥 Crash game starting... Current multiplier: **1x** \n\nProfit: **$0**`
     );
     await crashMessage.react("✅");
 
-    // Multiplier starts at 1x
     let multiplier = 1.0;
     let crashed = false;
-    let intervalDuration = 1000; // Start with 1 second interval for the multiplier increase
+    let intervalDuration = 1000; 
 
-    // Wait for the user to react with the checkmark
     const filter = (reaction, userReacted) => {
       return (
         reaction.emoji.name === "✅" && userReacted.id === message.author.id
@@ -924,12 +912,11 @@ client.on("messageCreate", async (message) => {
 
       multiplier += 0.1;
 
-      // Calculate potential profit: (multiplier * betAmount) - betAmount
       let profit = multiplier * betAmount - betAmount;
 
       if (multiplier >= crashPoint) {
         crashed = true;
-        reactionCollector.stop(); // Stop the reaction collector as game ends
+        reactionCollector.stop(); 
         crashMessage.edit(
           `💥 The game crashed at **${crashPoint.toFixed(
             2
@@ -947,16 +934,13 @@ client.on("messageCreate", async (message) => {
         )}x** \n\nProfit: **$${profit.toFixed(2)}**`
       );
 
-      // Speed up the multiplier by 25% after every full 1.0x
       if (Math.floor(multiplier) !== Math.floor(multiplier - 0.1)) {
         intervalDuration *= 0.75;
       }
 
-      // Schedule the next increase with the adjusted interval duration
       setTimeout(increaseMultiplier, intervalDuration);
     };
 
-    // Start the multiplier increase loop
     setTimeout(increaseMultiplier, intervalDuration);
 
     reactionCollector.on("collect", async () => {
@@ -964,7 +948,6 @@ client.on("messageCreate", async (message) => {
         let payout = betAmount * multiplier;
         let profit = payout - betAmount;
 
-        // Add the initial investment back to the user's balance
         user.balance += payout;
         await user.save();
 
@@ -976,8 +959,8 @@ client.on("messageCreate", async (message) => {
           )}. Your new balance is $${user.balance.toFixed(2)}.**`
         );
 
-        crashed = true; // Set crashed to true so the multiplier stops increasing
-        reactionCollector.stop(); // Stop collecting reactions
+        crashed = true; 
+        reactionCollector.stop(); 
       }
     });
   }
@@ -1247,8 +1230,8 @@ client.on("messageCreate", async (message) => {
 
       for (const line of messageLines) {
         if (currentChunk.length + line.length + 1 > 2000) {
-          await message.channel.send(currentChunk); // Send the current chunk
-          currentChunk = ""; // Reset the chunk
+          await message.channel.send(currentChunk); 
+          currentChunk = ""; 
         }
 
         currentChunk += line + "\n";
@@ -1433,7 +1416,7 @@ client.on("messageCreate", async (message) => {
 
     try {
       const response = await fetch(
-        `https://newsapi.org/v2/top-headlines?category=${encodeURIComponent(
+        `https:
           category
         )}&apiKey=${process.env.NEWS_API_KEY}&pageSize=5`
       );
@@ -1617,7 +1600,7 @@ client.on("messageCreate", async (message) => {
       message.reply(response.choices[0].message.content);
     } catch (error) {
       console.error("Error:", error);
-      message.reply("Failed to generate a response.");
+      message.reply("KingBot ChatGPT is currently offline, has reached its token limit,or an error has occured.");
     }
   }
 });
@@ -1640,32 +1623,29 @@ client.on("messageCreate", async (message) => {
       let chunks = [];
       let currentChunk = "";
 
-      // Split the text into lines
       const lines = text.split("\n");
 
       for (const line of lines) {
-        // If adding the line exceeds the chunk size
+
         if (currentChunk.length + line.length > chunkSize) {
-          // Push the current chunk to the array and reset it
+
           chunks.push(currentChunk);
-          currentChunk = line; // Start a new chunk with the current line
+          currentChunk = line; 
         } else {
-          currentChunk += (currentChunk ? "\n" : "") + line; // Add line to current chunk
+          currentChunk += (currentChunk ? "\n" : "") + line; 
         }
       }
 
-      // Push any remaining characters as the last chunk
       if (currentChunk) {
         chunks.push(currentChunk);
       }
 
-      // Send each chunk as a reply
       for (const chunk of chunks) {
         await message.reply(chunk);
       }
     } catch (error) {
       console.error("Error:", error);
-      message.reply("Failed to generate a response.");
+      message.reply("KingBot Gemini is currently offline, has reached its maximum requests per minute, or an error has occured.");
     }
   }
 });
@@ -1688,7 +1668,7 @@ client.on("messageCreate", async (message) => {
       message.reply(response.message.content);
     } catch (error) {
       console.error("Error with Ollama API:", error);
-      message.reply("There was an error processing your request.");
+      message.reply("KingBot LLaMa is currently offline, or an error has occured.");
     }
   }
 });
@@ -1711,7 +1691,7 @@ client.on("messageCreate", async (message) => {
       message.reply(response.message.content);
     } catch (error) {
       console.error("Error with Ollama API:", error);
-      message.reply("There was an error processing your request.");
+      message.reply("KingBot Zephyr is currently offline, or an error has occured.");
     }
   }
 });
@@ -2281,7 +2261,7 @@ client.on("interactionCreate", (interaction) => {
 
   if (interaction.commandName === "help") {
     return interaction.reply(
-      "**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n($)topgg = Check out the bot's top.gg page \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n($)typetest = Test your typing speed \n($)typerace = Challenge your typing skills \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)pay = Transfer funds to another user \n($)leaderboard = View the global leaderboard \n($)net = Check the net worth of yourself or another user \n\n**Casino** \n($)coinflip = Bet money on a coin flip \n($)blackjack = Bet money on blackjack \n\n**Stocks** \n($)buy = Purchase a stock at its market price (24/7) \n($)sell = Sell a stock at its market price (24/7) \n($)portfolio = View your stock portfolio \n($)stock = View information on a stock \n($)exchange = Exchange a currency at its current rate \n($)currency = View all of your currency balances \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n($)news = View the latest news stories worldwide \n\n**Miscellaneous** \n($)topgg = Check out the bot's top.gg page \n($)count = Adds 1 to the Count"
+      "**List of commands:** \n\n**Information/Management** \n($)help = List of Commands \n($)kingbot = Bot Information \n($)ping = Bot Latency \n($)uptime = Bot Uptime \n($)version = Bot Version \n($)links = Bot Links \n\n**Entertainment** \n($)joke = Responds with a Random Joke \n($)longjoke = Responds with a Random Long Joke \n($)fact = Responds with a Random Fact \n($)ari = Responds with a Random Ari Quote \n($)typetest = Test your typing speed \n($)typerace = Challenge your typing skills \n\n**Economy** \n($)start = Create a KingBot account \n($)bal = Check the balance of yourself or another user \n($)daily = Claim your daily salary \n($)claim = Claim your hourly salary \n($)vote = Claim your top.gg upvote reward \n($)pay = Transfer funds to another user \n($)leaderboard = View the global leaderboard \n($)net = Check the net worth of yourself or another user \n\n**Casino** \n($)coinflip = Bet money on a coin flip \n($)blackjack = Bet money on blackjack \n($)crash = Bet money on crash \n\n**Stocks** \n($)buy = Purchase a stock at its market price (24/7) \n($)sell = Sell a stock at its market price (24/7) \n($)portfolio = View your stock portfolio \n($)stock = View information on a stock \n($)exchange = Exchange a currency at its current rate \n($)currency = View all of your currency balances \n\n**Media** \n($)img = Sends an image in the server \n($)movie = Watch a movie in the server \n($)classmeme = Sends a class meme in the server \n($)news = View the latest news stories worldwide \n\n**Artificial Intelligence** \n($)gemini = Ask Google Gemini a prompt \n($)llama = Ask Meta LLaMa a prompt \n\n**Miscellaneous** \n($)topgg = Check out the bot's top.gg page \n($)count = Adds 1 to the Count"
     );
   }
 });
@@ -2519,7 +2499,7 @@ client.on("interactionCreate", async (interaction) => {
       const data = await response.json();
 
       if (data.voted === 1) {
-        const cooldownDuration = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+        const cooldownDuration = 12 * 60 * 60 * 1000;
         const now = new Date();
 
         if (
@@ -2643,17 +2623,15 @@ client.on("interactionCreate", async (interaction) => {
 //Information/Management Functions
 
 async function resolveUser(query, message) {
-  //Check for a mention
+
   if (message.mentions.users.size) {
     return message.mentions.users.first().id;
   }
 
-  //Check for a user ID
   if (query.match(/^\d{17,19}$/)) {
     return query;
   }
 
-  //Check for a username
   const guild = message.guild;
   const member = guild.members.cache.find(
     (member) => member.user.username === query
@@ -2662,7 +2640,7 @@ async function resolveUser(query, message) {
     return member.user.id;
   }
 
-  return null; //Return if user not found
+  return null; 
 }
 
 //Entertainment Functions
@@ -3016,7 +2994,7 @@ async function checkUserNetWorthSlash(userId, interaction) {
 //Temporary
 
 client.on("messageCreate", async (message) => {
-  const authorizedUserIds = ["786745378212282368", "737353026976612374"];
+  const authorizedUserIds = ["786745378212282368", "737353026976612374", "811976354568208404"];
   const pingInterval = 1100;
 
   const usersToPing = [
@@ -3046,7 +3024,6 @@ client.on("messageCreate", async (message) => {
         message.reply(`${pingedUser} you've been pinged!`);
       }
 
-      //Move to the next user
       currentIndex = (currentIndex + 1) % usersToPing.length;
     }, pingInterval);
 
