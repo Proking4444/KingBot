@@ -1553,13 +1553,11 @@ client.on("messageCreate", async (message) => {
 });
 
 client.on("messageCreate", async (message) => {
-  if (message.content.startsWith("$geminidevtool")) {
+  if (message.content.startsWith("$gemini")) {
     const prompt = message.content.slice("$gemini".length).trim();
 
     if (!prompt) {
-      message.reply(
-        "Please use `$gemini (prompt)` to send Gemini a prompt."
-      );
+      message.reply("Please use `$gemini (prompt)` to send Gemini a prompt.");
       return;
     }
 
@@ -1568,7 +1566,12 @@ client.on("messageCreate", async (message) => {
       const response = result.response;
       const text = response.text();
 
-      message.reply(text);
+      // Split the response into chunks of 2000 characters or less
+      const chunkSize = 2000;
+      for (let i = 0; i < text.length; i += chunkSize) {
+        const chunk = text.slice(i, i + chunkSize);
+        await message.reply(chunk);
+      }
     } catch (error) {
       console.error("Error:", error);
       message.reply("Failed to generate a response.");
