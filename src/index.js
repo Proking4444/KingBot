@@ -7,6 +7,7 @@ import {
   ActivityType,
   EmbedBuilder,
 } from "discord.js";
+
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 
@@ -238,7 +239,7 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", (message) => {
   if (message.content === "$version") {
     message.reply(
-      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.11.13.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.9.0 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.7.2 \n\n**Yahoo Finance (2)** \n2.13.2"
+      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.5.11.13.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.9.0 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.7.2 \n\n**Yahoo Finance (2)** \n2.13.2"
     );
   }
 });
@@ -1566,11 +1567,11 @@ client.on("messageCreate", async (message) => {
       const response = result.response;
       const text = response.text();
 
-      // Split the response into chunks of 2000 characters or less
-      const chunkSize = 2000;
-      for (let i = 0; i < text.length; i += chunkSize) {
-        const chunk = text.slice(i, i + chunkSize);
-        await message.reply(chunk);
+      // Split the response into sentences
+      const sentences = text.match(/[^.!?]+[.!?]+/g) || [text]; // Fallback to the entire text if no matches
+
+      for (const sentence of sentences) {
+        await message.reply(sentence.trim());
       }
     } catch (error) {
       console.error("Error:", error);
@@ -2246,7 +2247,7 @@ client.on("interactionCreate", (interaction) => {
 
   if (interaction.commandName === "version") {
     return interaction.reply(
-      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.4.11.13.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.5.4 \n\n**Yahoo Finance (2)** \n2.13.2"
+      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.5.11.13.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.5.4 \n\n**Yahoo Finance (2)** \n2.13.2"
     );
   }
 });
