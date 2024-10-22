@@ -691,7 +691,7 @@ client.on("messageCreate", async (message) => {
         .setColor("#00FF00")
         .setTitle("Coinflip Result")
         .setDescription(
-          `**You won!** \nThe coin landed on ${
+          `**You won $${betAmount}!** \nThe coin landed on ${
             coinFlip ? "heads" : "tails"
           }. Your new balance is $${user.balance.toFixed(2)}.`
         )
@@ -708,7 +708,7 @@ client.on("messageCreate", async (message) => {
         .setColor("#FF0000")
         .setTitle("Coinflip Result")
         .setDescription(
-          `**You lost!** \nThe coin landed on ${
+          `**You lost $${betAmount}!** \nThe coin landed on ${
             coinFlip ? "heads" : "tails"
           }. Your new balance is $${user.balance.toFixed(2)}.`
         )
@@ -755,12 +755,12 @@ client.on("messageCreate", async (message) => {
 
       if (playerValue === 21) {
         user.balance += betAmount * 2;
-        await message.reply(`${response}**Blackjack! You win!** Your new balance is ${(user.balance).toFixed(2)}.`);
+        await message.reply(`${response}**Blackjack! You won $${betAmount}!** Your new balance is ${(user.balance).toFixed(2)}.`);
         await user.save();
         return true; // End game after blackjack
       } 
       if (playerValue > 21) {
-        await message.reply(`${response}**Bust! You lose!** Your new balance is ${(user.balance).toFixed(2)}.`);
+        await message.reply(`${response}**Bust! You lost $${betAmount}!** Your new balance is ${(user.balance).toFixed(2)}.`);
         await user.save();
         return true; // End game after bust
       }
@@ -806,15 +806,15 @@ client.on("messageCreate", async (message) => {
                            `**Dealer's final hand:** \n${dealerHand.join(" ")} **(Value: ${finalDealerValue})**\n\n`;
 
       if (finalPlayerValue > 21) {
-        dealerResponse += `**Bust! You lose!** Your new balance is ${user.balance.toFixed(2)}.`;
+        dealerResponse += `**Bust! You lost $${betAmount}!** Your new balance is ${user.balance.toFixed(2)}.`;
       } else if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
         user.balance += betAmount * 2;
-        dealerResponse += `**You win!** Your new balance is ${(user.balance).toFixed(2)}.`;
+        dealerResponse += `**You won $${betAmount}!** Your new balance is ${(user.balance).toFixed(2)}.`;
       } else if (finalPlayerValue === finalDealerValue) {
         user.balance += betAmount; // Refund bet amount on tie
         dealerResponse += `**It's a tie!** Your balance is ${user.balance.toFixed(2)}.`;
       } else {
-        dealerResponse += `**You lose!** Your new balance is ${user.balance.toFixed(2)}.`;
+        dealerResponse += `**You lost $${betAmount}!** Your new balance is ${user.balance.toFixed(2)}.`;
       }
 
       await message.reply(dealerResponse);
@@ -825,95 +825,97 @@ client.on("messageCreate", async (message) => {
 
 client.on('messageCreate', async (message) => {
   if (message.content.startsWith("$crash")) {
-      let args = message.content.split(" ");
+    let args = message.content.split(" ");
 
-      if (args.length < 2) {
-          message.reply("Please use `$crash (bet amount)` to place a bet.");
-          return;
+    if (args.length < 2) {
+      message.reply("Please use `$crash (bet amount)` to place a bet.");
+      return;
+    }
+
+    let betAmount = parseInt(args[1], 10);
+
+    if (isNaN(betAmount) || betAmount <= 0) {
+      message.reply("Please enter a valid bet amount.");
+      return;
+    }
+
+    let user = await User.findOne({ discordId: message.author.id });
+
+    if (!user) {
+      message.reply("You need to create an account first with $start.");
+      return;
+    }
+
+    if (user.balance < betAmount) {
+      message.reply("You do not have enough balance to place this bet.");
+      return;
+    }
+
+    // Calculate the crash multiplier beforehand
+    const crashPoint = 0.01 + (0.99 / Math.random());
+
+    // Send the initial message and add the checkmark reaction
+    const crashMessage = await message.channel.send(`💥 Crash game starting... Current multiplier: 1x (Profit: $0)`);
+    await crashMessage.react('✅');
+
+    // Multiplier starts at 1x
+    let multiplier = 1.0;
+    let crashed = false;
+    let intervalDuration = 1000; // Start with 1 second interval for the multiplier increase
+
+    // Wait for the user to react with the checkmark
+    const filter = (reaction, userReacted) => {
+      return reaction.emoji.name === '✅' && userReacted.id === message.author.id;
+    };
+
+    const reactionCollector = crashMessage.createReactionCollector({
+      filter,
+    });
+
+    const increaseMultiplier = () => {
+      if (crashed) return;
+
+      multiplier += 0.1;
+
+      // Calculate potential profit: (multiplier * betAmount) - betAmount
+      let profit = (multiplier * betAmount) - betAmount;
+
+      if (multiplier >= crashPoint) {
+        crashed = true;
+        crashMessage.edit(`💥 The game crashed at **${crashPoint.toFixed(2)}x**!`);
+        reactionCollector.stop(); // Stop the reaction collector as game ends
+        user.balance -= betAmount;
+        message.reply(`You lost $${betAmount}! Your new balance is $${user.balance.toFixed(2)}.`);
+        user.save();
+        return;
       }
 
-      let betAmount = parseInt(args[1], 10);
+      crashMessage.edit(`💥 Current multiplier: **${multiplier.toFixed(1)}x** (Profit: $${profit.toFixed(2)})`);
 
-      if (isNaN(betAmount) || betAmount <= 0) {
-          message.reply("Please enter a valid bet amount.");
-          return;
+      // Speed up the multiplier by 25% after every full 1.0x
+      if (Math.floor(multiplier) !== Math.floor(multiplier - 0.1)) {
+        intervalDuration *= 0.75;
       }
 
-      let user = await User.findOne({ discordId: message.author.id });
-
-      if (!user) {
-          message.reply("You need to create an account first with $start.");
-          return;
-      }
-
-      if (user.balance < betAmount) {
-          message.reply("You do not have enough balance to place this bet.");
-          return;
-      }
-
-      // Calculate the crash multiplier beforehand
-      const crashPoint = 0.01 + (0.99 / Math.random());
-
-      // Send the initial message and add the checkmark reaction
-      const crashMessage = await message.channel.send(`💥 Crash game starting... Current multiplier: 1x (Profit: $0)`);
-      await crashMessage.react('✅');
-
-      // Multiplier starts at 1x
-      let multiplier = 1.0;
-      let crashed = false;
-      let intervalDuration = 1000; // Start with 1 second interval for the multiplier increase
-
-      // Wait for the user to react with the checkmark
-      const filter = (reaction, userReacted) => {
-          return reaction.emoji.name === '✅' && userReacted.id === message.author.id;
-      };
-
-      const reactionCollector = crashMessage.createReactionCollector({
-          filter,
-      });
-
-      const increaseMultiplier = () => {
-          if (crashed) return;
-
-          multiplier += 0.1;
-
-          // Calculate potential profit: (multiplier * betAmount) - betAmount
-          let profit = (multiplier * betAmount) - betAmount;
-
-          if (multiplier >= crashPoint) {
-              crashed = true;
-              crashMessage.edit(`💥 The game crashed at **${crashPoint.toFixed(2)}x**!`);
-              reactionCollector.stop(); // Stop the reaction collector as game ends
-              user.balance -= betAmount;
-              message.reply(`You lost **${betAmount}**! Your new balance is $${user.balance.toFixed(2)}.`);
-              user.save();
-              return;
-          }
-
-          crashMessage.edit(`💥 Current multiplier: **${multiplier.toFixed(1)}x** (Profit: $${profit.toFixed(2)})`);
-
-          // Speed up the multiplier by 25% after every full 1.0x
-          if (Math.floor(multiplier) !== Math.floor(multiplier - 0.1)) {
-              intervalDuration *= 0.75;
-          }
-
-          // Schedule the next increase with the adjusted interval duration
-          setTimeout(increaseMultiplier, intervalDuration);
-      };
-
-      // Start the multiplier increase loop
+      // Schedule the next increase with the adjusted interval duration
       setTimeout(increaseMultiplier, intervalDuration);
+    };
 
-      reactionCollector.on('collect', async () => {
-          if (!crashed) {
-              let payout = betAmount * multiplier;
-              let profit = payout - betAmount;
-              user.balance += payout;
-              await user.save();
-              crashMessage.edit(`✅ You cashed out at **${multiplier.toFixed(1)}x**! You won **$${payout.toFixed(2)}** (Profit: $${profit.toFixed(2)}). Your new balance is $${user.balance.toFixed(2)}.`);
-              reactionCollector.stop();
-          }
-      });
+    // Start the multiplier increase loop
+    setTimeout(increaseMultiplier, intervalDuration);
+
+    reactionCollector.on('collect', async () => {
+      if (!crashed) {
+        let payout = betAmount * multiplier;
+        let profit = payout - betAmount;
+        user.balance += payout;
+        await user.save();
+        crashMessage.edit(`✅ You cashed out at **${multiplier.toFixed(1)}x**! You won **$${payout.toFixed(2)}** (Profit: $${profit.toFixed(2)}). Your new balance is $${user.balance.toFixed(2)}.`);
+        
+        crashed = true; // Set crashed to true so the multiplier stops increasing
+        reactionCollector.stop(); // Stop collecting reactions
+      }
+    });
   }
 });
 
