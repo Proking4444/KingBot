@@ -1567,11 +1567,32 @@ client.on("messageCreate", async (message) => {
       const response = result.response;
       const text = response.text();
 
-      // Split the response into sentences
-      const sentences = text.match(/[^.!?]+[.!?]+/g) || [text]; // Fallback to the entire text if no matches
+      const chunkSize = 2000;
+      let chunks = [];
+      let currentChunk = "";
 
-      for (const sentence of sentences) {
-        await message.reply(sentence.trim());
+      // Split the text into lines
+      const lines = text.split('\n');
+
+      for (const line of lines) {
+        // If adding the line exceeds the chunk size
+        if (currentChunk.length + line.length > chunkSize) {
+          // Push the current chunk to the array and reset it
+          chunks.push(currentChunk);
+          currentChunk = line; // Start a new chunk with the current line
+        } else {
+          currentChunk += (currentChunk ? "\n" : "") + line; // Add line to current chunk
+        }
+      }
+
+      // Push any remaining characters as the last chunk
+      if (currentChunk) {
+        chunks.push(currentChunk);
+      }
+
+      // Send each chunk as a reply
+      for (const chunk of chunks) {
+        await message.reply(chunk);
       }
     } catch (error) {
       console.error("Error:", error);
