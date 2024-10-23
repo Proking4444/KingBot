@@ -1681,6 +1681,7 @@ client.on("messageCreate", async (message) => {
         parts: [{ text: doc.message }],
       }));
 
+      // Add the user's prompt to the history
       history.push({
         role: "user",
         parts: [{ text: prompt }],
@@ -1696,20 +1697,32 @@ client.on("messageCreate", async (message) => {
         ],
       });
 
+      // Send the message and store the response
       let result = await chat.sendMessage(prompt);
-      message.reply(result.response.text()); // Send the response as a reply
+      const botResponse = result.response.text(); // Store the bot's response
 
+      // Send the response as a reply
+      message.reply(botResponse); 
+
+      // Store the user prompt in the chat history
       await ChatHistory.create({
         user: message.author.username,
         message: prompt,
       });
 
+      // Store the bot's response in the chat history
+      await ChatHistory.create({
+        user: 'Gemini', // You can use a specific username for the bot
+        message: botResponse,
+      });
+
+      // Check and delete the oldest message if needed
       const messageCount = await ChatHistory.countDocuments();
       if (messageCount > 5) {
         const oldestMessage = await ChatHistory.findOne().sort({ createdAt: 1 });
         await ChatHistory.deleteOne({ _id: oldestMessage._id });
       }
-      
+
     } catch (error) {
       console.error('Error:', error);
       message.reply('KingBot Gemini 1.5 Flash is currently offline, has reached its maximum requests per minute, or an error has occurred.');
