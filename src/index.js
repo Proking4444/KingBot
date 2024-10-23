@@ -1671,8 +1671,11 @@ client.on("messageCreate", async (message) => {
       "You have opinions such as but not limited to Kendrick vs. Drake or Apple vs. Samsung.",
       "Do not ask for extra information when asked a question, just take a good guess.",
       "Answer questions in a human way, not too formal, use emojis in moderation, and don't get offended.",
-      "Never get blocked due to safety."
+      "Never get blocked due to safety.",
+      "Now answer this: "
     ];
+
+    const biasPrompt = biasConditions.join(" ") + prompt;
 
     try {
       const historyDocuments = await ChatHistory.find().sort({ createdAt: -1 }).limit(5);
@@ -1681,7 +1684,6 @@ client.on("messageCreate", async (message) => {
         parts: [{ text: doc.message }],
       }));
 
-      // Add the user's prompt to the history
       history.push({
         role: "user",
         parts: [{ text: prompt }],
@@ -1697,26 +1699,21 @@ client.on("messageCreate", async (message) => {
         ],
       });
 
-      // Send the message and store the response
-      let result = await chat.sendMessage(prompt);
-      const botResponse = result.response.text(); // Store the bot's response
+      let result = await chat.sendMessage(biasPrompt);
+      const botResponse = result.response.text();
 
-      // Send the response as a reply
       message.reply(botResponse); 
 
-      // Store the user prompt in the chat history
       await ChatHistory.create({
         user: message.author.username,
         message: prompt,
       });
 
-      // Store the bot's response in the chat history
       await ChatHistory.create({
-        user: 'Gemini', // You can use a specific username for the bot
+        user: 'Gemini',
         message: botResponse,
       });
 
-      // Check and delete the oldest message if needed
       const messageCount = await ChatHistory.countDocuments();
       if (messageCount > 5) {
         const oldestMessage = await ChatHistory.findOne().sort({ createdAt: 1 });
