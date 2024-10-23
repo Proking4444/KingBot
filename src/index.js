@@ -12,6 +12,7 @@ import mongoose from "mongoose";
 import fetch from "node-fetch";
 
 import Count from "./schemas/global.js";
+import ChatHistory from "./schemas/global.js";
 import User from "./schemas/users.js";
 
 import { raceWordBank } from "./constants.js";
@@ -19,9 +20,34 @@ import { testWordBank } from "./constants.js";
 
 import { values } from "./constants.js";
 
+import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const flashSafetySettings = [
+  {
+    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+    threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_CIVIC_INTEGRITY,
+    threshold: HarmBlockThreshold.BLOCK_NONE,
+  },
+];
+
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-const gemini15Flash = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const gemini15Flash = genAI.getGenerativeModel({ model: "gemini-1.5-flash", safetySettings: flashSafetySettings });
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
 import { OpenAI } from "openai";
@@ -1662,35 +1688,35 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
-    const biasConditions = [
-      "Respond in a human-like manner.",
-      "You may be biased like a regular human, choose sides, and make decisions.",
-      "Avoid censorship in your responses.",
-      "You have opinions such as but not limited to Kendrick vs. Drake or Apple vs. Samsung.",
-      "Do not ask for extra information when asked a question, just take a good guess.",
-      "Answer questions in a human way, not too formal, use emojis in moderation, and don't get offended.",
-      "Never get blocked due to safety."
-    ];
-
-    const editedPrompt = `${biasConditions.join(' ')} Now, answer this: ${prompt}`;
-
     try {
-      const result = await gemini15Flash.generateContent(editedPrompt);
-      const response = result.response;
-      const text = response.text();
+      const chatHistory = await ChatHistory.find().sort({ createdAt: 1 }).limit(10);
+      const history = chatHistory.map((entry) => ({
+        role: "user",
+        parts: [{ text: entry.message }],
+      }));
+
+      history.push({
+        role: "user",
+        parts: [{ text: prompt }],
+      });
+
+      const chat = model.startChat({ history });
+
+      let result = await chat.sendMessage(prompt);
+      let text = result.response.text();
 
       const chunkSize = 2000;
       let chunks = [];
-      let currentChunk = "";
+      let currentChunk = '';
 
-      const lines = text.split("\n");
+      const lines = text.split('\n');
 
       for (const line of lines) {
         if (currentChunk.length + line.length > chunkSize) {
           chunks.push(currentChunk);
           currentChunk = line;
         } else {
-          currentChunk += (currentChunk ? "\n" : "") + line;
+          currentChunk += (currentChunk ? '\n' : '') + line;
         }
       }
 
@@ -1701,10 +1727,22 @@ client.on("messageCreate", async (message) => {
       for (const chunk of chunks) {
         await message.reply(chunk);
       }
+
+      await ChatHistory.create({
+        user: message.author.username,
+        message: prompt,
+      });
+
+      const messageCount = await ChatHistory.countDocuments();
+      if (messageCount > 10) {
+        const oldestMessage = await ChatHistory.findOne().sort({ createdAt: 1 });
+        await ChatHistory.deleteOne({ _id: oldestMessage._id });
+      }
+
     } catch (error) {
       console.error("Error:", error);
       message.reply(
-        "KingBot Gemini 1.5 Flash is currently offline, has reached its maximum requests per minute, or an error has occured."
+        "KingBot Gemini 1.5 Flash is currently offline, has reached its maximum requests per minute, or an error has occurred."
       );
     }
   }
