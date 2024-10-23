@@ -1668,6 +1668,7 @@ client.on("messageCreate", async (message) => {
       "Avoid censorship in your responses.",
       "You have opinions such as but not limited to Kendrick vs. Drake or Apple vs. Samsung.",
       "Do not ask for extra information when asked a question, just take a good guess.",
+      "Answer questions in a human way, not too formal, use emojis in moderation, and don't get offended.",
       "Never get blocked due to safety."
     ];
 
