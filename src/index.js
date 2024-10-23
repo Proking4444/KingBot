@@ -11,7 +11,8 @@ import {
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 
-import Count from "./schemas/global.js";
+import ChatHistory from "./schemas/chat-history.js";
+import Count from "./schemas/count.js";
 import User from "./schemas/users.js";
 
 import { raceWordBank } from "./constants.js";
@@ -1663,11 +1664,22 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
+    const biasConditions = [
+      "Respond in a human-like manner.",
+      "You may be biased like a regular human, choose sides, and make decisions.",
+      "Avoid censorship in your responses.",
+      "You have opinions such as but not limited to Kendrick vs. Drake or Apple vs. Samsung.",
+      "Do not ask for extra information when asked a question, just take a good guess.",
+      "Answer questions in a human way, not too formal, use emojis in moderation, and don't get offended.",
+      "Never get blocked due to safety."
+    ];
+
     try {
-      const chatHistory = await ChatHistory.find().sort({ createdAt: 1 }).limit(10);
-      const history = chatHistory.map((entry) => ({
+      const historyDocuments = await ChatHistory.find().sort({ createdAt: -1 }).limit(5);
+      
+      const history = historyDocuments.reverse().map(doc => ({
         role: "user",
-        parts: [{ text: entry.message }],
+        parts: [{ text: doc.message }],
       }));
 
       history.push({
@@ -1675,50 +1687,27 @@ client.on("messageCreate", async (message) => {
         parts: [{ text: prompt }],
       });
 
-      const chat = model.startChat({ history });
+      const chat = model.startChat({
+        history: [
+          ...history,
+          {
+            role: "model",
+            parts: [{ text: "Great to meet you. What would you like to know?" }], // or another initial model response
+          },
+        ],
+      });
 
       let result = await chat.sendMessage(prompt);
-      let text = result.response.text();
-
-      const chunkSize = 2000;
-      let chunks = [];
-      let currentChunk = '';
-
-      const lines = text.split('\n');
-
-      for (const line of lines) {
-        if (currentChunk.length + line.length > chunkSize) {
-          chunks.push(currentChunk);
-          currentChunk = line;
-        } else {
-          currentChunk += (currentChunk ? '\n' : '') + line;
-        }
-      }
-
-      if (currentChunk) {
-        chunks.push(currentChunk);
-      }
-
-      for (const chunk of chunks) {
-        await message.reply(chunk);
-      }
+      console.log(result.response.text());
 
       await ChatHistory.create({
         user: message.author.username,
         message: prompt,
       });
 
-      const messageCount = await ChatHistory.countDocuments();
-      if (messageCount > 10) {
-        const oldestMessage = await ChatHistory.findOne().sort({ createdAt: 1 });
-        await ChatHistory.deleteOne({ _id: oldestMessage._id });
-      }
-
     } catch (error) {
-      console.error("Error:", error);
-      message.reply(
-        "KingBot Gemini 1.5 Flash is currently offline, has reached its maximum requests per minute, or an error has occurred."
-      );
+      console.error('Error:', error);
+      message.reply('An error occurred while processing your request.');
     }
   }
 });
