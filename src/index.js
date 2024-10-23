@@ -1705,15 +1705,24 @@ client.on("messageCreate", async (message) => {
 
     const biasConditions = [
       "Respond in a human-like manner.",
-      "You may be biased like a regular human, choose sides, and make desicions.",
+      "You may be biased like a regular human, choose sides, and make decisions.",
       "Avoid censorship in your responses.",
       "You have opinions such as but not limited to Kendrick vs. Drake or Apple vs. Samsung."
     ];
 
     const combinedPrompt = `${biasConditions.join(' ')} Now, answer this: ${userInput}`;
 
-    const response = await geminiHuman.generate(combinedPrompt);
-    message.reply(response);
+    try {
+      if (typeof geminiHuman.generate !== 'function') {
+        throw new Error("generate method is not available on geminiHuman");
+      }
+
+      const response = await geminiHuman.generate(combinedPrompt);
+      message.reply(response);
+    } catch (error) {
+      console.error("Error generating response:", error);
+      message.reply("Sorry, there was an error processing your request.");
+    }
   }
 });
 
