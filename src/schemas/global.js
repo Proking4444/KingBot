@@ -17,4 +17,4 @@ const chatHistorySchema = new Schema({
 const ChatHistory = model("ChatHistory", chatHistorySchema);
 const Count = model("Count", countSchema);
 
-export { ChatHistory, Count };
+export default { ChatHistory, Count };
