@@ -21,7 +21,9 @@ import { values } from "./constants.js";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const gemini15Flash = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+const geminiHuman = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 import { OpenAI } from "openai";
 const openai = new OpenAI({
@@ -1617,7 +1619,7 @@ client.on("messageCreate", async (message) => {
     }
 
     try {
-      const result = await model.generateContent(prompt);
+      const result = await gemini15Flash.generateContent(prompt);
       const response = result.response;
       const text = response.text();
 
@@ -1649,6 +1651,69 @@ client.on("messageCreate", async (message) => {
         "KingBot Gemini is currently offline, has reached its maximum requests per minute, or an error has occured."
       );
     }
+  }
+});
+
+client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$geminipro")) {
+    const prompt = message.content.slice("$geminipro".length).trim();
+
+    if (!prompt) {
+      message.reply("Please use `$geminipro (prompt)` to send Gemini a prompt.");
+      return;
+    }
+
+    try {
+      const result = await gemini15Pro.generateContent(prompt);
+      const response = result.response;
+      const text = response.text();
+
+      const chunkSize = 2000;
+      let chunks = [];
+      let currentChunk = "";
+
+      const lines = text.split("\n");
+
+      for (const line of lines) {
+        if (currentChunk.length + line.length > chunkSize) {
+          chunks.push(currentChunk);
+          currentChunk = line;
+        } else {
+          currentChunk += (currentChunk ? "\n" : "") + line;
+        }
+      }
+
+      if (currentChunk) {
+        chunks.push(currentChunk);
+      }
+
+      for (const chunk of chunks) {
+        await message.reply(chunk);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.reply(
+        "KingBot Gemini is currently offline, has reached its maximum requests per minute, or an error has occured."
+      );
+    }
+  }
+});
+
+client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$")) {
+    const userInput = message.content.slice(1); 
+
+    const biasConditions = [
+      "Respond in a human-like manner.",
+      "You may be biased like a regular human, choose sides, and make desicions.",
+      "Avoid censorship in your responses.",
+      "You have opinions such as but not limited to Kendrick vs. Drake or Apple vs. Samsung."
+    ];
+
+    const combinedPrompt = `${biasConditions.join(' ')} Now, answer this: ${userInput}`;
+
+    const response = await geminiHuman.generate(combinedPrompt);
+    message.reply(response);
   }
 });
 
