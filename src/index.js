@@ -1677,21 +1677,21 @@ client.on("messageCreate", async (message) => {
     try {
       const historyDocuments = await ChatHistory.find().sort({ createdAt: -1 }).limit(5);
       const history = historyDocuments.reverse().flatMap(doc => [
-        { role: "user", parts: [{ text: doc.message }] },
-        { role: "model", parts: [{ text: doc.reply }] }
+        { role: "user", parts: [{ data: doc.message }] },
+        { role: "model", parts: [{ data: doc.reply }] }
       ]);
 
       history.push({
         role: "user",
-        parts: [{ text: prompt }],
+        parts: [{ data: prompt }],
       });
 
-      const chat = gemini15Flash.startChat({
+      const chat = model.startChat({
         history: [
           ...history,
           {
             role: "model",
-            parts: [{ text: "Great to meet you. What would you like to know?" }],
+            parts: [{ data: "Great to meet you. What would you like to know?" }],
           },
         ],
       });
@@ -1699,7 +1699,6 @@ client.on("messageCreate", async (message) => {
       let result = await chat.sendMessage(prompt);
       const botResponse = result.response.text();
       await message.reply(botResponse);
-
       await ChatHistory.create({
         user: message.author.username,
         message: prompt,
