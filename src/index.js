@@ -22,6 +22,7 @@ import { values } from "./constants.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const gemini15Flash = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const geminiHuman = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
 import { OpenAI } from "openai";
@@ -1610,10 +1611,55 @@ client.on("messageCreate", async (message) => {
 
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$gemini")) {
-    const input = message.content.slice("$gemini".length).trim();
+    const prompt = message.content.slice("$gemini".length).trim();
+
+    if (!prompt) {
+      message.reply("Please use `$gemini (prompt)` to send Gemini a prompt.");
+      return;
+    }
+
+    try {
+      const result = await gemini15Flash.generateContent(prompt);
+      const response = result.response;
+      const text = response.text();
+
+      const chunkSize = 2000;
+      let chunks = [];
+      let currentChunk = "";
+
+      const lines = text.split("\n");
+
+      for (const line of lines) {
+        if (currentChunk.length + line.length > chunkSize) {
+          chunks.push(currentChunk);
+          currentChunk = line;
+        } else {
+          currentChunk += (currentChunk ? "\n" : "") + line;
+        }
+      }
+
+      if (currentChunk) {
+        chunks.push(currentChunk);
+      }
+
+      for (const chunk of chunks) {
+        await message.reply(chunk);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      message.reply(
+        "KingBot Gemini 1.5 Flash is currently offline, has reached its maximum requests per minute, or an error has occured."
+      );
+    }
+  }
+});
+
+client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$human")) {
+    const input = message.content.slice("$human".length).trim();
 
     if (!input) {
-      message.reply("Please use `$gemini (prompt)` to send Gemini a prompt.");
+      message.reply("Please use `$human (prompt)` to send Gemini Human a prompt.");
       return;
     }
 
@@ -1627,7 +1673,7 @@ client.on("messageCreate", async (message) => {
     const prompt = `${biasConditions.join(' ')} Now, answer this: ${input}`;
 
     try {
-      const result = await gemini15Flash.generateContent(prompt);
+      const result = await geminiHuman.generateContent(prompt);
       const response = result.response;
       const text = response.text();
 
