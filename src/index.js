@@ -12,7 +12,6 @@ import mongoose from "mongoose";
 import fetch from "node-fetch";
 
 import Count from "./schemas/global.js";
-import ChatHistory from "./schemas/global.js";
 import User from "./schemas/users.js";
 
 import { raceWordBank } from "./constants.js";
@@ -20,7 +19,6 @@ import { testWordBank } from "./constants.js";
 
 import { values } from "./constants.js";
 
-import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
