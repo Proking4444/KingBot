@@ -1700,8 +1700,8 @@ client.on("messageCreate", async (message) => {
 });
 
 client.on("messageCreate", async (message) => {
-  if (message.content.startsWith("$")) {
-    const userInput = message.content.slice(1); 
+  if (message.content.startsWith("$geminihuman")) {
+    const userInput = message.content.slice("$geminihuman".length).trim(); 
 
     const biasConditions = [
       "Respond in a human-like manner.",
