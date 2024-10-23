@@ -1676,10 +1676,10 @@ client.on("messageCreate", async (message) => {
 
     try {
       const historyDocuments = await ChatHistory.find().sort({ createdAt: -1 }).limit(5);
-      const history = historyDocuments.reverse().map(doc => ({
-        role: "user",
-        parts: [{ text: doc.message }],
-      }));
+      const history = historyDocuments.reverse().flatMap(doc => [
+        { role: "user", parts: [{ text: doc.message }] },
+        { role: "model", parts: [{ text: doc.reply }] }
+      ]);
 
       history.push({
         role: "user",
@@ -1697,11 +1697,13 @@ client.on("messageCreate", async (message) => {
       });
 
       let result = await chat.sendMessage(prompt);
-      message.reply(result.response.text());
+      const botResponse = result.response.text();
+      await message.reply(botResponse);
 
       await ChatHistory.create({
         user: message.author.username,
         message: prompt,
+        reply: botResponse,
       });
 
       const messageCount = await ChatHistory.countDocuments();
