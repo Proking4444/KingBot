@@ -22,7 +22,6 @@ import { values } from "./constants.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const gemini15Flash = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-const geminiHuman = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
 import { OpenAI } from "openai";
@@ -1656,9 +1655,9 @@ client.on("messageCreate", async (message) => {
 
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$human")) {
-    const input = message.content.slice("$human".length).trim();
+    const prompt = message.content.slice("$human".length).trim();
 
-    if (!input) {
+    if (!prompt) {
       message.reply("Please use `$human (prompt)` to send Gemini Human a prompt.");
       return;
     }
@@ -1670,10 +1669,10 @@ client.on("messageCreate", async (message) => {
       "You have opinions such as but not limited to Kendrick vs. Drake or Apple vs. Samsung."
     ];
 
-    const prompt = `${biasConditions.join(' ')} Now, answer this: ${input}`;
+    const editedPrompt = `${biasConditions.join(' ')} Now, answer this: ${prompt}`;
 
     try {
-      const result = await geminiHuman.generateContent(prompt);
+      const result = await gemini15Flash.generateContent(editedPrompt);
       const response = result.response;
       const text = response.text();
 
