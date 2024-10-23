@@ -1677,9 +1677,18 @@ client.on("messageCreate", async (message) => {
       "You are currently talking to: ",
     ];
 
-    const biasPrompt = biasConditions.join(" ") + message.author.id + ". " + "Now answer this: " + prompt;
-
     try {
+      const user = await User.findOne({ discordId: message.author.id });
+
+      const userName = user && user.name ? user.name : "Name Unknown";
+
+      const biasPrompt =
+        biasConditions.join(" ") +
+        userName +
+        ". " +
+        "Now answer this: " +
+        prompt;
+
       const historyDocuments = await ChatHistory.find()
         .sort({ createdAt: -1 })
         .limit(100);
@@ -1834,6 +1843,30 @@ client.on("messageCreate", async (message) => {
       message.reply(
         "KingBot Zephyr is currently offline, or an error has occured."
       );
+    }
+  }
+});
+
+client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$nameset")) {
+    const name = message.content.slice("$nameset".length).trim();
+
+    if (!name) {
+      message.reply("Please provide a name using `$nameset (name)`.");
+      return;
+    }
+
+    try {
+      const user = await User.findOneAndUpdate(
+        { discordId: message.author.id },
+        { name: name },
+        { upsert: true, new: true }
+      );
+
+      message.reply(`Your name has been set to ${user.name}.`);
+    } catch (error) {
+      console.error("Error setting name:", error);
+      message.reply("There was an error setting your name. Please try again.");
     }
   }
 });

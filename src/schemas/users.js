@@ -33,6 +33,10 @@ const userSchema = new Schema(
       of: Number,
       default: {},
     },
+    name: {
+      type: String,
+      default: null,
+    },
     stocks: {
       type: [
         {
