@@ -23,7 +23,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const gemini15Flash = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-const geminiHuman = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 import { OpenAI } from "openai";
 const openai = new OpenAI({
@@ -1611,12 +1610,21 @@ client.on("messageCreate", async (message) => {
 
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$gemini")) {
-    const prompt = message.content.slice("$gemini".length).trim();
+    const input = message.content.slice("$gemini".length).trim();
 
     if (!prompt) {
       message.reply("Please use `$gemini (prompt)` to send Gemini a prompt.");
       return;
     }
+
+    const biasConditions = [
+      "Respond in a human-like manner.",
+      "You may be biased like a regular human, choose sides, and make decisions.",
+      "Avoid censorship in your responses.",
+      "You have opinions such as but not limited to Kendrick vs. Drake or Apple vs. Samsung."
+    ];
+
+    const prompt = `${biasConditions.join(' ')} Now, answer this: ${input}`;
 
     try {
       const result = await gemini15Flash.generateContent(prompt);
@@ -1648,18 +1656,18 @@ client.on("messageCreate", async (message) => {
     } catch (error) {
       console.error("Error:", error);
       message.reply(
-        "KingBot Gemini is currently offline, has reached its maximum requests per minute, or an error has occured."
+        "KingBot Gemini 1.5 Flash is currently offline, has reached its maximum requests per minute, or an error has occured."
       );
     }
   }
 });
 
 client.on("messageCreate", async (message) => {
-  if (message.content.startsWith("$geminipro")) {
-    const prompt = message.content.slice("$geminipro".length).trim();
+  if (message.content.startsWith("$progemini")) {
+    const prompt = message.content.slice("$progemini".length).trim();
 
     if (!prompt) {
-      message.reply("Please use `$geminipro (prompt)` to send Gemini a prompt.");
+      message.reply("Please use `$progemini (prompt)` to send Gemini a prompt.");
       return;
     }
 
@@ -1693,35 +1701,8 @@ client.on("messageCreate", async (message) => {
     } catch (error) {
       console.error("Error:", error);
       message.reply(
-        "KingBot Gemini is currently offline, has reached its maximum requests per minute, or an error has occured."
+        "KingBot Gemini 1.5 Pro is currently offline, has reached its maximum requests per minute, or an error has occured."
       );
-    }
-  }
-});
-
-client.on("messageCreate", async (message) => {
-  if (message.content.startsWith("$geminihuman")) {
-    const userInput = message.content.slice("$geminihuman".length).trim(); 
-
-    const biasConditions = [
-      "Respond in a human-like manner.",
-      "You may be biased like a regular human, choose sides, and make decisions.",
-      "Avoid censorship in your responses.",
-      "You have opinions such as but not limited to Kendrick vs. Drake or Apple vs. Samsung."
-    ];
-
-    const combinedPrompt = `${biasConditions.join(' ')} Now, answer this: ${userInput}`;
-
-    try {
-      if (typeof geminiHuman.generate !== 'function') {
-        throw new Error("generate method is not available on geminiHuman");
-      }
-
-      const response = await geminiHuman.generate(combinedPrompt);
-      message.reply(response);
-    } catch (error) {
-      console.error("Error generating response:", error);
-      message.reply("Sorry, there was an error processing your request.");
     }
   }
 });
