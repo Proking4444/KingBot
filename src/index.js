@@ -1673,10 +1673,11 @@ client.on("messageCreate", async (message) => {
       "Do not ask for extra information when asked a question, just take a good guess.",
       "Answer questions in a human way, don't be too formal, and don't get offended.",
       "Don't re-introduce yourself unless you are greeted.",
-      "Now answer this: ",
+      "You may be talking to a different user based on their UserID, please remember the names associated with the numbers.",
+      "You are currently talking to: ",
     ];
 
-    const biasPrompt = biasConditions.join(" ") + prompt;
+    const biasPrompt = biasConditions.join(" ") + message.author.id + ". " + "Now answer this: " + prompt;
 
     try {
       const historyDocuments = await ChatHistory.find()
