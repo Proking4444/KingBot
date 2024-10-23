@@ -15,24 +15,32 @@ import ChatHistory from "./schemas/chat-history.js";
 import Count from "./schemas/count.js";
 import User from "./schemas/users.js";
 
-import { raceWordBank } from "./constants.js";
-import { testWordBank } from "./constants.js";
+import { raceWordBank, testWordBank, values } from "./constants.js";
 
-import { values } from "./constants.js";
-
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
+import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
+const safetySettings = [
+  {
+    category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE,
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_CIVIC_INTEGRITY, threshold: HarmBlockThreshold.BLOCK_NONE,
+  },
+];
+
 const gemini15Flash = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
-  safetySettings: [
-    {
-      category: HarmCategory.HARM_CATEGORY_UNSPECIFIED,
-      threshold: HarmBlockThreshold.BLOCK_NONE,
-    },
-  ]
+  model: "gemini-1.5-flash", safetySettings
 });
 
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
