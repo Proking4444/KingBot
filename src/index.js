@@ -1686,7 +1686,7 @@ client.on("messageCreate", async (message) => {
         parts: [{ text: prompt }],
       });
 
-      const chat = model.startChat({
+      const chat = gemini15Flash.startChat({
         history: [
           ...history,
           {
