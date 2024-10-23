@@ -1677,13 +1677,13 @@ client.on("messageCreate", async (message) => {
     try {
       const historyDocuments = await ChatHistory.find().sort({ createdAt: -1 }).limit(5);
       const history = historyDocuments.reverse().flatMap(doc => [
-        { role: "user", parts: [{ data: doc.message }] },
-        { role: "model", parts: [{ data: doc.reply }] }
+        { role: "user", parts: [{ text: doc.message }] },
+        { role: "model", parts: [{ text: doc.reply }] }
       ]);
 
       history.push({
         role: "user",
-        parts: [{ data: prompt }],
+        parts: [{ text: prompt }],
       });
 
       const chat = gemini15Flash.startChat({
@@ -1691,18 +1691,19 @@ client.on("messageCreate", async (message) => {
           ...history,
           {
             role: "model",
-            parts: [{ data: "Great to meet you. What would you like to know?" }],
+            parts: [{ text: "Great to meet you. What would you like to know?" }],
           },
         ],
       });
 
       let result = await chat.sendMessage(prompt);
       const botResponse = result.response.text();
-      await message.reply(botResponse);
+      await message.reply(botResponse); // Send the response as a reply
+
       await ChatHistory.create({
         user: message.author.username,
         message: prompt,
-        reply: botResponse,
+        reply: botResponse, // Save the bot's reply for the model part
       });
 
       const messageCount = await ChatHistory.countDocuments();
