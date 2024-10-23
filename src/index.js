@@ -1676,7 +1676,6 @@ client.on("messageCreate", async (message) => {
 
     try {
       const historyDocuments = await ChatHistory.find().sort({ createdAt: -1 }).limit(5);
-      
       const history = historyDocuments.reverse().map(doc => ({
         role: "user",
         parts: [{ text: doc.message }],
@@ -1692,7 +1691,7 @@ client.on("messageCreate", async (message) => {
           ...history,
           {
             role: "model",
-            parts: [{ text: "Great to meet you. What would you like to know?" }], // or another initial model response
+            parts: [{ text: "Great to meet you. What would you like to know?" }],
           },
         ],
       });
@@ -1704,6 +1703,15 @@ client.on("messageCreate", async (message) => {
         user: message.author.username,
         message: prompt,
       });
+
+      const messageCount = await ChatHistory.countDocuments();
+
+      if (messageCount > 5) {
+        const oldestMessages = await ChatHistory.find().sort({ createdAt: 1 }).limit(messageCount - 5);
+        for (const oldMessage of oldestMessages) {
+          await ChatHistory.deleteOne({ _id: oldMessage._id });
+        }
+      }
 
     } catch (error) {
       console.error('Error:', error);
