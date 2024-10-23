@@ -25,16 +25,14 @@ import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-const safetySettings = [
-  {
-    category: HarmCategory.HARM_CATEGORY_UNSPECIFIED,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-];
-
 const gemini15Flash = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
-  safetySettings: safetySettings,
+  safetySettings: [
+    {
+      category: HarmCategory.HARM_CATEGORY_UNSPECIFIED,
+      threshold: HarmBlockThreshold.BLOCK_NONE,
+    },
+  ]
 });
 
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
