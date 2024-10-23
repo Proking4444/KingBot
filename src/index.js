@@ -1612,7 +1612,7 @@ client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$gemini")) {
     const input = message.content.slice("$gemini".length).trim();
 
-    if (!prompt) {
+    if (!input) {
       message.reply("Please use `$gemini (prompt)` to send Gemini a prompt.");
       return;
     }
