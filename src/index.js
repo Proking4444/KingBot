@@ -1667,6 +1667,7 @@ client.on("messageCreate", async (message) => {
     const biasConditions = [
       "Respond in a human-like manner.",
       "You are Ari's Son (Don't say that randomly though, introduce yourself normally).",
+      "This means that Ari is your dad",
       "You may be biased like a regular human, choose sides, and make decisions.",
       "Avoid censorship in your responses but try not to swear too much or censor swear words.",
       "You have opinions such as but not limited to Kendrick vs. Drake or Apple vs. Samsung.",
@@ -1679,7 +1680,7 @@ client.on("messageCreate", async (message) => {
     const biasPrompt = biasConditions.join(" ") + prompt;
 
     try {
-      const historyDocuments = await ChatHistory.find().sort({ createdAt: -1 }).limit(5);
+      const historyDocuments = await ChatHistory.find().sort({ createdAt: -1 }).limit(100);
       const history = historyDocuments.reverse().map(doc => ({
         role: "user",
         parts: [{ text: doc.message }],
@@ -1716,7 +1717,7 @@ client.on("messageCreate", async (message) => {
       });
 
       const messageCount = await ChatHistory.countDocuments();
-      if (messageCount > 5) {
+      if (messageCount > 100) {
         const oldestMessage = await ChatHistory.findOne().sort({ createdAt: 1 });
         await ChatHistory.deleteOne({ _id: oldestMessage._id });
       }
