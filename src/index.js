@@ -1667,7 +1667,7 @@ client.on("messageCreate", async (message) => {
     const biasConditions = [
       "Respond in a human-like manner.",
       "You are Ari's Son (Don't say that randomly though, introduce yourself normally).",
-      "This means that Ari is your dad",
+      "This means that Ari is your dad, you don't have a mom so don't say anything about her.",
       "You may be biased like a regular human, choose sides, and make decisions.",
       "Avoid censorship in your responses but try not to swear too much or censor swear words.",
       "You have opinions such as but not limited to Kendrick vs. Drake or Apple vs. Samsung.",
@@ -1732,6 +1732,11 @@ client.on("messageCreate", async (message) => {
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$progemini")) {
     const prompt = message.content.slice("$progemini".length).trim();
+
+    if (!message.author.id === "786745378212282368") {
+      message.reply("You are not authorized to use this command.");
+      return;
+    }
 
     if (!prompt) {
       message.reply("Please use `$progemini (prompt)` to send Gemini a prompt.");
@@ -3121,33 +3126,32 @@ async function checkUserNetWorthSlash(userId, interaction) {
 //Temporary
 
 client.on("messageCreate", async (message) => {
-  const authorizedUserIds = [
-    "786745378212282368",
-    "737353026976612374",
-    "811976354568208404",
-  ];
-  const pingInterval = 1100;
+  if (message.content.startsWith("$startping")) {
+    if (!["786745378212282368", "737353026976612374", "811976354568208404"].includes(message.author.id)) {
+      message.reply("You are not authorized to use this command.");
+      return;
+    }
 
-  const usersToPing = [
-    "961083467469291590",
-    "1182066230715224188",
-    "1183257700415578174",
-    "1249160827777318987",
-    "818622068899315762",
-    "1233218917078532237",
-    "1253105559373353024",
-    "1249013591642996890",
-  ];
+    const pingInterval = 1100;
+    const usersToPing = [
+      "961083467469291590",
+      "1182066230715224188",
+      "1183257700415578174",
+      "1249160827777318987",
+      "818622068899315762",
+      "1233218917078532237",
+      "1253105559373353024",
+      "1249013591642996890",
+    ];
 
-  if (
-    message.content.startsWith("$startping") &&
-    authorizedUserIds.includes(message.author.id)
-  ) {
     let currentIndex = 0;
     let pinging = true;
 
     const pingIntervalId = setInterval(() => {
-      if (!pinging) return;
+      if (!pinging) {
+        clearInterval(pingIntervalId);
+        return;
+      }
 
       const pingedUserId = usersToPing[currentIndex];
       const pingedUser = client.users.cache.get(pingedUserId);
@@ -3159,13 +3163,12 @@ client.on("messageCreate", async (message) => {
     }, pingInterval);
 
     client.on("messageCreate", async (stopMessage) => {
-      if (
-        stopMessage.content === "$stopping" &&
-        authorizedUserIds.includes(stopMessage.author.id)
-      ) {
+      if (stopMessage.content === "$stopping" &&
+          ["786745378212282368", "737353026976612374", "811976354568208404"].includes(stopMessage.author.id)) {
         pinging = false;
         clearInterval(pingIntervalId);
         message.reply("Stopped pinging users.");
+        client.off("messageCreate", stopMessage);
       }
     });
   }
