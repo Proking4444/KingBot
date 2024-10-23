@@ -1686,7 +1686,7 @@ client.on("messageCreate", async (message) => {
         parts: [{ text: prompt }],
       });
 
-      const chat = gemini15Flash.startChat({
+      const chat = model.startChat({
         history: [
           ...history,
           {
@@ -1697,7 +1697,7 @@ client.on("messageCreate", async (message) => {
       });
 
       let result = await chat.sendMessage(prompt);
-      console.log(result.response.text());
+      message.reply(result.response.text());
 
       await ChatHistory.create({
         user: message.author.username,
@@ -1705,17 +1705,14 @@ client.on("messageCreate", async (message) => {
       });
 
       const messageCount = await ChatHistory.countDocuments();
-
       if (messageCount > 5) {
-        const oldestMessages = await ChatHistory.find().sort({ createdAt: 1 }).limit(messageCount - 5);
-        for (const oldMessage of oldestMessages) {
-          await ChatHistory.deleteOne({ _id: oldMessage._id });
-        }
+        const oldestMessage = await ChatHistory.findOne().sort({ createdAt: 1 });
+        await ChatHistory.deleteOne({ _id: oldestMessage._id });
       }
-
+      
     } catch (error) {
       console.error('Error:', error);
-      message.reply('An error occurred while processing your request.');
+      message.reply('KingBot Gemini 1.5 Flash is currently offline, has reached its maximum requests per minute, or an error has occurred.');
     }
   }
 });
