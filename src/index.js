@@ -17,30 +17,40 @@ import User from "./schemas/users.js";
 
 import { raceWordBank, testWordBank, values } from "./constants.js";
 
-import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
+import {
+  GoogleGenerativeAI,
+  HarmBlockThreshold,
+  HarmCategory,
+} from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
 const safetySettings = [
   {
-    category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE,
+    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+    threshold: HarmBlockThreshold.BLOCK_NONE,
   },
   {
-    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE,
+    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+    threshold: HarmBlockThreshold.BLOCK_NONE,
   },
   {
-    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE,
+    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+    threshold: HarmBlockThreshold.BLOCK_NONE,
   },
   {
-    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE,
+    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+    threshold: HarmBlockThreshold.BLOCK_NONE,
   },
   {
-    category: HarmCategory.HARM_CATEGORY_CIVIC_INTEGRITY, threshold: HarmBlockThreshold.BLOCK_NONE,
+    category: HarmCategory.HARM_CATEGORY_CIVIC_INTEGRITY,
+    threshold: HarmBlockThreshold.BLOCK_NONE,
   },
 ];
 
 const gemini15Flash = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash", safetySettings
+  model: "gemini-1.5-flash",
+  safetySettings,
 });
 
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
@@ -953,7 +963,9 @@ client.on("messageCreate", async (message) => {
       crashMessage.edit(
         `💥 Current multiplier: **${multiplier.toFixed(
           1
-        )}x** \n\nProfit: **$${profit.toFixed(2)}** \n\nType \`$cashout\` to cash out your profits.`
+        )}x** \n\nProfit: **$${profit.toFixed(
+          2
+        )}** \n\nType \`$cashout\` to cash out your profits.`
       );
 
       if (Math.floor(multiplier) !== Math.floor(multiplier - 0.1)) {
@@ -1679,7 +1691,9 @@ client.on("messageCreate", async (message) => {
     const prompt = message.content.slice("$human".length).trim();
 
     if (!prompt) {
-      message.reply("Please use `$human (prompt)` to send Gemini Human a prompt.");
+      message.reply(
+        "Please use `$human (prompt)` to send Gemini Human a prompt."
+      );
       return;
     }
 
@@ -1696,14 +1710,16 @@ client.on("messageCreate", async (message) => {
       "Don't repeat things that you have already said, such as introductions.",
       "Don't reintroduce yourself unless the other person uses a greeting.",
       "Never get blocked due to safety.",
-      "Now answer this: "
+      "Now answer this: ",
     ];
 
     const biasPrompt = biasConditions.join(" ") + prompt;
 
     try {
-      const historyDocuments = await ChatHistory.find().sort({ createdAt: -1 }).limit(100);
-      const history = historyDocuments.reverse().map(doc => ({
+      const historyDocuments = await ChatHistory.find()
+        .sort({ createdAt: -1 })
+        .limit(100);
+      const history = historyDocuments.reverse().map((doc) => ({
         role: "user",
         parts: [{ text: doc.message }],
       }));
@@ -1718,7 +1734,9 @@ client.on("messageCreate", async (message) => {
           ...history,
           {
             role: "model",
-            parts: [{ text: "Great to meet you. What would you like to know?" }],
+            parts: [
+              { text: "Great to meet you. What would you like to know?" },
+            ],
           },
         ],
       });
@@ -1726,7 +1744,7 @@ client.on("messageCreate", async (message) => {
       let result = await chat.sendMessage(biasPrompt);
       const botResponse = result.response.text();
 
-      message.reply(botResponse); 
+      message.reply(botResponse);
 
       await ChatHistory.create({
         user: message.author.username,
@@ -1734,19 +1752,22 @@ client.on("messageCreate", async (message) => {
       });
 
       await ChatHistory.create({
-        user: 'Ari\'s Son',
+        user: "Ari's Son",
         message: botResponse,
       });
 
       const messageCount = await ChatHistory.countDocuments();
       if (messageCount > 100) {
-        const oldestMessage = await ChatHistory.findOne().sort({ createdAt: 1 });
+        const oldestMessage = await ChatHistory.findOne().sort({
+          createdAt: 1,
+        });
         await ChatHistory.deleteOne({ _id: oldestMessage._id });
       }
-
     } catch (error) {
-      console.error('Error:', error);
-      message.reply('KingBot Gemini 1.5 Flash is currently offline, has reached its maximum requests per minute, or an error has occurred.');
+      console.error("Error:", error);
+      message.reply(
+        "KingBot Gemini 1.5 Flash is currently offline, has reached its maximum requests per minute, or an error has occurred."
+      );
     }
   }
 });
@@ -1761,7 +1782,9 @@ client.on("messageCreate", async (message) => {
     }
 
     if (!prompt) {
-      message.reply("Please use `$progemini (prompt)` to send Gemini a prompt.");
+      message.reply(
+        "Please use `$progemini (prompt)` to send Gemini a prompt."
+      );
       return;
     }
 
@@ -3149,7 +3172,13 @@ async function checkUserNetWorthSlash(userId, interaction) {
 
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$startping")) {
-    if (!["786745378212282368", "737353026976612374", "811976354568208404"].includes(message.author.id)) {
+    if (
+      ![
+        "786745378212282368",
+        "737353026976612374",
+        "811976354568208404",
+      ].includes(message.author.id)
+    ) {
       message.reply("You are not authorized to use this command.");
       return;
     }
@@ -3185,8 +3214,14 @@ client.on("messageCreate", async (message) => {
     }, pingInterval);
 
     client.on("messageCreate", async (stopMessage) => {
-      if (stopMessage.content === "$stopping" &&
-          ["786745378212282368", "737353026976612374", "811976354568208404"].includes(stopMessage.author.id)) {
+      if (
+        stopMessage.content === "$stopping" &&
+        [
+          "786745378212282368",
+          "737353026976612374",
+          "811976354568208404",
+        ].includes(stopMessage.author.id)
+      ) {
         pinging = false;
         clearInterval(pingIntervalId);
         stopMessage.reply("Stopped pinging users.");
