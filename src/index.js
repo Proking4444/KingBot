@@ -1679,7 +1679,6 @@ client.on("messageCreate", async (message) => {
 
     try {
       const user = await User.findOne({ discordId: message.author.id });
-
       const userName = user && user.name ? user.name : "Name Unknown";
 
       const biasPrompt =
@@ -1717,7 +1716,28 @@ client.on("messageCreate", async (message) => {
       let result = await chat.sendMessage(biasPrompt);
       const botResponse = result.response.text();
 
-      message.reply(botResponse);
+      const chunkSize = 2000;
+      let chunks = [];
+      let currentChunk = "";
+
+      const lines = botResponse.split("\n");
+
+      for (const line of lines) {
+        if (currentChunk.length + line.length > chunkSize) {
+          chunks.push(currentChunk);
+          currentChunk = line;
+        } else {
+          currentChunk += (currentChunk ? "\n" : "") + line;
+        }
+      }
+
+      if (currentChunk) {
+        chunks.push(currentChunk);
+      }
+
+      for (const chunk of chunks) {
+        await message.reply(chunk);
+      }
 
       await ChatHistory.create({
         user: message.author.username,
