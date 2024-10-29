@@ -7,6 +7,12 @@ export const values = {
   '8': 8, '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10, 'A': 11
 };
 
+const election = new EmbedBuilder()
+  .setTitle("2024 Presidential Election Prediction Consensus")
+  .setImage("https://www.270towin.com/map-images/consensus-2024-presidential-election-forecast")
+  .setFooter({ text: "Polling Averages from 270towin.com" });
+export { election };
+
 //Embeds
 
 //Desert

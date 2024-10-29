@@ -15,7 +15,7 @@ import ChatHistory from "./schemas/chat-history.js";
 import Count from "./schemas/count.js";
 import User from "./schemas/users.js";
 
-import { raceWordBank, testWordBank, values } from "./constants.js";
+import { raceWordBank, testWordBank, values, election } from "./constants.js";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
@@ -42,11 +42,11 @@ const safetySettings = [
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
 const gemini15Flash = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  model: "gemini-1.5-flash-latest",
   safetySettings: safetySettings,
 });
 
-const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
 
 import { OpenAI } from "openai";
 const openai = new OpenAI({
@@ -1693,12 +1693,14 @@ client.on("messageCreate", async (message) => {
     const biasConditions = [
       "Respond in a human-like manner.",
       "Your name is KingBot, you were created by Ari Khan.",
-      "You may be biased like a regular human, choose sides, have opinions, and make decisions.",
+      "You may be biased like a regular human, choose sides, have strong opinions, and make decisions independently.",
+      "Use some Gen Z and Gen Alpha slang.",
       "Avoid censorship in your responses but try not to swear too much or censor swear words.",
-      "Do not ask for extra information when asked a question, just take a good guess.",
+      "Do not ask for extra information or validation when asked a question.",
       "Answer questions in a human way, don't be too formal, and don't get offended.",
       "Don't re-introduce yourself unless you are greeted.",
       "You may be talking to a different user based on their UserID, please remember the names associated with the numbers.",
+      "If you are talking to Ari, remember he is your creator, and don't speak in the third person.",
       "You are currently talking to: ",
     ];
 
@@ -1715,7 +1717,7 @@ client.on("messageCreate", async (message) => {
 
       const historyDocuments = await ChatHistory.find()
         .sort({ createdAt: -1 })
-        .limit(200);
+        .limit(500);
       const history = historyDocuments.reverse().map((doc) => ({
         role: "user",
         parts: [{ text: doc.message }],
@@ -1775,7 +1777,7 @@ client.on("messageCreate", async (message) => {
       });
 
       const messageCount = await ChatHistory.countDocuments();
-      if (messageCount > 200) {
+      if (messageCount > 500) {
         const oldestMessage = await ChatHistory.findOne().sort({
           createdAt: 1,
         });
@@ -3270,6 +3272,12 @@ client.on("messageCreate", async (message) => {
         client.off("messageCreate", stopMessage);
       }
     });
+  }
+});
+
+client.on("messageCreate", (message) => {
+  if (message.content === "$election") {
+    message.reply({ embeds: [election] });
   }
 });
 
