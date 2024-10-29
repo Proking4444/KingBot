@@ -12,8 +12,8 @@ const election = new EmbedBuilder()
   .setImage("https://www.270towin.com/map-images/consensus-2024-presidential-election-forecast")
   .addFields([
     { 
-      name: "Polling Averages from [270towin.com](https://www.270towin.com)", 
-      value: "\u200b"
+      name: "Polling Averages from:", 
+      value: "https://www.270towin.com"
     }
   ])
 export { election };
