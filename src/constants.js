@@ -10,7 +10,12 @@ export const values = {
 const election = new EmbedBuilder()
   .setTitle("2024 Presidential Election Prediction Consensus")
   .setImage("https://www.270towin.com/map-images/consensus-2024-presidential-election-forecast")
-  .setFooter({ text: "Polling Averages from 270towin.com" });
+  .addFields([
+    { 
+      name: "Polling Averages from [270towin.com](https://www.270towin.com)", 
+      value: "\u200b"
+    }
+  ])
 export { election };
 
 //Embeds
