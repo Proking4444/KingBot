@@ -13,7 +13,7 @@ const election = new EmbedBuilder()
   .addFields([
     { 
       name: "Polling Averages from:", 
-      value: "https://www.270towin.com"
+      value: "**https://www.270towin.com**"
     }
   ])
 export { election };
