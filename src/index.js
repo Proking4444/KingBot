@@ -17,8 +17,6 @@ import User from "./schemas/users.js";
 
 import { raceWordBank, testWordBank, values, election } from "./constants.js";
 
-import date from 'date-and-time';
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 
