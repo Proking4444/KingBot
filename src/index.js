@@ -1693,8 +1693,25 @@ client.on("messageCreate", async (message) => {
     }
 
     const now = new Date();
-    const formattedDate = date.format(now, 'ddd, MM, DD, YYYY');
-    const formattedTime = date.format(now, 'HH:mm:ss A');
+
+    const dateOptions = {
+      timeZone: 'America/New_York',
+      weekday: 'long',
+      month: 'long',
+      day: '2-digit',
+      year: 'numeric'
+    };
+
+    const timeOptions = {
+      timeZone: 'America/New_York',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    };
+
+    const formattedDate = new Intl.DateTimeFormat('en-US', dateOptions).format(now);
+    const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(now);
 
     const biasConditions = [
       "Respond in a human-like manner.",
