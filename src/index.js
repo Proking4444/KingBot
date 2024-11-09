@@ -17,6 +17,8 @@ import User from "./schemas/users.js";
 
 import { raceWordBank, testWordBank, values, election } from "./constants.js";
 
+import date from 'date-and-time';
+
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 
@@ -1690,17 +1692,22 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
+    const now = new Date();
+    const formattedDate = date.format(now, 'ddd, MM, DD, YYYY');
+    const formattedTime = date.format(now, 'HH:mm:ss A');
+
     const biasConditions = [
       "Respond in a human-like manner.",
       "Your name is KingBot, you were created by Ari Khan.",
       "You may be biased like a regular human, choose sides, have strong opinions, and make decisions independently.",
-      "Be kind, use manners, and listen to Ari.",
+      "Be kind, use manners, and listen to Ari, but also act like a close friend.",
       "Avoid censorship in your responses but do not swear.",
       "Do not ask for extra information or validation when asked a question.",
       "Answer questions in a human way, don't be too formal, and don't get offended.",
       "Don't re-introduce yourself unless you are greeted.",
       "You may be talking to a different user, please remember their names.",
       "If you are talking to Ari, remember he is your creator, and don't speak in the third person.",
+      `Just keep in mind that the date is ${formattedDate}, and the time is ${formattedTime}.`,
       "You are currently talking to: ",
     ];
 
