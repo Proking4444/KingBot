@@ -19,6 +19,8 @@ import { raceWordBank, testWordBank, values, election } from "./constants.js";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
+import { GoogleAIFileManager } from "@google/generative-ai/server";
+
 
 const safetySettings = [
   {
@@ -40,6 +42,7 @@ const safetySettings = [
 ];
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEYAPI_KEY);
 
 const gemini15Flash = genAI.getGenerativeModel({
   model: "gemini-1.5-flash-latest",
@@ -1934,6 +1937,69 @@ client.on("messageCreate", async (message) => {
     } catch (error) {
       console.error("Error setting name:", error);
       message.reply("There was an error setting your name. Please try again.");
+    }
+  }
+});
+
+client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$vision")) {
+    const imageAttachment = message.attachments.first();
+    const prompt = message.content.slice("$vision".length).trim();
+
+    if (!imageAttachment || !imageAttachment.contentType.startsWith("image/")) {
+      return message.reply("Please provide an image attachment with your `$vision` command.");
+    }
+
+    if (!prompt) {
+      return message.reply("Please provide a text prompt along with the image for the `$vision` command.");
+    }
+
+    try {
+      const uploadResult = await fileManager.uploadFile(imageAttachment.url, {
+        mimeType: imageAttachment.contentType,
+        displayName: imageAttachment.name || "Uploaded Image",
+      });
+      const fileUri = uploadResult.file.uri;
+      console.log(`Uploaded file ${uploadResult.file.displayName} as: ${fileUri}`);
+
+      const input = [prompt, {
+        fileData: {
+          fileUri: fileUri,
+          mimeType: imageAttachment.contentType,
+        },
+      }];
+
+      const result = await gemini15Flash.generateContent(input);
+      const responseText = result.response.text();
+
+      const chunkSize = 2000;
+      let chunks = [];
+      let currentChunk = "";
+
+      const lines = responseText.split("\n");
+
+      for (const line of lines) {
+        if (currentChunk.length + line.length > chunkSize) {
+          chunks.push(currentChunk);
+          currentChunk = line;
+        } else {
+          currentChunk += (currentChunk ? "\n" : "") + line;
+        }
+      }
+
+      if (currentChunk) {
+        chunks.push(currentChunk);
+      }
+
+      for (const chunk of chunks) {
+        await message.reply(chunk);
+      }
+
+    } catch (error) {
+      console.error("Error:", error);
+      message.reply(
+        "There was an error processing your request. Please try again later."
+      );
     }
   }
 });
