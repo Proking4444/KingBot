@@ -1443,9 +1443,7 @@ client.on("messageCreate", async (message) => {
 
     try {
       const response = await fetch(
-        `https:
-          category
-        )}&apiKey=${process.env.NEWS_API_KEY}&pageSize=5`
+        `https://newsapi.org/v2/top-headlines?category=${category}&apiKey=${process.env.NEWS_API_KEY}&pageSize=5`
       );
 
       if (!response.ok) {
