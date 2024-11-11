@@ -10,6 +10,8 @@ import {
 
 import mongoose from "mongoose";
 import fetch from "node-fetch";
+import { promises as fs } from 'fs';
+import path from 'path';
 
 import ChatHistory from "./schemas/chat-history.js";
 import Count from "./schemas/count.js";
@@ -1958,7 +1960,10 @@ client.on("messageCreate", async (message) => {
       const imageArrayBuffer = await fetch(imageAttachment.url).then(res => res.arrayBuffer());
       const imageBuffer = Buffer.from(imageArrayBuffer);
 
-      const uploadResult = await fileManager.uploadFileFromBuffer(imageBuffer, {
+      const tempFilePath = path.join(__dirname, 'temp_image.png');
+      fs.writeFileSync(tempFilePath, imageBuffer);
+
+      const uploadResult = await fileManager.uploadFile(tempFilePath, {
         mimeType: imageAttachment.contentType,
         displayName: imageAttachment.name || "Uploaded Image",
       });
@@ -1998,6 +2003,8 @@ client.on("messageCreate", async (message) => {
       for (const chunk of chunks) {
         await message.reply(chunk);
       }
+
+      fs.unlinkSync(tempFilePath);
 
     } catch (error) {
       console.error("Error:", error);
