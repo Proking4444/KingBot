@@ -10,8 +10,9 @@ import {
 
 import mongoose from "mongoose";
 import fetch from "node-fetch";
-import { promises as fs } from 'fs';
+import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import ChatHistory from "./schemas/chat-history.js";
 import Count from "./schemas/count.js";
@@ -23,6 +24,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const safetySettings = [
   {
