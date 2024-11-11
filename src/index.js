@@ -1947,6 +1947,76 @@ client.on("messageCreate", async (message) => {
 });
 
 client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$visual")) {
+    const imageAttachment = message.attachments.first();
+    const prompt = message.content.slice("$image".length).trim();
+
+    if (!imageAttachment || !imageAttachment.contentType.startsWith("image/")) {
+      return message.reply("Please provide an image attachment with your `$vision` command.");
+    }
+
+    if (!prompt) {
+      return message.reply("Please provide a text prompt along with the image to use the `$vision` command.");
+    }
+
+    try {
+      const imageArrayBuffer = await fetch(imageAttachment.url).then(res => res.arrayBuffer());
+      const imageBuffer = Buffer.from(imageArrayBuffer);
+
+      const tempFilePath = path.join(__dirname, 'temp_image.png');
+      fs.writeFileSync(tempFilePath, imageBuffer);
+
+      const uploadResult = await fileManager.uploadFile(tempFilePath, {
+        mimeType: imageAttachment.contentType,
+        displayName: imageAttachment.name || "Uploaded Image",
+      });
+
+      const fileUri = uploadResult.file.uri;
+      console.log(`Uploaded file ${uploadResult.file.displayName} as: ${fileUri}`);
+
+      const input = [prompt, {
+        fileData: {
+          fileUri: fileUri,
+          mimeType: imageAttachment.contentType,
+        },
+      }];
+
+      const result = await gemini15Flash.generateContent(input);
+      const responseText = result.response.text();
+
+      const chunkSize = 2000;
+      let chunks = [];
+      let currentChunk = "";
+
+      const lines = responseText.split("\n");
+
+      for (const line of lines) {
+        if (currentChunk.length + line.length > chunkSize) {
+          chunks.push(currentChunk);
+          currentChunk = line;
+        } else {
+          currentChunk += (currentChunk ? "\n" : "") + line;
+        }
+      }
+
+      if (currentChunk) {
+        chunks.push(currentChunk);
+      }
+
+      for (const chunk of chunks) {
+        await message.reply(chunk);
+      }
+
+      fs.unlinkSync(tempFilePath);
+
+    } catch (error) {
+      console.error("Error:", error);
+      message.reply("There was an error processing your request. Please try again later.");
+    }
+  }
+});
+
+client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$vision")) {
     const imageAttachment = message.attachments.first();
     const prompt = message.content.slice("$vision".length).trim();
@@ -1984,29 +2054,19 @@ client.on("messageCreate", async (message) => {
         "Now answer this: " +
         prompt;
 
-      const imageArrayBuffer = await fetch(imageAttachment.url).then(res => res.arrayBuffer());
-      const imageBuffer = Buffer.from(imageArrayBuffer);
+      const result = await gemini15Flash.generateContent([visionPrompt]);
 
-      const tempFilePath = path.join(__dirname, 'temp_image.png');
-      fs.writeFileSync(tempFilePath, imageBuffer);
+      const responseText = result.response.text();
 
-      const uploadResult = await fileManager.uploadFile(tempFilePath, {
-        mimeType: imageAttachment.contentType,
-        displayName: imageAttachment.name || "Uploaded Image",
+      await ChatHistory.create({
+        user: message.author.username,
+        message: prompt,
       });
 
-      const fileUri = uploadResult.file.uri;
-      console.log(`Uploaded file ${uploadResult.file.displayName} as: ${fileUri}`);
-
-      const input = [visionPrompt, {
-        fileData: {
-          fileUri: fileUri,
-          mimeType: imageAttachment.contentType,
-        },
-      }];
-
-      const result = await gemini15Flash.generateContent(input);
-      const responseText = result.response.text();
+      await ChatHistory.create({
+        user: "KingBot",
+        message: responseText,
+      });
 
       const chunkSize = 2000;
       let chunks = [];
@@ -2030,8 +2090,6 @@ client.on("messageCreate", async (message) => {
       for (const chunk of chunks) {
         await message.reply(chunk);
       }
-
-      fs.unlinkSync(tempFilePath);
 
     } catch (error) {
       console.error("Error:", error);
