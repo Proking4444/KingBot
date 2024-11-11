@@ -1717,7 +1717,7 @@ client.on("messageCreate", async (message) => {
     const formattedDate = new Intl.DateTimeFormat('en-US', dateOptions).format(now);
     const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(now);
 
-    const biasConditions = [
+    const humanConditions = [
       "Respond in a human-like manner.",
       "Your name is KingBot, you were created by Ari Khan.",
       "You may be biased like a regular human, choose sides, have strong opinions, and make decisions independently.",
@@ -1736,8 +1736,8 @@ client.on("messageCreate", async (message) => {
       const user = await User.findOne({ discordId: message.author.id });
       const userName = user && user.name ? user.name : "Name Unknown";
 
-      const biasPrompt =
-        biasConditions.join(" ") +
+      const humanPrompt =
+        humanConditions.join(" ") +
         userName +
         ". " +
         "Now answer this: " +
@@ -1768,7 +1768,7 @@ client.on("messageCreate", async (message) => {
         ],
       });
 
-      let result = await chat.sendMessage(biasPrompt);
+      let result = await chat.sendMessage(humanPrompt);
       const botResponse = result.response.text();
 
       const chunkSize = 2000;
@@ -1956,10 +1956,34 @@ client.on("messageCreate", async (message) => {
     }
 
     if (!prompt) {
-      return message.reply("Please provide a text prompt along with the image for the `$vision` command.");
+      return message.reply("Please provide a text prompt along with the image to use the `$vision` command.");
     }
 
+    const visionConditions = [
+      "Respond in a human-like manner.",
+      "Your name is KingBot, you were created by Ari Khan.",
+      "You may be biased like a regular human, choose sides, have strong opinions, and make decisions independently.",
+      "Be kind, use manners, and listen to Ari, but also act like a close friend.",
+      "Avoid censorship in your responses but do not swear.",
+      "Do not ask for extra information or validation when asked a question.",
+      "Answer questions in a human way, don't be too formal, and don't get offended.",
+      "Don't re-introduce yourself unless you are greeted.",
+      "You may be talking to a different user, please remember their names.",
+      "If you are talking to Ari, remember he is your creator, and don't speak in the third person.",
+      "You are currently talking to: ",
+    ];
+
     try {
+      const user = await User.findOne({ discordId: message.author.id });
+      const userName = user && user.name ? user.name : "Name Unknown";
+
+      const visionPrompt =
+        visionConditions.join(" ") +
+        userName +
+        ". " +
+        "Now answer this: " +
+        prompt;
+
       const imageArrayBuffer = await fetch(imageAttachment.url).then(res => res.arrayBuffer());
       const imageBuffer = Buffer.from(imageArrayBuffer);
 
@@ -1974,7 +1998,7 @@ client.on("messageCreate", async (message) => {
       const fileUri = uploadResult.file.uri;
       console.log(`Uploaded file ${uploadResult.file.displayName} as: ${fileUri}`);
 
-      const input = [prompt, {
+      const input = [visionPrompt, {
         fileData: {
           fileUri: fileUri,
           mimeType: imageAttachment.contentType,
