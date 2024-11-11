@@ -1955,12 +1955,14 @@ client.on("messageCreate", async (message) => {
     }
 
     try {
-      const imageBuffer = await fetch(imageAttachment.url).then(res => res.buffer());
-      
-      const uploadResult = await fileManager.uploadFile(imageBuffer, {
+      const imageArrayBuffer = await fetch(imageAttachment.url).then(res => res.arrayBuffer());
+      const imageBuffer = Buffer.from(imageArrayBuffer);
+
+      const uploadResult = await fileManager.uploadFileFromBuffer(imageBuffer, {
         mimeType: imageAttachment.contentType,
         displayName: imageAttachment.name || "Uploaded Image",
       });
+
       const fileUri = uploadResult.file.uri;
       console.log(`Uploaded file ${uploadResult.file.displayName} as: ${fileUri}`);
 
@@ -1999,9 +2001,7 @@ client.on("messageCreate", async (message) => {
 
     } catch (error) {
       console.error("Error:", error);
-      message.reply(
-        "There was an error processing your request. Please try again later."
-      );
+      message.reply("There was an error processing your request. Please try again later.");
     }
   }
 });
