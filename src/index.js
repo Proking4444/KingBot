@@ -1955,7 +1955,9 @@ client.on("messageCreate", async (message) => {
     }
 
     try {
-      const uploadResult = await fileManager.uploadFile(imageAttachment.url, {
+      const imageBuffer = await fetch(imageAttachment.url).then(res => res.buffer());
+      
+      const uploadResult = await fileManager.uploadFile(imageBuffer, {
         mimeType: imageAttachment.contentType,
         displayName: imageAttachment.name || "Uploaded Image",
       });
