@@ -2029,6 +2029,27 @@ client.on("messageCreate", async (message) => {
       return message.reply("Please provide a text prompt along with the image to use the `$vision` command.");
     }
 
+    const now = new Date();
+
+    const dateOptions = {
+      timeZone: 'America/New_York',
+      weekday: 'long',
+      month: 'long',
+      day: '2-digit',
+      year: 'numeric'
+    };
+
+    const timeOptions = {
+      timeZone: 'America/New_York',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true
+    };
+
+    const formattedDate = new Intl.DateTimeFormat('en-US', dateOptions).format(now);
+    const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(now);
+
     const visionConditions = [
       "Respond in a human-like manner.",
       "Your name is KingBot, you were created by Ari Khan.",
@@ -2040,6 +2061,7 @@ client.on("messageCreate", async (message) => {
       "Don't re-introduce yourself unless you are greeted.",
       "You may be talking to a different user, please remember their names.",
       "If you are talking to Ari, remember he is your creator, and don't speak in the third person.",
+      `Just keep in mind that the date is ${formattedDate}, and the time is ${formattedTime}.`,
       "You are currently talking to: ",
     ];
 
