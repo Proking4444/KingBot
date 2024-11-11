@@ -2054,8 +2054,27 @@ client.on("messageCreate", async (message) => {
         "Now answer this: " +
         prompt;
 
-      const result = await gemini15Flash.generateContent([visionPrompt]);
+      const imageArrayBuffer = await fetch(imageAttachment.url).then(res => res.arrayBuffer());
+      const imageBuffer = Buffer.from(imageArrayBuffer);
 
+      const tempFilePath = path.join(__dirname, 'temp_image.png');
+      fs.writeFileSync(tempFilePath, imageBuffer);
+
+      const uploadResult = await fileManager.uploadFile(tempFilePath, {
+        mimeType: imageAttachment.contentType,
+        displayName: imageAttachment.name || "Uploaded Image",
+      });
+
+      const fileUri = uploadResult.file.uri;
+
+      const input = [visionPrompt, {
+        fileData: {
+          fileUri: fileUri,
+          mimeType: imageAttachment.contentType,
+        },
+      }];
+
+      const result = await gemini15Flash.generateContent(input);
       const responseText = result.response.text();
 
       await ChatHistory.create({
@@ -2090,6 +2109,8 @@ client.on("messageCreate", async (message) => {
       for (const chunk of chunks) {
         await message.reply(chunk);
       }
+
+      fs.unlinkSync(tempFilePath);
 
     } catch (error) {
       console.error("Error:", error);
