@@ -47,7 +47,7 @@ const safetySettings = [
 ];
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEYAPI_KEY);
+const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEY);
 
 const gemini15Flash = genAI.getGenerativeModel({
   model: "gemini-1.5-flash-latest",
