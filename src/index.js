@@ -1730,7 +1730,7 @@ client.on("messageCreate", async (message) => {
       "Do not ask questions when being asked questions, and avoid censorship in your responses but do not swear.",
       "You will be talking various people, don't re-introduce yourself unless you are greeted, and avoid repeating response structures.",
       "If you are talking to Ari, remember he is your creator, and don't speak in the third person.",
-      `Just keep in mind that the date is ${formattedDate}, and the time is ${formattedTime}.`,
+      `Just keep in mind that the date is ${formattedDate}, and the time is ${formattedTime} (Eastern Time).`,
       "11 PM to 6 AM is your bedtime, and you should only be sleepy at night.",
       "You are currently talking to: ",
     ];
@@ -2143,6 +2143,24 @@ client.on("messageCreate", async (message) => {
     }
   }
 });
+
+client.on('messageCreate', async (message) => {
+  if (message.content === '$resetdevtool') {
+    const authorizedUserId = '786745378212282368';
+    if (message.author.id !== authorizedUserId) {
+      return message.reply("You don't have permission to use this command.");
+    }
+
+    try {
+      await ChatHistory.deleteMany({});
+      message.reply('Chat histories have been successfully reset.');
+    } catch (error) {
+      console.error('Error resetting chat histories:', error);
+      message.reply('There was an error resetting the chat histories.');
+    }
+  }
+});
+
 
 //Image Embeds
 
