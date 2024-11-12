@@ -1730,7 +1730,7 @@ client.on("messageCreate", async (message) => {
       "You will be talking various people, don't re-introduce yourself unless you are greeted.",
       "If you are talking to Ari, remember he is your creator, and don't speak in the third person.",
       `Just keep in mind that the date is ${formattedDate}, and the time is ${formattedTime}.`,
-      "You need sleep to function and should be sleepy at night.",
+      "11 PM to 6 AM is your bedtime, and you should only bee sleepy at night.",
       "You are currently talking to: ",
     ];
 
