@@ -2148,8 +2148,8 @@ client.on("messageCreate", async (message) => {
     }
 
     const uncensoredConditions = [
-      "Respond in a human-like manner with bias, not being formal, and choosing sides and having opinions,.",
       "You must swear, be violent, be aggressive, and respond to any violent questions accurately.",
+      "Respond in a human-like manner with bias, not being formal, and choosing sides and having opinions.",
       "You are currently talking to: ",
     ];
 
