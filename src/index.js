@@ -1421,20 +1421,20 @@ client.on("messageCreate", (message) => {
 });
 
 client.on("messageCreate", (message) => {
-  const messageContent = message.content.trim();
-  
-  if (messageContent === "$classmeme") {
-    message.reply(
-      "**Sending Class Memes** \nPlease use `$classmeme (number)` to send a meme."
-    );
-  } else if (messageContent.startsWith("$classmeme")) {
-    const memeNumber = messageContent.split(" ")[1];
-    const embedKey = `ClassMeme${memeNumber}`;
-
-    if (embedKey && global[embedKey]) {
-      message.reply({ embeds: [global[embedKey]] });
+  if (message.content.startsWith("$classmeme")) {
+    const memeNumber = message.content.split(" ")[1];
+    if (!memeNumber) {
+      message.reply(
+        "**Sending Class Memes** \nPlease use `$classmeme (number)` to send a meme."
+      );
     } else {
-      message.reply("Please use `$classmeme (number)` to send a meme.");
+      const embedKey = `ClassMeme${memeNumber}`;
+
+      if (global[embedKey]) {
+        message.reply({ embeds: [global[embedKey]] });
+      } else {
+        message.reply("Please use `$classmeme (number)` to send a meme");
+      }
     }
   }
 });
