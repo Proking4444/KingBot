@@ -18,8 +18,6 @@ import ChatHistory from "./schemas/chat-history.js";
 import Count from "./schemas/count.js";
 import User from "./schemas/users.js";
 
-import { raceWordBank, testWordBank, values, election } from "./constants.js";
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
@@ -51,11 +49,6 @@ const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEY);
 
 const gemini15Flash = genAI.getGenerativeModel({
   model: "gemini-1.5-flash-latest",
-  safetySettings: safetySettings,
-});
-
-const gemini15Flash8B = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash-8b-latest",
   safetySettings: safetySettings,
 });
 
@@ -137,6 +130,11 @@ import {
   randomLongJokeList,
   randomFactList,
   randomAriQuoteList,
+  movieLinks,
+  raceWordBank, 
+  testWordBank, 
+  values, 
+  election 
 } from "./constants.js";
 
 const client = new Client({
@@ -1454,10 +1452,10 @@ client.on("messageCreate", (message) => {
       } else if (number === 10) {
         message.reply({ embeds: [MojaveDesertImage10] });
       } else {
-        message.reply("Please use `$img 0 (1-10)` for Mojave Desert images.");
+        message.reply("Please use `$img 0 (number)` for Mojave Desert images.");
       }
     } else {
-      message.reply("Please use `$img (code) (number)` to send an image. \n\n**Image Codes** \n- Desert (0)");
+      message.reply("Please use `$img (code) (number)` to send an image.");
     }
   }
 });
@@ -1467,14 +1465,34 @@ client.on("messageCreate", (message) => {
     message.reply(
       "**Watching Movies** \nPlease use `$movie (code)` to watch a movie. \n\n**Movie Codes:** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV) \n\nBoehlke 2023 \n- Happy Little Accidents (HLA) \n- King's Crypt (KC) \n- Monkey Murder (MM) \n- Mount Foreverrest (MF) \n- The Wild Jeffois (TWJ) \n- Thirst For Clout (TFC) \n- Recnac!! (The Miracle Drug) (RTMD) \n\nDeluca 2024 \n- 90 Days of Different (90DOD) \n- Ella vs Sohpie (Gun Version) (EVSGV) \n- Graffiti Day (GD) \n- Paint Ballistic (PB) \n- Sophie and Ella Travel the World (SAETTW) \n- The Mask (TM) \n- Thomas, Baron, Alice (TBA) \n- W Rube Goldberg (WRG) \n- Fire Rube Goldberg (FRG) \n\nGibson 2024 \n- 90 Days of Different: Day 40 (90DODD40) \n- A Ruff Day (ARD) \n- The Horror Movie (THM) \n- Epic Ice Cream Movie (EICM) \n- Every Fast Food Worker's Dream (EFFWD) \n- Slay 49 (S49) \n- Snowy Paintball Fight (SPF) \n\nOther \n- Donut Animation in Blender (DAIB) \n- The CN Tower (TCNT)"
     );
+  } else {
+    const movieCode = message.content.split(" ")[1];
+    if (movieLinks[movieCode]) {
+      message.reply(movieLinks[movieCode]);
+    } else {
+      message.reply(
+        "Please use `$movie (code)` to watch a movie."
+      );
+    }
   }
 });
 
 client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme") {
+  const messageContent = message.content.trim();
+  
+  if (messageContent === "$classmeme") {
     message.reply(
       "**Sending Class Memes** \nPlease use `$classmeme (number)` to send a meme."
     );
+  } else if (messageContent.startsWith("$classmeme")) {
+    const memeNumber = messageContent.split(" ")[1];
+    const embedKey = `ClassMeme${memeNumber}`;
+
+    if (embedKey && global[embedKey]) {
+      message.reply({ embeds: [global[embedKey]] });
+    } else {
+      message.reply("Please use `$classmeme (number)` to send a meme.");
+    }
   }
 });
 
@@ -2191,502 +2209,6 @@ client.on("messageCreate", async (message) => {
     await countDoc.save();
 
     message.reply(`The count is now ${countDoc.value}.`);
-  }
-});
-
-//Movies
-
-//Boehlke 2024
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie 2GWGBU") {
-    message.reply(
-      "https://www.youtube.com/watch?v=mTJGYZonJEs&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie DWY") {
-    message.reply(
-      "https://www.youtube.com/watch?v=74x8ddmOuGE&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie FG") {
-    message.reply(
-      "https://www.youtube.com/watch?v=M7T5dUg-tvQ&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie KA") {
-    message.reply(
-      "https://www.youtube.com/watch?v=mYrNIa0TRdM&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie TCOL") {
-    message.reply(
-      "https://www.youtube.com/watch?v=FAIEsauYHbQ&t=1s&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie TFV") {
-    message.reply(
-      "https://www.youtube.com/watch?v=Vx9EVfSy3jE&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-//Boehlke 2023
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie HLA") {
-    message.reply(
-      "https://www.youtube.com/watch?v=sNHxUNFNKPU&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie KC") {
-    message.reply(
-      "https://www.youtube.com/watch?v=uN7YJglqbH0&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie MM") {
-    message.reply(
-      "https://www.youtube.com/watch?v=TxGVbjbbqD0&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie MF") {
-    message.reply(
-      "https://www.youtube.com/watch?v=9OA4DHFvVG4&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie TWJ") {
-    message.reply(
-      "https://www.youtube.com/watch?v=q2EweIYOk6U&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie TFC") {
-    message.reply(
-      "https://www.youtube.com/watch?v=pFygb4GjvpY&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie RTMD") {
-    message.reply(
-      "https://www.youtube.com/watch?v=UGANwHGBJUc&ab_channel=BirbNotBorb"
-    );
-  }
-});
-
-//Deluca 2024
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie 90DOD") {
-    message.reply(
-      "https://www.youtube.com/watch?v=IfjO86FaemU&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie EVSGV") {
-    message.reply(
-      "https://www.youtube.com/watch?v=ClG-puU3A3U&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie GD") {
-    message.reply(
-      "https://www.youtube.com/watch?v=BBTp862EHOI&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie PB") {
-    message.reply(
-      "https://www.youtube.com/watch?v=5BFEArg1kR8&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie SAETTW") {
-    message.reply(
-      "https://www.youtube.com/watch?v=vITmBOt4Xb4&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie TM") {
-    message.reply(
-      "https://www.youtube.com/watch?v=QJtKll8R32M&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie TBA") {
-    message.reply(
-      "https://www.youtube.com/watch?v=lAnT1xb1tXY&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie WRG") {
-    message.reply(
-      "https://www.youtube.com/watch?v=Ny8Tg664pNw&ab_channel=NoFoxHere"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie FRG") {
-    message.reply("https://youtube.com/shorts/iLOPZQrw1QE?si=vsl_EQIyUgwaXb4o");
-  }
-});
-
-//Gibson 2024
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie 90DODD40") {
-    message.reply(
-      "https://www.youtube.com/watch?v=h_sJLpkI3qs&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie ARD") {
-    message.reply(
-      "https://www.youtube.com/watch?v=C7a_9UYLdJQ&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie THM") {
-    message.reply(
-      "https://www.youtube.com/watch?v=JTZqt1x4YUM&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie EICM") {
-    message.reply(
-      "https://www.youtube.com/watch?v=YEMSjycMGGw&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie EFFWD") {
-    message.reply(
-      "https://www.youtube.com/watch?v=hC7u0axQWGE&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie S49") {
-    message.reply(
-      "https://www.youtube.com/watch?v=S8y2aeTtgqw&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie SPF") {
-    message.reply(
-      "https://www.youtube.com/watch?v=bJFGeV8BiTI&t=1s&ab_channel=FilmCampInABox"
-    );
-  }
-});
-
-//Other
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie DAIB") {
-    message.reply("https://www.youtube.com/watch?v=YWRkH3fX0Jc");
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$movie TCNT") {
-    message.reply("https://www.youtube.com/watch?v=ZdWVo82Kx2k");
-  }
-});
-
-//Class Memes
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 1") {
-    message.reply({ embeds: [ClassMeme1] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 2") {
-    message.reply({ embeds: [ClassMeme2] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 3") {
-    message.reply({ embeds: [ClassMeme3] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 4") {
-    message.reply({ embeds: [ClassMeme4] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 5") {
-    message.reply({ embeds: [ClassMeme5] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 6") {
-    message.reply({ embeds: [ClassMeme6] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 7") {
-    message.reply({ embeds: [ClassMeme7] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 8") {
-    message.reply({ embeds: [ClassMeme8] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 9") {
-    message.reply({ embeds: [ClassMeme9] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 10") {
-    message.reply({ embeds: [ClassMeme10] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 11") {
-    message.reply({ embeds: [ClassMeme11] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 12") {
-    message.reply({ embeds: [ClassMeme12] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 13") {
-    message.reply({ embeds: [ClassMeme13] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 14") {
-    message.reply({ embeds: [ClassMeme14] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 15") {
-    message.reply({ embeds: [ClassMeme15] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 16") {
-    message.reply({ embeds: [ClassMeme16] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 17") {
-    message.reply({ embeds: [ClassMeme17] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 18") {
-    message.reply({ embeds: [ClassMeme18] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 19") {
-    message.reply({ embeds: [ClassMeme19] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 20") {
-    message.reply({ embeds: [ClassMeme20] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 21") {
-    message.reply({ embeds: [ClassMeme21] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 22") {
-    message.reply({ embeds: [ClassMeme22] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 23") {
-    message.reply({ embeds: [ClassMeme23] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 24") {
-    message.reply({ embeds: [ClassMeme24] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 25") {
-    message.reply({ embeds: [ClassMeme25] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 26") {
-    message.reply({ embeds: [ClassMeme26] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 27") {
-    message.reply({ embeds: [ClassMeme27] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 28") {
-    message.reply({ embeds: [ClassMeme28] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 29") {
-    message.reply({ embeds: [ClassMeme29] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 30") {
-    message.reply({ embeds: [ClassMeme30] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 31") {
-    message.reply({ embeds: [ClassMeme31] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 32") {
-    message.reply({ embeds: [ClassMeme32] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 33") {
-    message.reply({ embeds: [ClassMeme33] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 34") {
-    message.reply({ embeds: [ClassMeme34] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 35") {
-    message.reply({ embeds: [ClassMeme35] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 36") {
-    message.reply({ embeds: [ClassMeme36] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 37") {
-    message.reply({ embeds: [ClassMeme37] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 38") {
-    message.reply({ embeds: [ClassMeme38] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 39") {
-    message.reply({ embeds: [ClassMeme39] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$classmeme 40") {
-    message.reply({ embeds: [ClassMeme40] });
   }
 });
 

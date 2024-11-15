@@ -1305,3 +1305,46 @@ export const raceWordBank = [
   "turbine",
   "wattage",
 ];
+
+export const movieLinks = {
+  // Boehlke 2024
+  "2GWGBU": "https://www.youtube.com/watch?v=mTJGYZonJEs&ab_channel=FilmCampInABox",
+  "DWY": "https://www.youtube.com/watch?v=74x8ddmOuGE&ab_channel=FilmCampInABox",
+  "FG": "https://www.youtube.com/watch?v=M7T5dUg-tvQ&ab_channel=FilmCampInABox",
+  "KA": "https://www.youtube.com/watch?v=mYrNIa0TRdM&ab_channel=FilmCampInABox",
+  "TCOL": "https://www.youtube.com/watch?v=FAIEsauYHbQ&t=1s&ab_channel=FilmCampInABox",
+  "TFV": "https://www.youtube.com/watch?v=Vx9EVfSy3jE&ab_channel=FilmCampInABox",
+
+  // Boehlke 2023
+  "HLA": "https://www.youtube.com/watch?v=sNHxUNFNKPU&ab_channel=FilmCampInABox",
+  "KC": "https://www.youtube.com/watch?v=uN7YJglqbH0&ab_channel=FilmCampInABox",
+  "MM": "https://www.youtube.com/watch?v=TxGVbjbbqD0&ab_channel=FilmCampInABox",
+  "MF": "https://www.youtube.com/watch?v=9OA4DHFvVG4&ab_channel=FilmCampInABox",
+  "TWJ": "https://www.youtube.com/watch?v=q2EweIYOk6U&ab_channel=FilmCampInABox",
+  "TFC": "https://www.youtube.com/watch?v=pFygb4GjvpY&ab_channel=FilmCampInABox",
+  "RTMD": "https://www.youtube.com/watch?v=UGANwHGBJUc&ab_channel=BirbNotBorb",
+
+  // Deluca 2024
+  "90DOD": "https://www.youtube.com/watch?v=IfjO86FaemU&ab_channel=FilmCampInABox",
+  "EVSGV": "https://www.youtube.com/watch?v=ClG-puU3A3U&ab_channel=FilmCampInABox",
+  "GD": "https://www.youtube.com/watch?v=BBTp862EHOI&ab_channel=FilmCampInABox",
+  "PB": "https://www.youtube.com/watch?v=5BFEArg1kR8&ab_channel=FilmCampInABox",
+  "SAETTW": "https://www.youtube.com/watch?v=vITmBOt4Xb4&ab_channel=FilmCampInABox",
+  "TM": "https://www.youtube.com/watch?v=QJtKll8R32M&ab_channel=FilmCampInABox",
+  "TBA": "https://www.youtube.com/watch?v=lAnT1xb1tXY&ab_channel=FilmCampInABox",
+  "WRG": "https://www.youtube.com/watch?v=Ny8Tg664pNw&ab_channel=NoFoxHere",
+  "FRG": "https://youtube.com/shorts/iLOPZQrw1QE?si=vsl_EQIyUgwaXb4o",
+
+  // Gibson 2024
+  "90DODD40": "https://www.youtube.com/watch?v=h_sJLpkI3qs&ab_channel=FilmCampInABox",
+  "ARD": "https://www.youtube.com/watch?v=C7a_9UYLdJQ&ab_channel=FilmCampInABox",
+  "THM": "https://www.youtube.com/watch?v=JTZqt1x4YUM&ab_channel=FilmCampInABox",
+  "EICM": "https://www.youtube.com/watch?v=YEMSjycMGGw&ab_channel=FilmCampInABox",
+  "EFFWD": "https://www.youtube.com/watch?v=hC7u0axQWGE&ab_channel=FilmCampInABox",
+  "S49": "https://www.youtube.com/watch?v=S8y2aeTtgqw&ab_channel=FilmCampInABox",
+  "SPF": "https://www.youtube.com/watch?v=bJFGeV8BiTI&t=1s&ab_channel=FilmCampInABox",
+
+  // Other
+  "DAIB": "https://www.youtube.com/watch?v=YWRkH3fX0Jc",
+  "TCNT": "https://www.youtube.com/watch?v=ZdWVo82Kx2k",
+};
