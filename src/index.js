@@ -76,6 +76,8 @@ import ChatHistory from "./schemas/chat-history.js";
 import Count from "./schemas/count.js";
 import User from "./schemas/users.js";
 
+dotenv.config()
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
