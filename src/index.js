@@ -1418,12 +1418,45 @@ client.on("messageCreate", async (message) => {
 });
 
 //Media
-
 client.on("messageCreate", (message) => {
-  if (message.content === "$img") {
-    message.reply(
-      "**Sending Images** \nPlease use `$img (code) (number)` to send an image. \n\n**Image Codes** \n- Desert (0)"
-    );
+  if (message.content.startsWith("$img")) {
+    const args = message.content.split(" ");
+
+    if (args.length < 3) {
+      message.reply("Please provide both the image code and number. Usage: `$img (code) (number)`.");
+      return;
+    }
+
+    const code = args[1];
+    const number = parseInt(args[2]);
+
+    if (code === "0") {
+      if (number === 1) {
+        message.reply({ embeds: [MojaveDesertImage1] });
+      } else if (number === 2) {
+        message.reply({ embeds: [MojaveDesertImage2] });
+      } else if (number === 3) {
+        message.reply({ embeds: [MojaveDesertImage3] });
+      } else if (number === 4) {
+        message.reply({ embeds: [MojaveDesertImage4] });
+      } else if (number === 5) {
+        message.reply({ embeds: [MojaveDesertImage5] });
+      } else if (number === 6) {
+        message.reply({ embeds: [MojaveDesertImage6] });
+      } else if (number === 7) {
+        message.reply({ embeds: [MojaveDesertImage7] });
+      } else if (number === 8) {
+        message.reply({ embeds: [MojaveDesertImage8] });
+      } else if (number === 9) {
+        message.reply({ embeds: [MojaveDesertImage9] });
+      } else if (number === 10) {
+        message.reply({ embeds: [MojaveDesertImage10] });
+      } else {
+        message.reply("Invalid image number. Please use `$img 0 (1-10)` for Mojave Desert images.");
+      }
+    } else {
+      message.reply("Invalid image code. Please use `$img 0 (1-10)` for Mojave Desert images.");
+    }
   }
 });
 
@@ -1592,30 +1625,7 @@ client.on("messageCreate", async (message) => {
   }
 });
 
-//Miscellaneous
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$topgg") {
-    message.reply(
-      "**If you're enjoying KingBot, please consider upvoting the bot and leaving a positive review on Top.gg!** \nVote: https://top.gg/bot/1168240045510107308/vote \nReview: https://top.gg/bot/1168240045510107308#reviews \nBot Page: https://top.gg/bot/1168240045510107308"
-    );
-  }
-});
-
-client.on("messageCreate", async (message) => {
-  if (message.content === "$count") {
-    let countDoc = await Count.findOne();
-    if (!countDoc) {
-      countDoc = new Count({ value: 0 });
-    }
-
-    countDoc.value += 1;
-    await countDoc.save();
-
-    message.reply(`The count is now ${countDoc.value}.`);
-  }
-});
-
+//Artificial Intelligence
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$chatgptdevtool")) {
     const prompt = message.content.slice(9).trim();
@@ -2159,66 +2169,26 @@ client.on('messageCreate', async (message) => {
   }
 });
 
-
-//Image Embeds
-
+//Miscellaneous
 client.on("messageCreate", (message) => {
-  if (message.content === "$img 0 1") {
-    message.reply({ embeds: [MojaveDesertImage1] });
+  if (message.content === "$topgg") {
+    message.reply(
+      "**If you're enjoying KingBot, please consider upvoting the bot and leaving a positive review on Top.gg!** \nVote: https://top.gg/bot/1168240045510107308/vote \nReview: https://top.gg/bot/1168240045510107308#reviews \nBot Page: https://top.gg/bot/1168240045510107308"
+    );
   }
 });
 
-client.on("messageCreate", (message) => {
-  if (message.content === "$img 0 2") {
-    message.reply({ embeds: [MojaveDesertImage2] });
-  }
-});
+client.on("messageCreate", async (message) => {
+  if (message.content === "$count") {
+    let countDoc = await Count.findOne();
+    if (!countDoc) {
+      countDoc = new Count({ value: 0 });
+    }
 
-client.on("messageCreate", (message) => {
-  if (message.content === "$img 0 3") {
-    message.reply({ embeds: [MojaveDesertImage3] });
-  }
-});
+    countDoc.value += 1;
+    await countDoc.save();
 
-client.on("messageCreate", (message) => {
-  if (message.content === "$img 0 4") {
-    message.reply({ embeds: [MojaveDesertImage4] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$img 0 5") {
-    message.reply({ embeds: [MojaveDesertImage5] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$img 0 6") {
-    message.reply({ embeds: [MojaveDesertImage6] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$img 0 7") {
-    message.reply({ embeds: [MojaveDesertImage7] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$img 0 8") {
-    message.reply({ embeds: [MojaveDesertImage8] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$img 0 9") {
-    message.reply({ embeds: [MojaveDesertImage9] });
-  }
-});
-
-client.on("messageCreate", (message) => {
-  if (message.content === "$img 0 10") {
-    message.reply({ embeds: [MojaveDesertImage10] });
+    message.reply(`The count is now ${countDoc.value}.`);
   }
 });
 
@@ -3049,7 +3019,7 @@ client.on("interactionCreate", (interaction) => {
 
   if (interaction.commandName === "classmeme") {
     return interaction.reply(
-      "**Sending Class Memes** \nPlease use $classmeme (number) to send a meme."
+      "**Sending Class Memes** \nPlease use `$classmeme (number)` to send a meme."
     );
   }
 });
