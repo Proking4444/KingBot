@@ -1,72 +1,16 @@
 import dotenv from "dotenv";
-dotenv.config();
-
-import {
-  Client,
-  IntentsBitField,
-  ActivityType,
-  EmbedBuilder,
-} from "discord.js";
-
+import { Client, IntentsBitField, ActivityType } from "discord.js";
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-import ChatHistory from "./schemas/chat-history.js";
-import Count from "./schemas/count.js";
-import User from "./schemas/users.js";
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const safetySettings = [
-  {
-    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-  {
-    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-    threshold: HarmBlockThreshold.BLOCK_NONE,
-  },
-];
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEY);
-
-const gemini15Flash = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash-latest",
-  safetySettings: safetySettings,
-});
-
-const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
-
 import { OpenAI } from "openai";
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_KEY,
-});
-
 import { Ollama } from "ollama";
-const ollama = new Ollama({
-  baseURL: "http://localhost:11434/api/generate",
-});
-
 import yahooFinance from "yahoo-finance2";
-
-//Update this line every time a new embed is added
 import {
   MojaveDesertImage1,
   MojaveDesertImage2,
@@ -78,10 +22,6 @@ import {
   MojaveDesertImage8,
   MojaveDesertImage9,
   MojaveDesertImage10,
-} from "./constants.js";
-
-//Update this line every time a new class meme is added
-import {
   ClassMeme1,
   ClassMeme2,
   ClassMeme3,
@@ -122,20 +62,40 @@ import {
   ClassMeme38,
   ClassMeme39,
   ClassMeme40,
-} from "./constants.js";
-
-//Update this line every time a new list is added
-import {
   randomJokeList,
   randomLongJokeList,
   randomFactList,
   randomAriQuoteList,
   movieLinks,
-  raceWordBank, 
-  testWordBank, 
-  values, 
-  election 
+  raceWordBank,
+  testWordBank,
+  values,
+  election
 } from "./constants.js";
+import ChatHistory from "./schemas/chat-history.js";
+import Count from "./schemas/count.js";
+import User from "./schemas/users.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const safetySettings = [
+  { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
+  { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_NONE },
+  { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE },
+  { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE },
+];
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEY);
+const gemini15Flash = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash-latest",
+  safetySettings: safetySettings,
+});
+const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_KEY });
+const ollama = new Ollama({ baseURL: "http://localhost:11434/api/generate" });
 
 const client = new Client({
   intents: [
@@ -181,30 +141,11 @@ client.on("ready", async (c) => {
   let totalUsers = results.reduce((prevVal, currVal) => prevVal + currVal);
 
   let status = [
-    {
-      name: "$help",
-      type: ActivityType.Playing,
-    },
-
-    {
-      name: `${totalUsers} users!`,
-      type: ActivityType.Watching,
-    },
-
-    {
-      name: "$help",
-      type: ActivityType.Playing,
-    },
-
-    {
-      name: `${totalUsers} users!`,
-      type: ActivityType.Watching,
-    },
-
-    {
-      name: `${client.guilds.cache.size} servers!`,
-      type: ActivityType.Watching,
-    },
+    { name: "$help", type: ActivityType.Playing },
+    { name: `${totalUsers} users!`, type: ActivityType.Watching },
+    { name: "$help", type: ActivityType.Playing },
+    { name: `${totalUsers} users!`, type: ActivityType.Watching },
+    { name: `${client.guilds.cache.size} servers!`, type: ActivityType.Watching },
   ];
 
   console.log(`${c.user.tag} is Online!`);
