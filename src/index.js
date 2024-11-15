@@ -1423,15 +1423,16 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", (message) => {
   if (message.content.startsWith("$classmeme")) {
     const memeNumber = message.content.split(" ")[1];
+    
     if (!memeNumber) {
       message.reply(
         "**Sending Class Memes** \nPlease use `$classmeme (number)` to send a meme."
       );
     } else {
-      const embedKey = `ClassMeme${memeNumber}`;
+      const memeEmbed = eval(`ClassMeme${memeNumber}`); 
 
-      if (global[embedKey]) {
-        message.reply({ embeds: [global[embedKey]] });
+      if (memeEmbed) {
+        message.reply({ embeds: [memeEmbed] });
       } else {
         message.reply("Please use `$classmeme (number)` to send a meme");
       }
