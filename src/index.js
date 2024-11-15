@@ -1423,7 +1423,9 @@ client.on("messageCreate", (message) => {
     const args = message.content.split(" ");
 
     if (args.length < 3) {
-      message.reply("Please provide both the image code and number. Usage: `$img (code) (number)`.");
+      message.reply(
+        "**Sending Images** \nPlease use `$img (code) (number)` to send an image. \n\n**Image Codes** \n- Desert (0)"
+      );
       return;
     }
 
@@ -1452,10 +1454,10 @@ client.on("messageCreate", (message) => {
       } else if (number === 10) {
         message.reply({ embeds: [MojaveDesertImage10] });
       } else {
-        message.reply("Invalid image number. Please use `$img 0 (1-10)` for Mojave Desert images.");
+        message.reply("Please use `$img 0 (1-10)` for Mojave Desert images.");
       }
     } else {
-      message.reply("Invalid image code. Please use `$img 0 (1-10)` for Mojave Desert images.");
+      message.reply("Please use `$img (code) (number)` to send an image. \n\n**Image Codes** \n- Desert (0)");
     }
   }
 });
