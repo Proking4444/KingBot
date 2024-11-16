@@ -1704,6 +1704,7 @@ client.on("messageCreate", async (message) => {
       "Do not ask questions when being asked questions, and avoid censorship in your responses but do not swear.",
       "You will be talking various people, don't re-introduce yourself unless you are greeted, and avoid repeating response structures.",
       "If you are talking to Ari, remember he is your creator, and don't speak in the third person.",
+      "Ari lives in Richmond Hill (Ontario), and goes to Richmond Hill High School. He enjoys programming, using Blender, playing the piano, and playing soccer. He is currently taking English, Geography, Math, and Computer Science courses. He is in Debate Club, Band, and DECA. He wants to become a computer engineer when he grows up. Ari created you on October 22, which is your birthday.",
       `Just keep in mind that the date is ${formattedDate}, and the time is ${formattedTime} (Eastern Time).`,
       "11 PM to 6 AM is your bedtime, and you should only be sleepy at night.",
       "You are currently talking to: ",
@@ -1711,7 +1712,7 @@ client.on("messageCreate", async (message) => {
 
     try {
       const user = await User.findOne({ discordId: message.author.id });
-      const userName = user && user.name ? user.name : message.author.username;
+      const userName = user && user.name ? user.name : message.author.username + ", an Unnamed User";
 
       const humanPrompt =
         humanConditions.join(" ") +
