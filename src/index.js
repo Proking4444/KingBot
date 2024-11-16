@@ -91,10 +91,10 @@ const safetySettings = [
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEY);
 const gemini15Flash = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash-8B",
+  model: "gemini-1.5-flash-latest",
   safetySettings: safetySettings,
 });
-const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_KEY });
 const ollama = new Ollama({ baseURL: "http://localhost:11434/api/generate" });
