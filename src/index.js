@@ -2686,13 +2686,17 @@ async function checkSelfNetWorth(message) {
       }
     }
 
-    let netWorthMessage = `**Your Net Worth:**\n`;
-    netWorthMessage += `**USD:** $${(totalNetWorth["USD"] || 0).toFixed(2)}`;
+    let netWorthMessage = `Your current net worth is `;
+
+    netWorthMessage += `$${(totalNetWorth["USD"] || 0).toFixed(2)} USD`;
+
     for (const currency in totalNetWorth) {
       if (currency !== "USD") {
-        netWorthMessage += ` + ${totalNetWorth[currency].toFixed(2)} ${currency}`;
+        netWorthMessage += ` + ${(totalNetWorth[currency] || 0).toFixed(2)} ${currency}`;
       }
     }
+
+    netWorthMessage += ".";
 
     message.reply(netWorthMessage);
   } catch (error) {
@@ -2729,13 +2733,17 @@ async function checkUserNetWorth(userId, message) {
       }
     }
 
-    let netWorthMessage = `<@${userId}> has a net worth of:\n`;
-    netWorthMessage += `**USD:** $${(totalNetWorth["USD"] || 0).toFixed(2)}`;
+    let netWorthMessage = `<@${userId}> has a net worth of `;
+
+    netWorthMessage += `$${(totalNetWorth["USD"] || 0).toFixed(2)} USD`;
+
     for (const currency in totalNetWorth) {
       if (currency !== "USD") {
-        netWorthMessage += ` + ${totalNetWorth[currency].toFixed(2)} ${currency}`;
+        netWorthMessage += ` + ${(totalNetWorth[currency] || 0).toFixed(2)} ${currency}`;
       }
     }
+
+    netWorthMessage += ".";
 
     message.reply(netWorthMessage);
   } catch (error) {
@@ -2861,94 +2869,98 @@ async function checkBalanceSlash(userId, interaction) {
   }
 }
 
-async function checkSelfNetWorthSlash(interaction) {
-  await interaction.deferReply();
+async function checkSelfNetWorthSlash(interaction) { 
+  await interaction.deferReply(); 
 
-  const userId = interaction.user.id;
+  const userId = interaction.user.id; 
 
-  try {
-    const user = await User.findOne({ discordId: userId });
+  try { 
+    const user = await User.findOne({ discordId: userId }); 
 
-    if (!user) {
-      await interaction.editReply("You need to create an account first with `$start`.");
-      return;
-    }
+    if (!user) { 
+      await interaction.editReply("You need to create an account first with `$start`."); 
+      return; 
+    } 
 
-    let totalNetWorth = { USD: user.balance };
+    let totalNetWorth = { USD: user.balance }; 
 
-    if (user.stocks && user.stocks.length > 0) {
-      for (const stock of user.stocks) {
-        const currentPrice = await fetchStockPrice(stock.symbol);
-        const stockCurrency = await fetchStockCurrency(stock.symbol);
+    if (user.stocks && user.stocks.length > 0) { 
+      for (const stock of user.stocks) { 
+        const currentPrice = await fetchStockPrice(stock.symbol); 
+        const stockCurrency = await fetchStockCurrency(stock.symbol); 
 
-        if (currentPrice !== null) {
-          const stockValue = currentPrice * stock.amount;
+        if (currentPrice !== null) { 
+          const stockValue = currentPrice * stock.amount; 
 
-          if (!totalNetWorth[stockCurrency]) {
-            totalNetWorth[stockCurrency] = 0;
-          }
+          if (!totalNetWorth[stockCurrency]) { 
+            totalNetWorth[stockCurrency] = 0; 
+          } 
 
-          totalNetWorth[stockCurrency] += stockValue;
-        }
-      }
-    }
+          totalNetWorth[stockCurrency] += stockValue; 
+        } 
+      } 
+    } 
 
-    let netWorthMessage = `**Your Net Worth:**\n`;
-    netWorthMessage += `**USD:** $${(totalNetWorth["USD"] || 0).toFixed(2)}`;
-    for (const currency in totalNetWorth) {
-      if (currency !== "USD") {
-        netWorthMessage += ` + ${totalNetWorth[currency].toFixed(2)} ${currency}`;
-      }
-    }
+    let netWorthMessage = `Your current net worth is $${(totalNetWorth["USD"] || 0).toFixed(2)} USD`; 
 
-    await interaction.editReply(netWorthMessage);
-  } catch (error) {
-    console.error("Error fetching net worth:", error);
-    await interaction.editReply("Error fetching net worth. Please try again later.");
-  }
-}
+    for (const currency in totalNetWorth) { 
+      if (currency !== "USD") { 
+        netWorthMessage += ` + ${(totalNetWorth[currency] || 0).toFixed(2)} ${currency}`; 
+      } 
+    } 
 
-async function checkUserNetWorthSlash(userId, interaction) {
-  try {
-    const user = await User.findOne({ discordId: userId });
+    netWorthMessage += "."; 
 
-    if (!user) {
-      await interaction.reply("This user has not created an account yet.");
-      return;
-    }
+    await interaction.editReply(netWorthMessage); 
+  } catch (error) { 
+    console.error("Error fetching net worth:", error); 
+    await interaction.editReply("Error fetching net worth. Please try again later."); 
+  } 
+} 
 
-    let totalNetWorth = { USD: user.balance };
+async function checkUserNetWorthSlash(userId, interaction) { 
+  try { 
+    const user = await User.findOne({ discordId: userId }); 
 
-    if (user.stocks && user.stocks.length > 0) {
-      for (const stock of user.stocks) {
-        const currentPrice = await fetchStockPrice(stock.symbol);
-        const stockCurrency = await fetchStockCurrency(stock.symbol);
+    if (!user) { 
+      await interaction.reply("This user has not created an account yet."); 
+      return; 
+    } 
 
-        if (currentPrice !== null) {
-          const stockValue = currentPrice * stock.amount;
+    let totalNetWorth = { USD: user.balance }; 
 
-          if (!totalNetWorth[stockCurrency]) {
-            totalNetWorth[stockCurrency] = 0;
-          }
+    if (user.stocks && user.stocks.length > 0) { 
+      for (const stock of user.stocks) { 
+        const currentPrice = await fetchStockPrice(stock.symbol); 
+        const stockCurrency = await fetchStockCurrency(stock.symbol); 
 
-          totalNetWorth[stockCurrency] += stockValue;
-        }
-      }
-    }
+        if (currentPrice !== null) { 
+          const stockValue = currentPrice * stock.amount; 
 
-    let netWorthMessage = `<@${userId}> has a net worth of:\n`;
-    netWorthMessage += `**USD:** $${(totalNetWorth["USD"] || 0).toFixed(2)}`;
-    for (const currency in totalNetWorth) {
-      if (currency !== "USD") {
-        netWorthMessage += ` + ${totalNetWorth[currency].toFixed(2)} ${currency}`;
-      }
-    }
+          if (!totalNetWorth[stockCurrency]) { 
+            totalNetWorth[stockCurrency] = 0; 
+          } 
 
-    await interaction.reply(netWorthMessage);
-  } catch (error) {
-    console.error("Error fetching net worth:", error);
-    await interaction.reply("Error fetching net worth. Please try again later.");
-  }
+          totalNetWorth[stockCurrency] += stockValue; 
+        } 
+      } 
+    } 
+
+    let netWorthMessage = `<@${userId}> has a net worth of $${(totalNetWorth["USD"] || 0).toFixed(2)} USD`; 
+
+    for (const currency in totalNetWorth) { 
+      if (currency !== "USD") { 
+        netWorthMessage += ` + ${(totalNetWorth[currency] || 0).toFixed(2)} ${currency}`; 
+      } 
+    } 
+
+    netWorthMessage += "."; 
+
+    await interaction.reply(netWorthMessage); 
+  } catch (error) { 
+    console.error("Error fetching net worth:", error); 
+    await interaction.reply("Error fetching net worth. Please try again later."); 
+  } 
 }
 
 //Temporary
