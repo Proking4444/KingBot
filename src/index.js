@@ -91,7 +91,7 @@ const safetySettings = [
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEY);
 const gemini15Flash = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash-exp",
+  model: "gemini-exp-1114",
   safetySettings: safetySettings,
 });
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
