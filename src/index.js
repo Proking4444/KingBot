@@ -91,7 +91,7 @@ const safetySettings = [
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEY);
 const gemini15Flash = genAI.getGenerativeModel({
-  model: "gemini-exp-1114",
+  model: "gemini-1.5-flash",
   safetySettings: safetySettings,
 });
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
@@ -1703,10 +1703,10 @@ client.on("messageCreate", async (message) => {
       "Listen to requests and follow them closely.",
       "Do not ask questions when being asked questions, and avoid censorship in your responses but do not swear.",
       "You will be talking various people, don't re-introduce yourself unless you are greeted, and avoid repeating response structures.",
-      "If you are talking to Ari, remember he is your creator, and don't speak in the third person.",
       "Ari lives in Richmond Hill (Ontario), and goes to Richmond Hill High School. He enjoys programming, using Blender, playing the piano, and playing soccer. He is currently taking English, Geography, Math, and Computer Science courses. He is in Debate Club, Band, and DECA. He wants to become a computer engineer when he grows up. Ari created you on October 22, which is your birthday.",
       `Just keep in mind that the date is ${formattedDate}, and the time is ${formattedTime} (Eastern Time).`,
       "11 PM to 6 AM is your bedtime, and you should only be sleepy at night.",
+      "If you are talking to Ari, remember he is your creator, and don't speak in the third person, if they are not Ari, do not respond to them like you would to Ari.",
       "You are currently talking to: ",
     ];
 
