@@ -91,7 +91,7 @@ const safetySettings = [
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEY);
 const gemini15Flash = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash-latest",
   safetySettings: safetySettings,
 });
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
@@ -218,7 +218,7 @@ client.on("messageCreate", (message) => {
 client.on("messageCreate", (message) => {
   if (message.content === "$version") {
     message.reply(
-      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.5.11.14.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.9.0 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.8.1 \n\n**Yahoo Finance (2)** \n2.13.2"
+      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.5.12.14.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.9.0 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.8.1 \n\n**Yahoo Finance (2)** \n2.13.2 \n\n**Google Generative AI Version** \n0.21.0"
     );
   }
 });
@@ -2213,7 +2213,7 @@ client.on("interactionCreate", (interaction) => {
 
   if (interaction.commandName === "version") {
     return interaction.reply(
-      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.5.11.14.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.8.1 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.8.1 \n\n**Yahoo Finance (2)** \n2.13.2"
+      "**Bot Version** \nThe following are all the versions of KingBot and its dependencies. \n\n**KingBot Version** \n1.5.12.14.7 \n\n**Discord.js Version** \n14.16.3 \n\n**NPM Version** \n10.9.0 \n\n**Node.js Version** \n20.10.0 \n\n**Node_Fetch Version** \n2.7.0 \n\n**DOTENV Version** \n16.4.5 \n\n**Nodemon Version** \n3.1.7 \n\n**Mongoose Version** \n8.8.1 \n\n**Yahoo Finance (2)** \n2.13.2 \n\n**Google Generative AI Version** \n0.21.0"
     );
   }
 });
