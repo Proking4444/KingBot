@@ -2450,17 +2450,17 @@ client.on("interactionCreate", async (interaction) => {
   const { commandName, options } = interaction;
 
   if (commandName === "net") {
-    const args = options.getString("user");
+    const userOption = options.getUser("user");
 
-    if (!args) {
+    if (!userOption) {
       await checkSelfNetWorthSlash(interaction);
     } else {
-      const userId = await resolveUser(args, interaction);
+      const userId = userOption.id;
 
       if (userId) {
         await checkUserNetWorthSlash(userId, interaction);
       } else {
-        interaction.reply("That user was not found.");
+        await interaction.reply("That user was not found.");
       }
     }
   }
@@ -2918,57 +2918,51 @@ async function checkSelfNetWorthSlash(interaction) {
   } 
 } 
 
-async function checkUserNetWorthSlash(userId, interaction) { 
-  try { 
-    const user = interaction.options.getUser("user"); 
+async function checkUserNetWorthSlash(userId, interaction) {
+  try {
+    const user = await User.findOne({ discordId: userId });
 
-    if (!user) { 
-      await interaction.reply("Please specify a valid user."); 
-      return; 
-    } 
+    if (!user) {
+      await interaction.reply("This user has not created an account yet.");
+      return;
+    }
 
-    const userData = await User.findOne({ discordId: user.id }); 
+    let totalNetWorth = { USD: user.balance };
 
-    if (!userData) { 
-      await interaction.reply("This user has not created an account yet."); 
-      return; 
-    } 
+    if (user.stocks && user.stocks.length > 0) {
+      for (const stock of user.stocks) {
+        const currentPrice = await fetchStockPrice(stock.symbol);
+        const stockCurrency = await fetchStockCurrency(stock.symbol);
 
-    let totalNetWorth = { USD: userData.balance }; 
+        if (currentPrice !== null) {
+          const stockValue = currentPrice * stock.amount;
 
-    if (userData.stocks && userData.stocks.length > 0) { 
-      for (const stock of userData.stocks) { 
-        const currentPrice = await fetchStockPrice(stock.symbol); 
-        const stockCurrency = await fetchStockCurrency(stock.symbol); 
+          if (!totalNetWorth[stockCurrency]) {
+            totalNetWorth[stockCurrency] = 0;
+          }
 
-        if (currentPrice !== null) { 
-          const stockValue = currentPrice * stock.amount; 
+          totalNetWorth[stockCurrency] += stockValue;
+        }
+      }
+    }
 
-          if (!totalNetWorth[stockCurrency]) { 
-            totalNetWorth[stockCurrency] = 0; 
-          } 
+    let netWorthMessage = `<@${userId}> has a net worth of $${(totalNetWorth["USD"] || 0).toFixed(2)} USD`;
 
-          totalNetWorth[stockCurrency] += stockValue; 
-        } 
-      } 
-    } 
+    for (const currency in totalNetWorth) {
+      if (currency !== "USD") {
+        netWorthMessage += ` + ${(totalNetWorth[currency] || 0).toFixed(2)} ${currency}`;
+      }
+    }
 
-    let netWorthMessage = `<@${user.id}> has a net worth of $${(totalNetWorth["USD"] || 0).toFixed(2)} USD`; 
+    netWorthMessage += ".";
 
-    for (const currency in totalNetWorth) { 
-      if (currency !== "USD") { 
-        netWorthMessage += ` + ${(totalNetWorth[currency] || 0).toFixed(2)} ${currency}`; 
-      } 
-    } 
-
-    netWorthMessage += "."; 
-
-    await interaction.reply(netWorthMessage); 
-  } catch (error) { 
-    console.error("Error fetching net worth:", error); 
-    await interaction.reply("Error fetching net worth. Please try again later."); 
-  } 
+    await interaction.reply(netWorthMessage);
+  } catch (error) {
+    console.error("Error fetching net worth:", error);
+    await interaction.reply("Error fetching net worth. Please try again later.");
+  }
 }
+
 
 //Temporary
 
