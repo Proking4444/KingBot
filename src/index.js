@@ -2688,7 +2688,7 @@ async function checkSelfNetWorth(message) {
 
     let netWorthMessage = `Your current net worth is `;
 
-    netWorthMessage += `$${(totalNetWorth["USD"] || 0).toFixed(2)} USD`;
+    netWorthMessage += `${(totalNetWorth["USD"] || 0).toFixed(2)} USD`;
 
     for (const currency in totalNetWorth) {
       if (currency !== "USD") {
@@ -2735,7 +2735,7 @@ async function checkUserNetWorth(userId, message) {
 
     let netWorthMessage = `<@${userId}> has a net worth of `;
 
-    netWorthMessage += `$${(totalNetWorth["USD"] || 0).toFixed(2)} USD`;
+    netWorthMessage += `${(totalNetWorth["USD"] || 0).toFixed(2)} USD`;
 
     for (const currency in totalNetWorth) {
       if (currency !== "USD") {
@@ -2901,7 +2901,7 @@ async function checkSelfNetWorthSlash(interaction) {
       } 
     } 
 
-    let netWorthMessage = `Your current net worth is $${(totalNetWorth["USD"] || 0).toFixed(2)} USD`; 
+    let netWorthMessage = `Your current net worth is ${(totalNetWorth["USD"] || 0).toFixed(2)} USD`; 
 
     for (const currency in totalNetWorth) { 
       if (currency !== "USD") { 
@@ -2920,17 +2920,24 @@ async function checkSelfNetWorthSlash(interaction) {
 
 async function checkUserNetWorthSlash(userId, interaction) { 
   try { 
-    const user = await User.findOne({ discordId: userId }); 
+    const user = interaction.options.getUser("user"); 
 
     if (!user) { 
+      await interaction.reply("Please specify a valid user."); 
+      return; 
+    } 
+
+    const userData = await User.findOne({ discordId: user.id }); 
+
+    if (!userData) { 
       await interaction.reply("This user has not created an account yet."); 
       return; 
     } 
 
-    let totalNetWorth = { USD: user.balance }; 
+    let totalNetWorth = { USD: userData.balance }; 
 
-    if (user.stocks && user.stocks.length > 0) { 
-      for (const stock of user.stocks) { 
+    if (userData.stocks && userData.stocks.length > 0) { 
+      for (const stock of userData.stocks) { 
         const currentPrice = await fetchStockPrice(stock.symbol); 
         const stockCurrency = await fetchStockCurrency(stock.symbol); 
 
@@ -2946,7 +2953,7 @@ async function checkUserNetWorthSlash(userId, interaction) {
       } 
     } 
 
-    let netWorthMessage = `<@${userId}> has a net worth of $${(totalNetWorth["USD"] || 0).toFixed(2)} USD`; 
+    let netWorthMessage = `<@${user.id}> has a net worth of $${(totalNetWorth["USD"] || 0).toFixed(2)} USD`; 
 
     for (const currency in totalNetWorth) { 
       if (currency !== "USD") { 
