@@ -3053,6 +3053,17 @@ client.on("messageCreate", async (message) => {
       for (const user of users) {
         let updated = false;
 
+        if (user.username === undefined) {
+          try {
+            const discordUser = await client.users.fetch(user.discordId);
+            user.username = discordUser.username;
+            updated = true;
+          } catch (err) {
+            console.error(`Could not fetch user ${user.discordId}:`, err);
+            continue;
+          }
+        }
+
         if (user.balance === undefined) {
           user.balance = 0;
           updated = true;
