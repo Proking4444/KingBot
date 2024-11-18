@@ -437,9 +437,14 @@ client.on("messageCreate", async (message) => {
         username: message.author.username,
         balance: 0,
         lastDailyCollected: null,
+        lastClaimCollected: null,
+        lastVoteTimestamp: null,
+        currencies: {},
+        name: null,
+        stocks: [],
       });
 
-      message.reply("Your account has been created.");
+      message.reply("Your account has been created with all fields initialized.");
     }
   }
 });
@@ -1908,13 +1913,20 @@ client.on("messageCreate", async (message) => {
     }
 
     try {
-      const user = await User.findOneAndUpdate(
+      const user = await User.findOne({ discordId: message.author.id });
+
+      if (!user) {
+        message.reply("You need to create an account first using `$start`.");
+        return;
+      }
+
+      const updatedUser = await User.findOneAndUpdate(
         { discordId: message.author.id },
         { name: name },
-        { upsert: true, new: true }
+        { new: true }
       );
 
-      message.reply(`Your name has been set to ${user.name}.`);
+      message.reply(`Your name has been set to ${updatedUser.name}.`);
     } catch (error) {
       console.error("Error setting name:", error);
       message.reply("There was an error setting your name. Please try again.");
@@ -3030,6 +3042,57 @@ client.on("messageCreate", async (message) => {
 client.on("messageCreate", (message) => {
   if (message.content === "$election") {
     message.reply({ embeds: [election] });
+  }
+});
+
+client.on("messageCreate", async (message) => {
+  if (message.content === "$fixfields" && message.author.id === "786745378212282368") {
+    try {
+      const users = await User.find();
+
+      for (const user of users) {
+        let updated = false;
+
+        if (user.balance === undefined) {
+          user.balance = 0;
+          updated = true;
+        }
+        if (user.lastDailyCollected === undefined) {
+          user.lastDailyCollected = null;
+          updated = true;
+        }
+        if (user.lastClaimCollected === undefined) {
+          user.lastClaimCollected = null;
+          updated = true;
+        }
+        if (user.lastVoteTimestamp === undefined) {
+          user.lastVoteTimestamp = null;
+          updated = true;
+        }
+        if (user.currencies === undefined) {
+          user.currencies = {};
+          updated = true;
+        }
+        if (user.name === undefined) {
+          user.name = null;
+          updated = true;
+        }
+        if (user.stocks === undefined) {
+          user.stocks = [];
+          updated = true;
+        }
+
+        if (updated) {
+          await user.save();
+          console.log(`Fixed missing fields for user ${user.discordId}`);
+        }
+      }
+
+      message.reply("All missing fields have been fixed for user documents.");
+    } catch (error) {
+      console.error("Error fixing fields:", error);
+      message.reply("There was an error fixing fields. Please try again later.");
+    }
   }
 });
 
