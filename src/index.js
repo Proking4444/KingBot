@@ -95,7 +95,7 @@ const gemini15Flash = genAI.getGenerativeModel({
   safetySettings: safetySettings,
   generationConfig: {
     maxOutputTokens: 8192,
-    temperature: 1.5,
+    temperature: 1.25,
   },
 });
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
