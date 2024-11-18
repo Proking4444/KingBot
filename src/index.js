@@ -93,6 +93,10 @@ const fileManager = new GoogleAIFileManager(process.env.GOOGLE_API_KEY);
 const gemini15Flash = genAI.getGenerativeModel({
   model: "gemini-1.5-flash-latest",
   safetySettings: safetySettings,
+  generationConfig: {
+    maxOutputTokens: 8192,
+    temperature: 1.5,
+  },
 });
 const gemini15Pro = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
 
