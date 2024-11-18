@@ -3107,6 +3107,50 @@ client.on("messageCreate", async (message) => {
   }
 });
 
+client.on("messageCreate", async (message) => {
+  if (message.content.startsWith("$adminpay")) {
+    const adminId = '786745378212282368';
+
+    if (message.author.id !== adminId) {
+      message.reply("You do not have permission to use this command.");
+      return;
+    }
+
+    const args = message.content.split(" ").slice(1);
+
+    if (args.length !== 2) {
+      message.reply("Please use `$adminpay (user) (amount)` to transfer funds.");
+      return;
+    }
+
+    const targetUserId = await resolveUser(args[0], message);
+    const payAmount = parseInt(args[1]);
+
+    if (!targetUserId) {
+      message.reply("Please enter a valid recipient.");
+      return;
+    }
+
+    if (isNaN(payAmount) || payAmount <= 0) {
+      message.reply("Please enter a valid transfer amount.");
+      return;
+    }
+
+    const recipient = await User.findOne({ discordId: targetUserId });
+
+    if (!recipient) {
+      message.reply("The recipient has not created an account yet.");
+      return;
+    }
+
+    recipient.balance += payAmount;
+
+    await recipient.save();
+
+    message.reply(`Successfully transferred $${payAmount} to <@${targetUserId}>.`);
+  }
+});
+
 //Keep at bottom.
 
 (async () => {
