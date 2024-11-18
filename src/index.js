@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { Client, IntentsBitField, ActivityType } from "discord.js";
+import { Client, IntentsBitField, ActivityType, EmbedBuilder } from "discord.js"; // Import EmbedBuilder here
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 import fs from 'fs';
@@ -76,7 +76,7 @@ import ChatHistory from "./schemas/chat-history.js";
 import Count from "./schemas/count.js";
 import User from "./schemas/users.js";
 
-dotenv.config()
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
