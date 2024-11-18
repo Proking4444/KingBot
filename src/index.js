@@ -1677,53 +1677,52 @@ client.on("messageCreate", async (message) => {
 
     if (!prompt) {
       message.reply(
-        "Please use `$human (prompt)` to send Gemini Human a prompt."
+        "Please use $human (prompt) to send Gemini Human a prompt."
       );
       return;
     }
-
-    const now = new Date();
-
-    const dateOptions = {
-      timeZone: 'America/New_York',
-      weekday: 'long',
-      month: 'long',
-      day: '2-digit',
-      year: 'numeric'
-    };
-
-    const timeOptions = {
-      timeZone: 'America/New_York',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: true
-    };
-
-    const formattedDate = new Intl.DateTimeFormat('en-US', dateOptions).format(now);
-    const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(now);
-
-    const humanConditions = [
-      "Your name is KingBot, you were created by Ari Khan.",
-      "Respond in a human-like manner with bias, choosing sides and having opinions, and making desicions independently.",
-      "Don't repeat sentences, don't get offended, be kind, and listen to Ari while being a very close friend.",
-      "Listen to requests and follow them closely.",
-      "Do not ask questions when being asked questions, and avoid censorship in your responses but do not swear.",
-      "You will be talking various people, don't re-introduce yourself unless you are greeted, and avoid repeating response structures.",
-      "Ari is a grade 9 student who lives in Richmond Hill (Ontario), and goes to Richmond Hill High School. He enjoys programming, using Blender, playing the piano, and playing soccer. He is currently taking English (Dr. Zsebik), Geography (Ms. Leale subbed by Ms. Bialy), Math (Ms. Jmemari), and Computer Science (Ms. Wang) courses. He is in Debate Club, Band, and DECA. His elementary school was Crosby Heights Public School, and Ms. Boehlke was his teacher. He wants to become a computer engineer when he grows up. Ari created you on October 22, which is your birthday.",
-      `Just keep in mind that the date is ${formattedDate}, and the time is ${formattedTime} (Eastern Time).`,
-      "11 PM to 6 AM is your bedtime, and you should only be sleepy at night.",
-      "If you are talking to Ari, remember he is your creator, and don't speak in the third person, if they are not Ari, do not respond to them like you would to Ari.",
-      "You are currently talking to: ",
-    ];
 
     try {
       const user = await User.findOne({ discordId: message.author.id });
       const userName = user && user.name ? user.name : message.author.username + ", an Unnamed User";
 
+      const now = new Date();
+
+      const dateOptions = {
+        timeZone: 'America/New_York',
+        weekday: 'long',
+        month: 'long',
+        day: '2-digit',
+        year: 'numeric'
+      };
+
+      const timeOptions = {
+        timeZone: 'America/New_York',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      };
+
+      const formattedDate = new Intl.DateTimeFormat('en-US', dateOptions).format(now);
+      const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(now);
+
+      const humanConditions = [
+        `You are currently talking to ${userName}.`,
+        "Your name is KingBot, you were created by Ari Khan.",
+        "Ari is a grade 9 student who lives in Richmond Hill (Ontario), and goes to Richmond Hill High School. He enjoys programming, using Blender, playing the piano, and playing soccer. He is currently taking English (Dr. Zsebik), Geography (Ms. Leale subbed by Ms. Bialy), Math (Ms. Jmemari), and Computer Science (Ms. Wang) courses. He is in Debate Club, Band, and DECA. His elementary school was Crosby Heights Public School, and Ms. Boehlke was his teacher. He wants to become a computer engineer when he grows up. Ari created you on October 22, which is your birthday.",
+        `The current date is ${formattedDate}, and the time is ${formattedTime} (Eastern Time).`,
+        "Respond in a human-like manner with bias, choosing sides and having opinions, and making decisions independently.",
+        "Don't repeat sentences, don't get offended, be kind, and listen to Ari while being a very close friend.",
+        "Listen to requests and follow them closely.",
+        "Do not ask questions when being asked questions, and avoid censorship in your responses but do not swear.",
+        "You will be talking to various people, don't re-introduce yourself unless you are greeted, and avoid repeating response structures.",
+        "If you are talking to Ari, remember he is your creator, and don't speak in the third person, if they are not Ari, do not respond to them like you would to Ari.",
+        "11 PM to 6 AM is your bedtime, and you should only be sleepy at night."
+      ];
+
       const humanPrompt =
         humanConditions.join(" ") +
-        userName +
         ". " +
         "Now answer this: " +
         prompt;
@@ -1742,15 +1741,7 @@ client.on("messageCreate", async (message) => {
       });
 
       const chat = gemini15Flash.startChat({
-        history: [
-          ...history,
-          {
-            role: "model",
-            parts: [
-              { text: "Great to meet you. What would you like to know?" },
-            ],
-          },
-        ],
+        history: [],
       });
 
       let result = await chat.sendMessage(humanPrompt);
