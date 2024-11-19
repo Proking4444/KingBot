@@ -747,7 +747,7 @@ client.on("messageCreate", async (message) => {
       if (playerValue === 21) {
         user.balance += betAmount * 2;
         await message.reply(
-          `${response}**Blackjack! You won $${betAmount}!** Your new balance is ${user.balance.toFixed(
+          `${response}**Blackjack! You won $${betAmount.toFixed(2)}!** Your new balance is ${user.balance.toFixed(
             2
           )}.`
         );
@@ -756,7 +756,7 @@ client.on("messageCreate", async (message) => {
       }
       if (playerValue > 21) {
         await message.reply(
-          `${response}**Bust! You lost $${betAmount}!** Your new balance is ${user.balance.toFixed(
+          `${response}**Bust! You lost $${betAmount.toFixed(2)}!** Your new balance is ${user.balance.toFixed(
             2
           )}.`
         );
@@ -816,12 +816,12 @@ client.on("messageCreate", async (message) => {
         )} **(Value: ${finalDealerValue})**\n\n`;
 
       if (finalPlayerValue > 21) {
-        dealerResponse += `**Bust! You lost $${betAmount}!** Your new balance is ${user.balance.toFixed(
+        dealerResponse += `**Bust! You lost $${betAmount.toFixed(2)}!** Your new balance is ${user.balance.toFixed(
           2
         )}.`;
       } else if (finalDealerValue > 21 || finalPlayerValue > finalDealerValue) {
         user.balance += betAmount * 2;
-        dealerResponse += `**You won $${betAmount}!** Your new balance is ${user.balance.toFixed(
+        dealerResponse += `**You won $${betAmount.toFixed(2)}!** Your new balance is ${user.balance.toFixed(
           2
         )}.`;
       } else if (finalPlayerValue === finalDealerValue) {
@@ -830,7 +830,7 @@ client.on("messageCreate", async (message) => {
           2
         )}.`;
       } else {
-        dealerResponse += `**You lost $${betAmount}!** Your new balance is ${user.balance.toFixed(
+        dealerResponse += `**You lost $${betAmount.toFixed(2)}!** Your new balance is ${user.balance.toFixed(
           2
         )}.`;
       }
@@ -1036,7 +1036,7 @@ client.on("messageCreate", async (message) => {
 
       message.reply(
         `Successfully bought ${amount} shares of ${symbol} at $${price.toFixed(
-          3
+          4
         )} (${currency}) each.`
       );
     } catch (error) {
@@ -1102,7 +1102,7 @@ client.on("messageCreate", async (message) => {
 
       message.reply(
         `Successfully sold ${amount} shares of ${symbol} at $${price.toFixed(
-          3
+          4
         )} (${currency}) each.`
       );
     } catch (error) {
@@ -1258,9 +1258,7 @@ client.on("messageCreate", async (message) => {
     }
 
     message.reply(
-      `**${stockName} (${symbol}):** \n**Current Price:** $${price.toFixed(
-        4
-      )} (${currency})`
+      `**${stockName} (${symbol}):** \n**Current Price:** $${price} (${currency})`
     );
   }
 });
