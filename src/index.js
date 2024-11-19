@@ -1497,7 +1497,7 @@ client.on("messageCreate", async (message) => {
 
   if (message.content.startsWith("$timeout")) {
     try {
-      if (!message.member.permissions.has("ModerateMembers")) {
+      if (!message.member.permissions.has(PermissionsBitField.Flags.ModerateMembers)) {
         return message.reply("You don't have permission to timeout members.");
       }
 
@@ -1554,7 +1554,7 @@ client.on("messageCreate", async (message) => {
 
   if (message.content.startsWith("$untimeout")) {
     try {
-      if (!message.member.permissions.has("ModerateMembers")) {
+      if (!message.member.permissions.has(PermissionsBitField.Flags.ModerateMembers)) {
         return message.reply("You don't have permission to untimeout members.");
       }
 
