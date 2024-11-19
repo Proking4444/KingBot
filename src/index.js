@@ -2608,7 +2608,7 @@ async function handlePayCommand(message, args) {
   }
 
   const targetUserId = await resolveUser(args[0], message);
-  const payAmount = parseInt(args[1]);
+  let payAmount = parseFloat(args[1]);
 
   if (!targetUserId) {
     message.reply("Please enter a valid recipient.");
@@ -2616,9 +2616,11 @@ async function handlePayCommand(message, args) {
   }
 
   if (isNaN(payAmount) || payAmount <= 0) {
-    message.reply("Please enter a valid transfer amount.");
+    message.reply("Please enter a valid transfer amount (greater than 0).");
     return;
   }
+
+  payAmount = Math.round(payAmount * 100) / 100;
 
   const senderId = message.author.id;
 
@@ -2650,7 +2652,7 @@ async function handlePayCommand(message, args) {
   await recipient.save();
 
   message.reply(
-    `Successfully transferred $${payAmount} to <@${targetUserId}>.`
+    `Successfully transferred $${payAmount.toFixed(2)} to <@${targetUserId}>.`
   );
 }
 
