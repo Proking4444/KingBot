@@ -2620,8 +2620,6 @@ async function handlePayCommand(message, args) {
     return;
   }
 
-  payAmount = Math.round(payAmount * 100) / 100;
-
   const senderId = message.author.id;
 
   if (senderId === targetUserId) {
