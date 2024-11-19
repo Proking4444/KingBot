@@ -1498,14 +1498,14 @@ client.on("messageCreate", async (message) => {
   if (!message.guild) return;
 
   if (message.content.startsWith("$timeout")) {
-    if (!message.member.permissions.has("MUTE_MEMBERS")) {
+    if (!message.member.permissions.has("ModerateMembers")) {
       return message.reply("You don't have permission to timeout members.");
     }
 
     const args = message.content.trim().split(" ");
     if (args.length < 3) {
       return message.reply(
-        "Please use `$timeout (user) (duration in minutes) (reason)` to mute a member."
+        "Please use `$timeout (user) (duration in minutes) (reason)` to timeout a member."
       );
     }
 
@@ -1540,10 +1540,14 @@ client.on("messageCreate", async (message) => {
         `Timeouted <@${targetUserId}> for ${durationInMinutes} minutes. Reason: ${reason}`
       );
     } catch (error) {
-      console.error("Error timeouting user:", error);
-      message.reply(
-        "Failed to timeout the user. Ensure the bot has the appropriate permissions and role hierarchy."
-      );
+      if (error.code === 50013) {
+        message.reply(
+          "Failed to timeout the user. Ensure the bot has the appropriate permissions and role hierarchy."
+        );
+      } else {
+        console.error("Error timeouting user:", error);
+        message.reply("An unexpected error occurred while attempting to timeout the user.");
+      }
     }
   }
 });
@@ -1552,14 +1556,14 @@ client.on("messageCreate", async (message) => {
   if (!message.guild) return;
 
   if (message.content.startsWith("$untimeout")) {
-    if (!message.member.permissions.has("MUTE_MEMBERS")) {
+    if (!message.member.permissions.has("ModerateMembers")) {
       return message.reply("You don't have permission to untimeout members.");
     }
 
     const args = message.content.trim().split(" ");
     if (args.length < 2) {
       return message.reply(
-        "Please use `$untimeout (user)` to unmute a member."
+        "Please use `$untimeout (user)` to untimeout a member."
       );
     }
 
@@ -1579,17 +1583,21 @@ client.on("messageCreate", async (message) => {
 
     try {
       if (!targetMember.communicationDisabledUntilTimestamp) {
-        return message.reply(`<@${targetUserId}> is already unmuted.`);
+        return message.reply(`<@${targetUserId}> is not currently timed out.`);
       }
 
       await targetMember.disableCommunicationUntil(null);
 
-      message.reply(`Untimeouted <@${targetUserId}>.`);
+      message.reply(`Successfully removed timeout for <@${targetUserId}>.`);
     } catch (error) {
-      console.error("Error untimeouting user:", error);
-      message.reply(
-        "Failed to untimeout the user. Ensure the bot has the appropriate permissions and role hierarchy."
-      );
+      if (error.code === 50013) {
+        message.reply(
+          "Failed to untimeout the user. Ensure the bot has the appropriate permissions and role hierarchy."
+        );
+      } else {
+        console.error("Error untimeouting user:", error);
+        message.reply("An unexpected error occurred while attempting to untimeout the user.");
+      }
     }
   }
 });
