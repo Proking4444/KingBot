@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { Client, IntentsBitField, ActivityType, EmbedBuilder } from "discord.js";
+import { Client, GatewayIntentBits, ActivityType, EmbedBuilder } from "discord.js";
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 import fs from 'fs';
@@ -105,25 +105,23 @@ const ollama = new Ollama({ baseURL: "http://localhost:11434/api/generate" });
 
 const client = new Client({
   intents: [
-    IntentsBitField.Flags.Guilds,
-    IntentsBitField.Flags.GuildMembers,
-    IntentsBitField.Flags.GuildMessages,
-    IntentsBitField.Flags.MessageContent,
-    IntentsBitField.Flags.GuildMessageReactions,
-    IntentsBitField.Flags.GuildEmojisAndStickers,
-    IntentsBitField.Flags.GuildModeration,
-    IntentsBitField.Flags.GuildIntegrations,
-    IntentsBitField.Flags.GuildWebhooks,
-    IntentsBitField.Flags.GuildVoiceStates,
-    IntentsBitField.Flags.GuildPresences,
-    IntentsBitField.Flags.GuildMessageTyping,
-    IntentsBitField.Flags.DirectMessages,
-    IntentsBitField.Flags.DirectMessageReactions,
-    IntentsBitField.Flags.DirectMessageTyping,
-    IntentsBitField.Flags.AutoModerationConfiguration,
-    IntentsBitField.Flags.AutoModerationExecution,
-    IntentsBitField.Flags.GuildMessagePolls,
-    IntentsBitField.Flags.DirectMessagePolls,
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildEmojisAndStickers,
+    GatewayIntentBits.GuildModeration,
+    GatewayIntentBits.GuildIntegrations,
+    GatewayIntentBits.GuildWebhooks,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildMessageTyping,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.DirectMessageReactions,
+    GatewayIntentBits.DirectMessageTyping,
+    GatewayIntentBits.AutoModerationConfiguration,
+    GatewayIntentBits.AutoModerationExecution,
   ],
 });
 
@@ -1499,7 +1497,7 @@ client.on("messageCreate", async (message) => {
 
   if (message.content.startsWith("$timeout")) {
     try {
-      if (!message.member.permissions.has("MODERATE_MEMBERS")) {
+      if (!message.member.permissions.has("ModerateMembers")) {
         return message.reply("You don't have permission to timeout members.");
       }
 
