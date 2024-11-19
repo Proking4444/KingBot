@@ -898,7 +898,7 @@ client.on("messageCreate", async (message) => {
 
       multiplier += 0.1;
 
-      let profit = multiplier * betAmount - betAmount;
+      let profit = (multiplier - 1) * betAmount;
 
       if (multiplier >= crashPoint) {
         crashed = true;
