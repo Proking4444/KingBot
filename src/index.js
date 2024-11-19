@@ -1505,7 +1505,7 @@ client.on("messageCreate", async (message) => {
     const args = message.content.trim().split(" ");
     if (args.length < 3) {
       return message.reply(
-        "Please use `$timeout (user) (duration in minutes) (reason)` to timeout a member."
+        "Please use `$timeout (user) (duration in minutes) (reason)` to mute a member."
       );
     }
 
@@ -1532,21 +1532,20 @@ client.on("messageCreate", async (message) => {
 
     try {
       const muteDuration = durationInMinutes * 60 * 1000;
-      await targetMember.disableCommunicationUntil(
-        Date.now() + muteDuration,
-        reason
-      );
+      await targetMember.timeout(muteDuration, reason);
       message.reply(
         `Timeouted <@${targetUserId}> for ${durationInMinutes} minutes. Reason: ${reason}`
       );
     } catch (error) {
       if (error.code === 50013) {
         message.reply(
-          "Failed to timeout the user. Ensure the bot has the appropriate permissions and role hierarchy."
+          "Failed to timeout the user. The bot lacks the necessary permissions."
         );
       } else {
         console.error("Error timeouting user:", error);
-        message.reply("An unexpected error occurred while attempting to timeout the user.");
+        message.reply(
+          "An unexpected error occurred while attempting to timeout the user."
+        );
       }
     }
   }
@@ -1563,7 +1562,7 @@ client.on("messageCreate", async (message) => {
     const args = message.content.trim().split(" ");
     if (args.length < 2) {
       return message.reply(
-        "Please use `$untimeout (user)` to untimeout a member."
+        "Please use `$untimeout (user)` to remove a timeout from a member."
       );
     }
 
@@ -1583,20 +1582,21 @@ client.on("messageCreate", async (message) => {
 
     try {
       if (!targetMember.communicationDisabledUntilTimestamp) {
-        return message.reply(`<@${targetUserId}> is not currently timed out.`);
+        return message.reply(`<@${targetUserId}> is not currently timeouted.`);
       }
 
-      await targetMember.disableCommunicationUntil(null);
-
-      message.reply(`Successfully removed timeout for <@${targetUserId}>.`);
+      await targetMember.timeout(null); // Removes the timeout
+      message.reply(`Successfully removed timeout from <@${targetUserId}>.`);
     } catch (error) {
       if (error.code === 50013) {
         message.reply(
-          "Failed to untimeout the user. Ensure the bot has the appropriate permissions and role hierarchy."
+          "Failed to remove the timeout. The bot lacks the necessary permissions."
         );
       } else {
         console.error("Error untimeouting user:", error);
-        message.reply("An unexpected error occurred while attempting to untimeout the user.");
+        message.reply(
+          "An unexpected error occurred while attempting to untimeout the user."
+        );
       }
     }
   }
