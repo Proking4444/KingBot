@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { Client, IntentsBitField, ActivityType, EmbedBuilder } from "discord.js"; // Import EmbedBuilder here
+import { Client, IntentsBitField, ActivityType, EmbedBuilder } from "discord.js";
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 import fs from 'fs';
@@ -1499,7 +1499,7 @@ client.on("messageCreate", async (message) => {
 
   if (message.content.startsWith("$timeout")) {
     try {
-      if (!message.member.permissions.has("ModerateMembers")) {
+      if (!message.member.permissions.has("MODERATE_MEMBERS")) {
         return message.reply("You don't have permission to timeout members.");
       }
 
