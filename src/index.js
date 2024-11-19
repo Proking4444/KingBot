@@ -1498,48 +1498,48 @@ client.on("messageCreate", async (message) => {
   if (!message.guild) return;
 
   if (message.content.startsWith("$timeout")) {
-    if (!message.member.permissions.has("ModerateMembers")) {
-      return message.reply("You don't have permission to timeout members.");
-    }
-
-    const args = message.content.trim().split(" ");
-    if (args.length < 3) {
-      return message.reply(
-        "Please use `$timeout (user) (duration in minutes) (reason)` to mute a member."
-      );
-    }
-
-    const username = args[1].trim();
-    const durationInMinutes = parseInt(args[2]);
-
-    if (isNaN(durationInMinutes) || durationInMinutes <= 0) {
-      return message.reply("Please provide a valid duration in minutes.");
-    }
-
-    const reason = args.slice(3).join(" ").trim() || "No reason provided.";
-
-    const targetUserId = await resolveUser(username, message);
-    if (!targetUserId) {
-      return message.reply("User not found.");
-    }
-
-    const targetMember = await message.guild.members
-      .fetch(targetUserId)
-      .catch(() => null);
-    if (!targetMember) {
-      return message.reply("User not found in the guild.");
-    }
-
     try {
+      if (!message.member.permissions.has("ModerateMembers")) {
+        return message.reply("You don't have permission to timeout members.");
+      }
+
+      const args = message.content.trim().split(" ");
+      if (args.length < 3) {
+        return message.reply(
+          "Please use `$timeout (user) (duration in minutes) (reason)` to mute a member."
+        );
+      }
+
+      const username = args[1].trim();
+      const durationInMinutes = parseInt(args[2]);
+
+      if (isNaN(durationInMinutes) || durationInMinutes <= 0) {
+        return message.reply("Please provide a valid duration in minutes.");
+      }
+
+      const reason = args.slice(3).join(" ").trim() || "No reason provided.";
+
+      const targetUserId = await resolveUser(username, message);
+      if (!targetUserId) {
+        return message.reply("User not found.");
+      }
+
+      const targetMember = await message.guild.members
+        .fetch(targetUserId)
+        .catch(() => null);
+      if (!targetMember) {
+        return message.reply("User not found in the guild.");
+      }
+
       const muteDuration = durationInMinutes * 60 * 1000;
       await targetMember.timeout(muteDuration, reason);
       message.reply(
         `Timeouted <@${targetUserId}> for ${durationInMinutes} minutes. Reason: ${reason}`
       );
     } catch (error) {
-      if (error.code === 50013) {
+      if (error.code === "BitFieldInvalid") {
         message.reply(
-          "Failed to timeout the user. The bot lacks the necessary permissions."
+          "It seems you don't have the necessary permission (`ModerateMembers`) to use this command."
         );
       } else {
         console.error("Error timeouting user:", error);
@@ -1555,42 +1555,42 @@ client.on("messageCreate", async (message) => {
   if (!message.guild) return;
 
   if (message.content.startsWith("$untimeout")) {
-    if (!message.member.permissions.has("ModerateMembers")) {
-      return message.reply("You don't have permission to untimeout members.");
-    }
-
-    const args = message.content.trim().split(" ");
-    if (args.length < 2) {
-      return message.reply(
-        "Please use `$untimeout (user)` to remove a timeout from a member."
-      );
-    }
-
-    const username = args[1].trim();
-
-    const targetUserId = await resolveUser(username, message);
-    if (!targetUserId) {
-      return message.reply("User not found.");
-    }
-
-    const targetMember = await message.guild.members
-      .fetch(targetUserId)
-      .catch(() => null);
-    if (!targetMember) {
-      return message.reply("User not found in the guild.");
-    }
-
     try {
+      if (!message.member.permissions.has("ModerateMembers")) {
+        return message.reply("You don't have permission to untimeout members.");
+      }
+
+      const args = message.content.trim().split(" ");
+      if (args.length < 2) {
+        return message.reply(
+          "Please use `$untimeout (user)` to remove a timeout from a member."
+        );
+      }
+
+      const username = args[1].trim();
+
+      const targetUserId = await resolveUser(username, message);
+      if (!targetUserId) {
+        return message.reply("User not found.");
+      }
+
+      const targetMember = await message.guild.members
+        .fetch(targetUserId)
+        .catch(() => null);
+      if (!targetMember) {
+        return message.reply("User not found in the guild.");
+      }
+
       if (!targetMember.communicationDisabledUntilTimestamp) {
         return message.reply(`<@${targetUserId}> is not currently timeouted.`);
       }
 
-      await targetMember.timeout(null); // Removes the timeout
+      await targetMember.timeout(null);
       message.reply(`Successfully removed timeout from <@${targetUserId}>.`);
     } catch (error) {
-      if (error.code === 50013) {
+      if (error.code === "BitFieldInvalid") {
         message.reply(
-          "Failed to remove the timeout. The bot lacks the necessary permissions."
+          "It seems you don't have the necessary permission (`ModerateMembers`) to use this command."
         );
       } else {
         console.error("Error untimeouting user:", error);
