@@ -934,9 +934,6 @@ client.on("messageCreate", async (message) => {
         let payout = betAmount * multiplier;
         let profit = payout - betAmount;
 
-        user.balance += payout;
-        await user.save();
-
         crashMessage.edit(
           `✅ You cashed out at **${multiplier.toFixed(
             1
@@ -947,6 +944,22 @@ client.on("messageCreate", async (message) => {
 
         crashed = true;
         reactionCollector.stop();
+
+        setTimeout(async () => {
+          let finalPayout = betAmount * multiplier;
+          let finalProfit = finalPayout - betAmount;
+
+          user.balance += finalPayout;
+          await user.save();
+
+          crashMessage.edit(
+            `✅ Final Result: You cashed out at **${multiplier.toFixed(
+              1
+            )}x**! \n\n**You won $${finalProfit.toFixed(
+              2
+            )}!** Your final balance is $${user.balance.toFixed(2)}.`
+          );
+        }, 100);
       }
     });
   }
