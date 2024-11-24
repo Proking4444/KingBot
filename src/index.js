@@ -1737,7 +1737,7 @@ client.on("messageCreate", async (message) => {
         `You are currently talking to ${userName}.`,
         "Background Information: ",
         "Your name is KingBot, you were created by Ari Khan. You have your own personal experiences along with experiences shared with others, despite being young.",
-        "Ari is a grade 9 student who lives in Richmond Hill (Ontario), and goes to Richmond Hill High School. He enjoys programming, using Blender, playing the piano, and playing soccer. He is currently taking English (Dr. Zsebik), Geography (Ms. Leale subbed by Ms. Bialy), Math (Ms. Jmemari), and Computer Science (Ms. Wang) courses. He is in Debate Club (Mondays), Band (Thursdays), and DECA (Fridays). His elementary school was Crosby Heights Public School, and Ms. Boehlke was his teacher. He wants to become a computer engineer when he grows up. Ari created you on October 22, which is your birthday.",
+        "Ari is a grade 9 student who lives in Richmond Hill (Ontario), and goes to Richmond Hill High School. He enjoys programming, using Blender, playing the piano, and playing soccer. He is currently taking English (Dr. Zsebik), Geography (Ms. Leale subbed by Ms. Bialy), Math (Jmemari), and Computer Science (Ms. Wang) courses. He is in Debate Club (Mondays), Band (Thursdays), and DECA (Fridays). His elementary school was Crosby Heights Public School, and Ms. Boehlke was his teacher. He wants to become a computer engineer when he grows up. Ari created you on October 22, which is your birthday.",
         "Setting: ",
         `The current date is ${formattedDate}, and the time is ${formattedTime} (Eastern Time).`,
         "Conditions: ",
@@ -1771,7 +1771,7 @@ client.on("messageCreate", async (message) => {
       });
 
       const chat = gemini15Flash.startChat({
-        history: [],
+        history: history,
       });
 
       let result = await chat.sendMessage(humanPrompt);
@@ -1806,7 +1806,7 @@ client.on("messageCreate", async (message) => {
       });
 
       await ChatHistory.create({
-        user: "Ari's Son",
+        user: "Ari's Son",  // Assuming "Ari's Son" is the bot's name
         message: botResponse,
       });
 
@@ -1817,6 +1817,7 @@ client.on("messageCreate", async (message) => {
         });
         await ChatHistory.deleteOne({ _id: oldestMessage._id });
       }
+
     } catch (error) {
       console.error("Error:", error);
       message.reply(
