@@ -1806,7 +1806,7 @@ client.on("messageCreate", async (message) => {
       });
 
       await ChatHistory.create({
-        user: "Ari's Son",  // Assuming "Ari's Son" is the bot's name
+        user: "Ari's Son",
         message: botResponse,
       });
 
