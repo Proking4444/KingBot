@@ -6,6 +6,7 @@ Currently, only LTS versions are supported for public download.
 
 | LTS Versions | Supported     |
 | ------- | ------------------ |
+| 0.2.0   | :white_check_mark: |
 | 0.1.0   | :white_check_mark: |
 
 ## Reporting a Vulnerability
