@@ -1166,7 +1166,7 @@ client.on("messageCreate", async (message) => {
           const averagePurchasePrice =
             stockData[stock.symbol].totalCost / stockData[stock.symbol].totalAmount;
 
-          profit = (currentValue - averagePurchasePrice * stock.amount).toFixed(2);
+          profit = (currentValue - (averagePurchasePrice * stock.amount)).toFixed(2);
 
           if (!totalPortfolioValue[stockCurrency]) {
             totalPortfolioValue[stockCurrency] = 0;
@@ -1183,7 +1183,10 @@ client.on("messageCreate", async (message) => {
         portfolioMessage += `**Date:** ${purchaseDate} \n`;
         portfolioMessage += `**Shares:** ${stock.amount} \n`;
         portfolioMessage += `**Currency:** ${stockCurrency} \n`;
-        portfolioMessage += `**Average Purchase Price:** $${(stockData[stock.symbol].totalCost / stockData[stock.symbol].totalAmount).toFixed(2)} \n`;
+        portfolioMessage += `**Average Purchase Price:** $${(
+          stockData[stock.symbol].totalCost /
+          stockData[stock.symbol].totalAmount
+        ).toFixed(2)} \n`;
         portfolioMessage += `**Current Price:** $${currentPrice} \n`;
         portfolioMessage += `**Value:** $${value} \n`;
         portfolioMessage += `**Profit:** $${profit} \n\n`;
@@ -1208,9 +1211,7 @@ client.on("messageCreate", async (message) => {
       ).toFixed(2)} USD`;
       for (const currency in totalProfit) {
         if (currency !== "USD") {
-          portfolioMessage += ` + ${totalProfit[currency].toFixed(
-            2
-          )} ${currency}`;
+          portfolioMessage += ` + ${totalProfit[currency].toFixed(2)} ${currency}`;
         }
       }
       portfolioMessage += `\n`;
