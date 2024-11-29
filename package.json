@@ -14,7 +14,6 @@
     "@google/generative-ai": "^0.21.0",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
-    "formdata-node": "^6.0.3",
     "mongoose": "^8.8.3",
     "node-fetch": "^3.3.2",
     "node.js": "^0.0.1-security",
