@@ -22,7 +22,6 @@
     "npm": "^10.9.1",
     "ollama": "^0.5.10",
     "openai": "^4.73.1",
-    "web-streams-polyfill": "^4.0.0",
     "yahoo-finance2": "^2.13.2"
   }
 }
