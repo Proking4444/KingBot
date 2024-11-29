@@ -1266,20 +1266,37 @@ client.on("messageCreate", async (message) => {
     }
 
     const symbol = args[0].toUpperCase();
+    const stockData = await fetchStockData(symbol);
 
-    const stockName = await getStockName(symbol);
-    const price = await fetchStockPrice(symbol);
-    const currency = await fetchStockCurrency(symbol);
-
-    if (!price || !currency) {
+    if (!stockData) {
       return message.reply(
-        "Please use `$stock (symbol)` to view information on a stock."
+        "Could not retrieve data for the given symbol. Please ensure it is valid."
       );
     }
 
-    message.reply(
-      `**${stockName} (${symbol}):** \n**Current Price:** $${price} (${currency})`
-    );
+    const {
+      name,
+      price,
+      currency,
+      marketCap,
+      dividendYield,
+      fiftyTwoWeekHigh,
+      fiftyTwoWeekLow,
+      averageVolume,
+      change,
+      changePercent,
+    } = stockData;
+
+    const response = `**${name} (${symbol}):**\n` +
+      `**Current Price:** $${price} (${currency})\n\n` +
+      `**Market Cap:** ${marketCap}\n` +
+      `**Change:** $${change} (${changePercent})\n` +
+      `**Dividend Yield:** ${dividendYield}\n` +
+      `**52-Week High:** ${fiftyTwoWeekHigh}\n` +
+      `**52-Week Low:** ${fiftyTwoWeekLow}\n` +
+      `**Average Volume (3M):** ${averageVolume}`;
+
+    message.reply(response);
   }
 });
 
@@ -2873,6 +2890,97 @@ async function fetchExchangeRate(fromCurrency, toCurrency) {
     }
   } catch (error) {
     console.error("Error fetching exchange rate:", error);
+    return null;
+  }
+}
+
+async function fetchStockData(symbol) {
+  const data = {};
+
+  try {
+    const result = await yahooFinance.quote(symbol);
+
+    if (!result) return null;
+
+    try {
+      data.name = result.shortName || "Unknown Name";
+    } catch {
+      data.name = "N/A";
+    }
+
+    try {
+      data.price = result.regularMarketPrice
+        ? result.regularMarketPrice.toFixed(2)
+        : "N/A";
+    } catch {
+      data.price = "N/A";
+    }
+
+    try {
+      data.currency = result.currency || "N/A";
+    } catch {
+      data.currency = "N/A";
+    }
+
+    try {
+      data.marketCap = result.marketCap
+        ? `$${(result.marketCap / 1e9).toFixed(2)}B`
+        : "N/A";
+    } catch {
+      data.marketCap = "N/A";
+    }
+
+    try {
+      data.dividendYield = result.dividendYield
+        ? `${(result.dividendYield * 100).toFixed(2)}%`
+        : "N/A";
+    } catch {
+      data.dividendYield = "N/A";
+    }
+
+    try {
+      data.fiftyTwoWeekHigh = result.fiftyTwoWeekHigh
+        ? `$${result.fiftyTwoWeekHigh.toFixed(2)}`
+        : "N/A";
+    } catch {
+      data.fiftyTwoWeekHigh = "N/A";
+    }
+
+    try {
+      data.fiftyTwoWeekLow = result.fiftyTwoWeekLow
+        ? `$${result.fiftyTwoWeekLow.toFixed(2)}`
+        : "N/A";
+    } catch {
+      data.fiftyTwoWeekLow = "N/A";
+    }
+
+    try {
+      data.averageVolume = result.averageDailyVolume3Month
+        ? result.averageDailyVolume3Month.toLocaleString()
+        : "N/A";
+    } catch {
+      data.averageVolume = "N/A";
+    }
+
+    try {
+      data.change = result.regularMarketChange
+        ? result.regularMarketChange.toFixed(2)
+        : "N/A";
+    } catch {
+      data.change = "N/A";
+    }
+
+    try {
+      data.changePercent = result.regularMarketChangePercent
+        ? `${result.regularMarketChangePercent.toFixed(2)}%`
+        : "N/A";
+    } catch {
+      data.changePercent = "N/A";
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching stock data:", error);
     return null;
   }
 }
