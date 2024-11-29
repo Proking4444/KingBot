@@ -1279,7 +1279,6 @@ client.on("messageCreate", async (message) => {
     if (stockData.fiftyTwoWeekLow) response += `\n**52-Week Low:** ${stockData.fiftyTwoWeekLow}`;
     if (stockData.averageVolume) response += `\n**Average Volume:** ${stockData.averageVolume}`;
     if (stockData.change) response += `\n**Price Change:** $${stockData.change}`;
-    if (stockData.changePercent) response += `\n**Price Change Percentage:** ${stockData.changePercent}%`;
     if (stockData.volume) response += `\n**Volume:** ${stockData.volume}`;
     if (stockData.previousClose) response += `\n**Previous Close:** $${stockData.previousClose}`;
     if (stockData.preMarketPrice) response += `\n**Pre-Market Price:** $${stockData.preMarketPrice}`;
@@ -1288,8 +1287,6 @@ client.on("messageCreate", async (message) => {
     if (stockData.open) response += `\n**Open:** $${stockData.open}`;
     if (stockData.high) response += `\n**High:** $${stockData.high}`;
     if (stockData.low) response += `\n**Low:** $${stockData.low}`;
-    if (stockData.priceChange) response += `\n**Price Change:** $${stockData.priceChange}`;
-    if (stockData.priceChangePercent) response += `\n**Price Change Percentage:** ${stockData.priceChangePercent}%`;
     if (stockData.yearRange) response += `\n**1-Year Range:** ${stockData.yearRange}`;
 
     message.reply(response);
