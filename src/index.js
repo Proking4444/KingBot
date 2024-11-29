@@ -1260,41 +1260,37 @@ client.on("messageCreate", async (message) => {
     const args = message.content.slice(7).trim().split(/ +/);
 
     if (args.length < 1) {
-      return message.reply(
-        "Please use `$stock (symbol)` to view information on a stock."
-      );
+      return message.reply("Please use `$stock (symbol)` to view information on a stock.");
     }
 
     const symbol = args[0].toUpperCase();
+
     const stockData = await fetchStockData(symbol);
 
     if (!stockData) {
-      return message.reply(
-        "Could not retrieve data for the given symbol. Please ensure it is valid."
-      );
+      return message.reply("Unable to fetch stock information. Please try again later.");
     }
 
-    const {
-      name,
-      price,
-      currency,
-      marketCap,
-      dividendYield,
-      fiftyTwoWeekHigh,
-      fiftyTwoWeekLow,
-      averageVolume,
-      change,
-      changePercent,
-    } = stockData;
+    let response = `**${stockData.name} (${symbol}):** \n**Current Price:** $${stockData.price} (${stockData.currency})`;
 
-    const response = `**${name} (${symbol}):**\n` +
-      `**Current Price:** $${price} (${currency})\n\n` +
-      `**Market Cap:** ${marketCap}\n` +
-      `**Change:** $${change} (${changePercent})\n` +
-      `**Dividend Yield:** ${dividendYield}\n` +
-      `**52-Week High:** ${fiftyTwoWeekHigh}\n` +
-      `**52-Week Low:** ${fiftyTwoWeekLow}\n` +
-      `**Average Volume (3M):** ${averageVolume}`;
+    if (stockData.marketCap) response += `\n**Market Cap:** ${stockData.marketCap}`;
+    if (stockData.dividendYield) response += `\n**Dividend Yield:** ${stockData.dividendYield}`;
+    if (stockData.fiftyTwoWeekHigh) response += `\n**52-Week High:** ${stockData.fiftyTwoWeekHigh}`;
+    if (stockData.fiftyTwoWeekLow) response += `\n**52-Week Low:** ${stockData.fiftyTwoWeekLow}`;
+    if (stockData.averageVolume) response += `\n**Average Volume:** ${stockData.averageVolume}`;
+    if (stockData.change) response += `\n**Price Change:** $${stockData.change}`;
+    if (stockData.changePercent) response += `\n**Price Change Percentage:** ${stockData.changePercent}%`;
+    if (stockData.volume) response += `\n**Volume:** ${stockData.volume}`;
+    if (stockData.previousClose) response += `\n**Previous Close:** $${stockData.previousClose}`;
+    if (stockData.preMarketPrice) response += `\n**Pre-Market Price:** $${stockData.preMarketPrice}`;
+    if (stockData.exchange) response += `\n**Exchange:** ${stockData.exchange}`;
+    if (stockData.shortRatio) response += `\n**Short Ratio:** ${stockData.shortRatio}`;
+    if (stockData.open) response += `\n**Open:** $${stockData.open}`;
+    if (stockData.high) response += `\n**High:** $${stockData.high}`;
+    if (stockData.low) response += `\n**Low:** $${stockData.low}`;
+    if (stockData.priceChange) response += `\n**Price Change:** $${stockData.priceChange}`;
+    if (stockData.priceChangePercent) response += `\n**Price Change Percentage:** ${stockData.priceChangePercent}%`;
+    if (stockData.yearRange) response += `\n**1-Year Range:** ${stockData.yearRange}`;
 
     message.reply(response);
   }
@@ -2904,83 +2900,101 @@ async function fetchStockData(symbol) {
 
     try {
       data.name = result.shortName || "Unknown Name";
-    } catch {
-      data.name = "N/A";
-    }
+    } catch {}
 
     try {
-      data.price = result.regularMarketPrice
-        ? result.regularMarketPrice.toFixed(2)
-        : "N/A";
-    } catch {
-      data.price = "N/A";
-    }
+      data.price = result.regularMarketPrice ? result.regularMarketPrice.toFixed(2) : 'N/A';
+    } catch {}
 
     try {
-      data.currency = result.currency || "N/A";
-    } catch {
-      data.currency = "N/A";
-    }
+      data.currency = result.currency || 'N/A';
+    } catch {}
 
     try {
-      data.marketCap = result.marketCap
-        ? `$${(result.marketCap / 1e9).toFixed(2)}B`
-        : "N/A";
-    } catch {
-      data.marketCap = "N/A";
-    }
+      data.marketCap = result.marketCap ? result.marketCap : 'N/A';
+    } catch {}
 
     try {
-      data.dividendYield = result.dividendYield
-        ? `${(result.dividendYield * 100).toFixed(2)}%`
-        : "N/A";
-    } catch {
-      data.dividendYield = "N/A";
-    }
+      data.dividendYield = result.dividendYield ? result.dividendYield : 'N/A';
+    } catch {}
 
     try {
-      data.fiftyTwoWeekHigh = result.fiftyTwoWeekHigh
-        ? `$${result.fiftyTwoWeekHigh.toFixed(2)}`
-        : "N/A";
-    } catch {
-      data.fiftyTwoWeekHigh = "N/A";
-    }
+      data.fiftyTwoWeekHigh = result.fiftyTwoWeekHigh ? result.fiftyTwoWeekHigh : 'N/A';
+    } catch {}
 
     try {
-      data.fiftyTwoWeekLow = result.fiftyTwoWeekLow
-        ? `$${result.fiftyTwoWeekLow.toFixed(2)}`
-        : "N/A";
-    } catch {
-      data.fiftyTwoWeekLow = "N/A";
-    }
+      data.fiftyTwoWeekLow = result.fiftyTwoWeekLow ? result.fiftyTwoWeekLow : 'N/A';
+    } catch {}
 
     try {
-      data.averageVolume = result.averageDailyVolume3Month
-        ? result.averageDailyVolume3Month.toLocaleString()
-        : "N/A";
-    } catch {
-      data.averageVolume = "N/A";
-    }
+      data.averageVolume = result.averageVolume ? result.averageVolume : 'N/A';
+    } catch {}
 
     try {
-      data.change = result.regularMarketChange
-        ? result.regularMarketChange.toFixed(2)
-        : "N/A";
-    } catch {
-      data.change = "N/A";
-    }
+      data.change = result.regularMarketChange ? result.regularMarketChange.toFixed(2) : 'N/A';
+    } catch {}
 
     try {
-      data.changePercent = result.regularMarketChangePercent
-        ? `${result.regularMarketChangePercent.toFixed(2)}%`
-        : "N/A";
-    } catch {
-      data.changePercent = "N/A";
-    }
+      data.changePercent = result.regularMarketChangePercent ? result.regularMarketChangePercent.toFixed(2) : 'N/A';
+    } catch {}
+
+    try {
+      if (result.regularMarketVolume) {
+        data.volume = result.regularMarketVolume.raw || result.regularMarketVolume;
+      }
+    } catch {}
+
+    try {
+      if (result.regularMarketPreviousClose) {
+        data.previousClose = result.regularMarketPreviousClose.raw || result.regularMarketPreviousClose;
+      }
+    } catch {}
+
+    try {
+      if (result.preMarketPrice) {
+        data.preMarketPrice = result.preMarketPrice.raw || result.preMarketPrice;
+      }
+    } catch {}
+
+    try {
+      data.exchange = result.fullExchangeName || 'N/A';
+    } catch {}
+
+    try {
+      data.shortRatio = result.shortRatio || 'N/A';
+    } catch {}
+
+    try {
+      data.open = result.regularMarketOpen || 'N/A';
+    } catch {}
+
+    try {
+      data.high = result.regularMarketDayHigh || 'N/A';
+    } catch {}
+
+    try {
+      data.low = result.regularMarketDayLow || 'N/A';
+    } catch {}
+
+    try {
+      data.priceChange = result.regularMarketPrice - result.regularMarketPreviousClose || 'N/A';
+    } catch {}
+
+    try {
+      data.priceChangePercent = (data.priceChange / result.regularMarketPreviousClose * 100).toFixed(2) || 'N/A';
+    } catch {}
+
+    try {
+      data.lastTradeTime = result.regularMarketTime || 'N/A';
+    } catch {}
+
+    try {
+      data.yearRange = `${result.fiftyTwoWeekLow} - ${result.fiftyTwoWeekHigh}` || 'N/A';
+    } catch {}
 
     return data;
+
   } catch (error) {
-    console.error("Error fetching stock data:", error);
     return null;
   }
 }
