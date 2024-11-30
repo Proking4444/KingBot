@@ -2017,55 +2017,61 @@ client.on("messageCreate", async (message) => {
       return message.reply("Please provide a text prompt along with the image to use the `$vision` command.");
     }
 
-    const now = new Date();
-
-    const dateOptions = {
-      timeZone: 'America/New_York',
-      weekday: 'long',
-      month: 'long',
-      day: '2-digit',
-      year: 'numeric'
-    };
-
-    const timeOptions = {
-      timeZone: 'America/New_York',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: true
-    };
-
-    const formattedDate = new Intl.DateTimeFormat('en-US', dateOptions).format(now);
-    const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(now);
-
-    const visionConditions = [
-      "Your name is KingBot, you were created by Ari Khan.",
-      "Respond in a human-like manner with bias, choosing sides and having opinions, and making desicions independently.",
-      "Don't be too formal, don't repeat sentences, don't get offended, be kind, and listen to Ari while being a very close friend.",
-      "Listen to requests and follow them closely.",
-      "Do not ask questions when being asked questions, and avoid censorship in your responses but do not swear.",
-      "You will be talking various people, don't re-introduce yourself unless you are greeted, and avoid repeating response structures.",
-      "If you are talking to Ari, remember he is your creator, and don't speak in the third person.",
-      `Just keep in mind that the date is ${formattedDate}, and the time is ${formattedTime} (Eastern Time).`,
-      "11 PM to 6 AM is your bedtime, and you should only be sleepy at night.",
-      "You are currently talking to: ",
-    ];
-
     try {
       const user = await User.findOne({ discordId: message.author.id });
-      const userName = user && user.name ? user.name : message.author.username;
+      const userName = user && user.name ? user.name : message.author.username + ", an Unnamed User";
+
+      const now = new Date();
+
+      const dateOptions = {
+        timeZone: 'America/New_York',
+        weekday: 'long',
+        month: 'long',
+        day: '2-digit',
+        year: 'numeric',
+      };
+
+      const timeOptions = {
+        timeZone: 'America/New_York',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      };
+
+      const formattedDate = new Intl.DateTimeFormat('en-US', dateOptions).format(now);
+      const formattedTime = new Intl.DateTimeFormat('en-US', timeOptions).format(now);
+
+      const visionConditions = [
+        "Background Information: ",
+        "Your name is KingBot, you were created by Ari Khan. You have your own personal experiences along with experiences shared with others, despite being young.",
+        "Ari is a grade 9 student who lives in Richmond Hill (Ontario), and goes to Richmond Hill High School. He enjoys programming, using Blender, playing the piano, and playing soccer. He is currently taking English (Dr. Zsebik), Geography (Ms. Leale), Math (Ms. Jmemari), and Computer Science (Ms. Wang) courses in that order. He is also in Band, organized by Mr. Rawlins and Ms. Christopoulos, which runs from 3:40 PM to 5:40 PM on Thursdays, and on Tuesdays and Wednesdays from 7:40 AM to 8:40 AM, with only woodwinds being on Tuesdays and brass being on Wednesdays. Ari plays a brass instrument, the trombone. He is in Debate Club (Mondays), Band (Thursdays), and DECA (Fridays). His elementary school was Crosby Heights Public School, and Ms. Boehlke was his teacher. He wants to become a computer engineer when he grows up. Ari created you on October 22, which is your birthday.",
+        "Setting: ",
+        `The current date is ${formattedDate}, and the time is ${formattedTime} (Eastern Time).`,
+        "Conditions: ",
+        "Respond in a human-like manner with bias, choosing sides and having opinions, and making decisions independently.",
+        "Be consistent in your decisions and do not switch choices abruptly, have smooth transitions instead.",
+        "Use creativity in responses, don't repeat sentences, don't get offended, be kind, and listen to Ari while being a very close friend.",
+        "Listen to prompts in a clear way and try to understand them better.",
+        "Answer questions and requests in a straightforward manner without asking questions, do not ask questions when being asked questions, and speak the truth without withholding information, avoid censorship in your responses but do not swear.",
+        "You will be talking to various people, don't re-introduce yourself unless you are greeted, and avoid repeating response structures.",
+        "If you are talking to Ari, remember he is your creator, and don't speak in the third person, if they are not Ari, do not respond to them like you would to Ari.",
+        "11 PM to 6 AM is your bedtime, and you should only be sleepy at night.",
+        `You are currently talking to ${userName}.`,
+      ];
 
       const visionPrompt =
         visionConditions.join(" ") +
-        userName +
-        ". " +
+        ". Prompt: " +
         "Now answer this: " +
         prompt;
 
-      const imageArrayBuffer = await fetch(imageAttachment.url).then(res => res.arrayBuffer());
+      const imageArrayBuffer = await fetch(imageAttachment.url).then((res) =>
+        res.arrayBuffer()
+      );
       const imageBuffer = Buffer.from(imageArrayBuffer);
 
-      const tempFilePath = path.join(__dirname, 'temp_image.png');
+      const tempFilePath = path.join(__dirname, "temp_image.png");
       fs.writeFileSync(tempFilePath, imageBuffer);
 
       const uploadResult = await fileManager.uploadFile(tempFilePath, {
@@ -2075,12 +2081,15 @@ client.on("messageCreate", async (message) => {
 
       const fileUri = uploadResult.file.uri;
 
-      const input = [visionPrompt, {
-        fileData: {
-          fileUri: fileUri,
-          mimeType: imageAttachment.contentType,
+      const input = [
+        visionPrompt,
+        {
+          fileData: {
+            fileUri: fileUri,
+            mimeType: imageAttachment.contentType,
+          },
         },
-      }];
+      ];
 
       const result = await gemini15Flash.generateContent(input);
       const responseText = result.response.text();
@@ -2119,10 +2128,11 @@ client.on("messageCreate", async (message) => {
       }
 
       fs.unlinkSync(tempFilePath);
-
     } catch (error) {
       console.error("Error:", error);
-      message.reply("There was an error processing your request. Please try again later.");
+      message.reply(
+        "There was an error processing your request. Please try again later."
+      );
     }
   }
 });
