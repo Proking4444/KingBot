@@ -2872,7 +2872,7 @@ async function fetchStockData(symbol) {
     } catch {}
 
     try {
-      data.marketCap = result.marketCap ? result.marketCap : 'N/A';
+      data.marketCap = result.marketCap ? formatNumber(result.marketCap) : 'N/A';
     } catch {}
 
     try {
@@ -2888,7 +2888,7 @@ async function fetchStockData(symbol) {
     } catch {}
 
     try {
-      data.averageVolume = result.averageVolume ? result.averageVolume : 'N/A';
+      data.averageVolume = result.averageVolume ? formatNumber(result.averageVolume) : 'N/A';
     } catch {}
 
     try {
@@ -2901,7 +2901,7 @@ async function fetchStockData(symbol) {
 
     try {
       if (result.regularMarketVolume) {
-        data.volume = result.regularMarketVolume.raw || result.regularMarketVolume;
+        data.volume = formatNumber(result.regularMarketVolume.raw || result.regularMarketVolume);
       }
     } catch {}
 
@@ -2957,6 +2957,18 @@ async function fetchStockData(symbol) {
 
   } catch (error) {
     return null;
+  }
+}
+
+function formatNumber(number) {
+  if (number >= 1e9) {
+    return (number / 1e9).toFixed(2) + 'B';
+  } else if (number >= 1e6) {
+    return (number / 1e6).toFixed(2) + 'M';
+  } else if (number >= 1e3) {
+    return (number / 1e3).toFixed(2) + 'K';
+  } else {
+    return number.toString();
   }
 }
 
