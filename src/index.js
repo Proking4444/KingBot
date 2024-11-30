@@ -75,6 +75,7 @@ import {
 import ChatHistory from "./schemas/chat-history.js";
 import Count from "./schemas/count.js";
 import User from "./schemas/users.js";
+import KingBotStock from "./schemas/kingBotStock.js";
 
 dotenv.config();
 
@@ -971,9 +972,7 @@ client.on("messageCreate", async (message) => {
     const args = message.content.slice(4).trim().split(/ +/);
 
     if (args.length < 2) {
-      return message.reply(
-        "Please use `$buy (symbol) (amount)` to purchase stocks."
-      );
+      return message.reply("Please use `$buy (symbol) (amount)` to purchase stocks.");
     }
 
     const symbol = args[0].toUpperCase();
@@ -983,8 +982,8 @@ client.on("messageCreate", async (message) => {
       return message.reply("Please enter a valid whole number for the amount.");
     }
 
-    if (symbol.endsWith("=X")) {
-      return message.reply("Please use `$exchange` to exchange currencies.");
+    if (symbol === "KGB") {
+      return buyKingbotStock(message, amount);
     }
 
     try {
@@ -998,9 +997,7 @@ client.on("messageCreate", async (message) => {
       const user = await User.findOne({ discordId: message.author.id });
 
       if (!user) {
-        return message.reply(
-          "You need to create an account first with `$start`."
-        );
+        return message.reply("You need to create an account first with `$start`.");
       }
 
       let currencyBalance = 0;
@@ -1018,22 +1015,16 @@ client.on("messageCreate", async (message) => {
         user.balance -= price * amount;
       }
 
-      const existingStockIndex = user.stocks.findIndex(
-        (stock) => stock.symbol === symbol
-      );
+      const existingStockIndex = user.stocks.findIndex((stock) => stock.symbol === symbol);
 
       if (existingStockIndex >= 0) {
         const existingStock = user.stocks[existingStockIndex];
-
         const totalCost = existingStock.purchasePrice * existingStock.amount + price * amount;
         existingStock.amount += amount;
         existingStock.purchasePrice = totalCost / existingStock.amount;
         existingStock.currentPrice = price;
         existingStock.currentTotalValue = existingStock.amount * price;
-
-        existingStock.profit =
-          (existingStock.currentPrice - existingStock.purchasePrice) *
-          existingStock.amount;
+        existingStock.profit = (existingStock.currentPrice - existingStock.purchasePrice) * existingStock.amount;
       } else {
         user.stocks.push({
           symbol: symbol,
@@ -1048,11 +1039,7 @@ client.on("messageCreate", async (message) => {
 
       await user.save();
 
-      message.reply(
-        `Successfully bought ${amount} shares of ${symbol} at $${price.toFixed(
-          4
-        )} (${currency}) each.`
-      );
+      message.reply(`Successfully bought ${amount} shares of ${symbol} at $${price.toFixed(4)} (${currency}) each.`);
     } catch (error) {
       console.error("Error buying stocks:", error);
       message.reply("Error buying stocks. Please try again later.");
@@ -1139,7 +1126,10 @@ client.on("messageCreate", async (message) => {
       let totalPortfolioValue = { USD: 0 };
       let totalProfit = { USD: 0 };
 
-      for (const stock of user.stocks) {
+      const kgbStock = user.stocks.find(stock => stock.symbol === "KGB");
+      const otherStocks = user.stocks.filter(stock => stock.symbol !== "KGB");
+
+      for (const stock of otherStocks) {
         const purchaseDate = stock.purchaseDate
           ? stock.purchaseDate.toISOString().split("T")[0]
           : "Unknown";
@@ -1151,6 +1141,7 @@ client.on("messageCreate", async (message) => {
         if (fetchedPrice !== null) {
           const currentValue = fetchedPrice * stock.amount;
           const profit = (currentValue - stock.purchasePrice * stock.amount).toFixed(2);
+          const averagePurchasePrice = (stock.purchasePrice).toFixed(2);
 
           totalPortfolioValue[stockCurrency] = (totalPortfolioValue[stockCurrency] || 0) + currentValue;
           totalProfit[stockCurrency] = (totalProfit[stockCurrency] || 0) + parseFloat(profit);
@@ -1159,9 +1150,31 @@ client.on("messageCreate", async (message) => {
           portfolioMessage += `**Date:** ${purchaseDate} \n`;
           portfolioMessage += `**Shares:** ${stock.amount} \n`;
           portfolioMessage += `**Currency:** ${stockCurrency} \n`;
+          portfolioMessage += `**Average Purchase Price:** $${averagePurchasePrice} \n`;
           portfolioMessage += `**Current Price:** $${fetchedPrice.toFixed(2)} \n`;
           portfolioMessage += `**Value:** $${currentValue.toFixed(2)} \n`;
           portfolioMessage += `**Profit:** $${profit} \n\n`;
+        }
+      }
+
+      if (kgbStock) {
+        const kgbData = await KingBotStock.findOne({ symbol: "KGB" });
+
+        if (kgbData) {
+          const kgbCurrentValue = kgbData.price * kgbStock.amount;
+          const kgbProfit = (kgbCurrentValue - kgbStock.purchasePrice * kgbStock.amount).toFixed(2);
+
+          totalPortfolioValue[kgbData.currency] = (totalPortfolioValue[kgbData.currency] || 0) + kgbCurrentValue;
+          totalProfit[kgbData.currency] = (totalProfit[kgbData.currency] || 0) + parseFloat(kgbProfit);
+
+          portfolioMessage += `**${kgbData.name} (${kgbStock.symbol}):** \n`;
+          portfolioMessage += `**Date:** ${kgbStock.purchaseDate ? kgbStock.purchaseDate.toISOString().split("T")[0] : "Unknown"} \n`;
+          portfolioMessage += `**Shares:** ${kgbStock.amount} \n`;
+          portfolioMessage += `**Currency:** ${kgbData.currency} \n`;
+          portfolioMessage += `**Average Purchase Price:** $${kgbStock.purchasePrice.toFixed(2)} \n`;
+          portfolioMessage += `**Current Price:** $${kgbData.price.toFixed(2)} \n`;
+          portfolioMessage += `**Value:** $${kgbCurrentValue.toFixed(2)} \n`;
+          portfolioMessage += `**Profit:** $${kgbProfit} \n\n`;
         }
       }
 
@@ -2982,6 +2995,97 @@ function formatNumber(number) {
   }
 }
 
+async function initializeKGBStock() {
+  let stock = await KingBotStock.findOne({ symbol: "KGB" });
+
+  if (!stock) {
+    stock = new KingBotStock({
+      symbol: "KGB",
+      name: "KGB Corporation",
+      price: 100.0,
+      currency: "USD",
+    });
+    await stock.save();
+    console.log("KGB stock initialized with default price.");
+  } else {
+    console.log(`KGB stock loaded with last recorded price: $${stock.price.toFixed(2)}`);
+  }
+
+  return stock;
+}
+
+async function updateKGBPrice() {
+  const stock = await KingBotStock.findOne({ symbol: "KGB" });
+  if (!stock) {
+    console.error("KGB stock not found in MongoDB. Initialization required.");
+    return;
+  }
+
+  setInterval(async () => {
+    const priceChangePercentage = (Math.random() * (0.006 + 0.005) - 0.005);
+    stock.price += stock.price * priceChangePercentage;
+
+    if (stock.price < 10) {
+      stock.price = 10;
+    }
+
+    await stock.save();
+    console.log(`KGB stock price updated to $${stock.price.toFixed(2)}`);
+  }, 10000);
+}
+
+async function buyKingbotStock(message, amount) {
+  try {
+    const stock = await KingBotStock.findOne({ symbol: "KGB" });
+
+    if (!stock) {
+      return message.reply("KGB stock is not available right now.");
+    }
+
+    const price = stock.price;
+    const user = await User.findOne({ discordId: message.author.id });
+
+    if (!user) {
+      return message.reply("You need to create an account first with `$start`.");
+    }
+
+    if (user.balance < price * amount) {
+      return message.reply(`Insufficient balance in USD.`);
+    }
+
+    user.balance -= price * amount;
+
+    const existingStockIndex = user.stocks.findIndex((stock) => stock.symbol === "KGB");
+
+    if (existingStockIndex >= 0) {
+      const existingStock = user.stocks[existingStockIndex];
+      const totalCost = existingStock.purchasePrice * existingStock.amount + price * amount;
+      existingStock.amount += amount;
+      existingStock.purchasePrice = totalCost / existingStock.amount;
+      existingStock.currentPrice = price;
+      existingStock.currentTotalValue = existingStock.amount * price;
+      existingStock.profit = (existingStock.currentPrice - existingStock.purchasePrice) * existingStock.amount;
+    } else {
+      user.stocks.push({
+        symbol: "KGB",
+        amount: amount,
+        purchasePrice: price,
+        purchaseDate: new Date(),
+        currentPrice: price,
+        currentTotalValue: price * amount,
+        profit: 0,
+      });
+    }
+
+    await user.save();
+
+    message.reply(`Successfully bought ${amount} shares of KGB at $${price.toFixed(2)} each.`);
+  } catch (error) {
+    console.error("Error buying KGB stock:", error);
+    message.reply("Error buying KGB stock. Please try again later.");
+  }
+}
+
 //Slash Functions
 
 //Slash Economy Functions
@@ -3283,6 +3387,7 @@ client.on("messageCreate", async (message) => {
 });
 
 //Keep at bottom.
+initializeKGBStock().then(updateKGBPrice);
 
 (async () => {
   try {
