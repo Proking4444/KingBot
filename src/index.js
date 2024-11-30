@@ -1271,7 +1271,7 @@ client.on("messageCreate", async (message) => {
 
     let response = `**${stockData.name} (${symbol}):** \n**Current Price:** $${stockData.price} (${stockData.currency})`;
 
-    if (stockData.marketCap) response += `\n\n**Market Cap:** ${stockData.marketCap}`;
+    if (stockData.marketCap) response += `\n\n**Market Cap:** $${stockData.marketCap}`;
     if (stockData.dividendYield) response += `\n**Dividend Yield:** ${stockData.dividendYield}`;
     if (stockData.fiftyTwoWeekHigh) response += `\n**52-Week High:** ${stockData.fiftyTwoWeekHigh}`;
     if (stockData.fiftyTwoWeekLow) response += `\n**52-Week Low:** ${stockData.fiftyTwoWeekLow}`;
