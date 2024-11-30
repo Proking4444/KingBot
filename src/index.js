@@ -1254,7 +1254,9 @@ client.on("messageCreate", async (message) => {
           return message.reply("KGB stock not initialized. Please try again later.");
         }
 
-        return message.reply(`**KingBot (KGB):** \n**Current Price:** $${stock.price.toFixed(2)}`);
+        const marketCap = stock.price * stock.stocksInCirculation;
+
+        return message.reply(`**KingBot Corporation (KGB):** \n**Current Price:** $${stock.price.toFixed(2)} (USD) \n\n**Market Cap:** $${marketCap.toFixed(2)} \n**Volume:** ${stock.volume} \n**Exchange:** KingBot Coin Exchange`);
       } catch (error) {
         console.error("Error fetching KGB stock:", error);
         return message.reply("Error fetching KGB stock. Please try again later.");
@@ -3020,9 +3022,11 @@ async function initializeKGBStock() {
   if (!stock) {
     stock = new KingBotStock({
       symbol: "KGB",
-      name: "KGB Corporation",
+      name: "KingBot Corporation Coin",
       price: 100.0,
       currency: "USD",
+      stocksInCirculation: 0,
+      volume: 0,
     });
     await stock.save();
     console.log("KGB stock initialized with default price.");
@@ -3041,7 +3045,7 @@ async function updateKGBPrice() {
   }
 
   setInterval(async () => {
-    const priceChangePercentage = (Math.random() * (0.0055 + 0.005) - 0.005);
+    const priceChangePercentage = (Math.random() * (0.006 + 0.005) - 0.005);
     stock.price += stock.price * priceChangePercentage;
 
     if (stock.price < 10) {
@@ -3096,6 +3100,10 @@ async function buyKingbotStock(message, amount) {
       });
     }
 
+    stock.stocksInCirculation += amount;
+    stock.volume += amount;
+    await stock.save();
+
     await user.save();
 
     message.reply(`Successfully bought ${amount} shares of KGB at $${price.toFixed(2)} each.`);
@@ -3134,6 +3142,14 @@ async function sellKingbotStock(message, amount) {
   }
 
   user.balance += revenue;
+
+  const stock = await KingBotStock.findOne({ symbol: "KGB" });
+  if (stock) {
+    stock.stocksInCirculation -= amount;
+    stock.volume += amount;
+    await stock.save();
+  }
+
   await user.save();
 
   message.reply(
