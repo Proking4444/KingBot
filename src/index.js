@@ -1060,6 +1060,10 @@ client.on("messageCreate", async (message) => {
     const symbol = args[0].toUpperCase();
     const amount = parseFloat(args[1]);
 
+    if (symbol === "KGB") {
+      return sellKingbotStock(message, amount);
+    }
+
     try {
       const price = await fetchStockPrice(symbol);
       const currency = await fetchStockCurrency(symbol);
@@ -1241,6 +1245,21 @@ client.on("messageCreate", async (message) => {
     }
 
     const symbol = args[0].toUpperCase();
+
+    if (symbol === "KGB") {
+      try {
+        const stock = await KingBotStock.findOne({ symbol: "KGB" });
+
+        if (!stock) {
+          return message.reply("KGB stock not initialized. Please try again later.");
+        }
+
+        return message.reply(`**KingBot (KGB):** \n**Current Price:** $${stock.price.toFixed(2)}`);
+      } catch (error) {
+        console.error("Error fetching KGB stock:", error);
+        return message.reply("Error fetching KGB stock. Please try again later.");
+      }
+    }
 
     const stockData = await fetchStockData(symbol);
 
@@ -3084,6 +3103,42 @@ async function buyKingbotStock(message, amount) {
     console.error("Error buying KGB stock:", error);
     message.reply("Error buying KGB stock. Please try again later.");
   }
+}
+
+async function sellKingbotStock(message, amount) {
+  const user = await User.findOne({ discordId: message.author.id });
+
+  if (!user) {
+    return message.reply("You need to create an account first with `$start`.");
+  }
+
+  const kgbStockIndex = user.stocks.findIndex((stock) => stock.symbol === "KGB");
+
+  if (kgbStockIndex === -1 || user.stocks[kgbStockIndex].amount < amount) {
+    return message.reply("You do not own enough KGB shares to sell.");
+  }
+
+  const kgbPrice = await fetchStockPrice("KGB");
+  if (!kgbPrice) {
+    return message.reply("Error fetching KGB price.");
+  }
+
+  const revenue = kgbPrice * amount;
+
+  user.stocks[kgbStockIndex].amount -= amount;
+  user.stocks[kgbStockIndex].currentTotalValue =
+    user.stocks[kgbStockIndex].amount * kgbPrice;
+
+  if (user.stocks[kgbStockIndex].amount === 0) {
+    user.stocks.splice(kgbStockIndex, 1);
+  }
+
+  user.balance += revenue;
+  await user.save();
+
+  message.reply(
+    `Successfully sold ${amount} shares of KGB at $${kgbPrice.toFixed(4)} each.`
+  );
 }
 
 //Slash Functions
