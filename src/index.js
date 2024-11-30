@@ -3041,7 +3041,7 @@ async function updateKGBPrice() {
   }
 
   setInterval(async () => {
-    const priceChangePercentage = (Math.random() * (0.006 + 0.005) - 0.005);
+    const priceChangePercentage = (Math.random() * (0.0055 + 0.005) - 0.005);
     stock.price += stock.price * priceChangePercentage;
 
     if (stock.price < 10) {
