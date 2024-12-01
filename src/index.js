@@ -1392,7 +1392,7 @@ client.on("messageCreate", async (message) => {
 });
 
 client.on("messageCreate", async (message) => {
-  if (message.content === "kingbotstocksplitdevtool") {
+  if (message.content === "$kingbotstocksplitdevtool") {
       if (message.author.id !== "786745378212282368") {
           return message.reply("You are not authorized to use this command.");
       }
@@ -1407,16 +1407,18 @@ client.on("messageCreate", async (message) => {
           kgbStock.stocksInCirculation *= 2;
           await kgbStock.save();
 
-          const portfolios = await Portfolio.find({ "stocks.symbol": "KGB" });
+          const usersWithKGBStocks = await User.find({ "stocks.symbol": "KGB" });
 
-          if (portfolios.length === 0) {
+          if (usersWithKGBStocks.length === 0) {
               return message.reply("No users own shares of KGB.");
           }
 
-          for (const portfolio of portfolios) {
-              const stock = portfolio.stocks.find((s) => s.symbol === "KGB");
-              stock.amount *= 2;
-              await portfolio.save();
+          for (const user of usersWithKGBStocks) {
+              const kgbStockEntry = user.stocks.find((stock) => stock.symbol === "KGB");
+              if (kgbStockEntry) {
+                  kgbStockEntry.amount *= 2;
+              }
+              await user.save();
           }
 
           return message.reply(
