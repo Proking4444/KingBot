@@ -1391,6 +1391,46 @@ client.on("messageCreate", async (message) => {
   }
 });
 
+client.on("messageCreate", async (message) => {
+  if (message.content === "kingbotstocksplitdevtool") {
+      if (message.author.id !== "786745378212282368") {
+          return message.reply("You are not authorized to use this command.");
+      }
+
+      try {
+          const kgbStock = await KingBotStock.findOne({ symbol: "KGB" });
+          if (!kgbStock) {
+              return message.reply("KGB stock not found in the database.");
+          }
+
+          kgbStock.price /= 2;
+          kgbStock.stocksInCirculation *= 2;
+          await kgbStock.save();
+
+          const portfolios = await Portfolio.find({ "stocks.symbol": "KGB" });
+
+          if (portfolios.length === 0) {
+              return message.reply("No users own shares of KGB.");
+          }
+
+          for (const portfolio of portfolios) {
+              const stock = portfolio.stocks.find((s) => s.symbol === "KGB");
+              stock.amount *= 2;
+              await portfolio.save();
+          }
+
+          return message.reply(
+              `A stock split for KGB has been performed. The new price is $${kgbStock.price.toFixed(2)}, ` +
+              `stocks in circulation have doubled to ${kgbStock.stocksInCirculation}, ` +
+              `and all users' holdings have been updated.`
+          );
+      } catch (error) {
+          console.error("Error performing stock split:", error);
+          return message.reply("An error occurred while performing the stock split.");
+      }
+  }
+});
+
 //Media
 client.on("messageCreate", (message) => {
   if (message.content.startsWith("$img")) {
@@ -3045,7 +3085,7 @@ async function updateKGBPrice() {
   }
 
   setInterval(async () => {
-    const priceChangePercentage = (Math.random() * (0.00525 + 0.005) - 0.005);
+    const priceChangePercentage = (Math.random() * (0.0051 + 0.005) - 0.005);
     stock.price += stock.price * priceChangePercentage;
 
     if (stock.price < 10) {
@@ -3055,6 +3095,42 @@ async function updateKGBPrice() {
     await stock.save();
     console.log(`KGB stock price updated to $${stock.price.toFixed(2)}`);
   }, 10000);
+
+  setInterval(async () => {
+    const priceChangePercentage = (Math.random() * (0.01 + 0.01) - 0.01);
+    stock.price += stock.price * priceChangePercentage;
+
+    if (stock.price < 10) {
+      stock.price = 10;
+    }
+
+    await stock.save();
+    console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (minute effect)`);
+  }, 60000);
+
+  setInterval(async () => {
+    const priceChangePercentage = (Math.random() * (0.05 + 0.05) - 0.05);
+    stock.price += stock.price * priceChangePercentage;
+
+    if (stock.price < 10) {
+      stock.price = 10;
+    }
+
+    await stock.save();
+    console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (hour effect)`);
+  }, 3600000);
+
+  setInterval(async () => {
+    const priceChangePercentage = (Math.random() * (0.15 + 0.15) - 0.15);
+    stock.price += stock.price * priceChangePercentage;
+
+    if (stock.price < 10) {
+      stock.price = 10;
+    }
+
+    await stock.save();
+    console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (day effect)`);
+  }, 86400000);
 }
 
 async function buyKingbotStock(message, amount) {
