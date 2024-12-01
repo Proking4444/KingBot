@@ -3080,58 +3080,78 @@ async function initializeKGBStock() {
 }
 
 async function updateKGBPrice() {
-  const stock = await KingBotStock.findOne({ symbol: "KGB" });
-  if (!stock) {
+  const initialStock = await KingBotStock.findOne({ symbol: "KGB" });
+  if (!initialStock) {
     console.error("KGB stock not found in MongoDB. Initialization required.");
     return;
   }
 
   setInterval(async () => {
-    const priceChangePercentage = (Math.random() * (0.0051 + 0.005) - 0.005);
-    stock.price += stock.price * priceChangePercentage;
+    try {
+      const stock = await KingBotStock.findOne({ symbol: "KGB" });
+      const priceChangePercentage = (Math.random() * (0.0051 + 0.005) - 0.005);
+      stock.price += stock.price * priceChangePercentage;
 
-    if (stock.price < 10) {
-      stock.price = 10;
+      if (stock.price < 10) {
+        stock.price = 10;
+      }
+
+      await stock.save();
+      console.log(`KGB stock price updated to $${stock.price.toFixed(2)}`);
+    } catch (error) {
+      console.error("Error updating stock price (base effect):", error);
     }
-
-    await stock.save();
-    console.log(`KGB stock price updated to $${stock.price.toFixed(2)}`);
   }, 10000);
 
   setInterval(async () => {
-    const priceChangePercentage = (Math.random() * (0.01 + 0.01) - 0.01);
-    stock.price += stock.price * priceChangePercentage;
+    try {
+      const stock = await KingBotStock.findOne({ symbol: "KGB" });
+      const priceChangePercentage = (Math.random() * (0.01 + 0.01) - 0.01);
+      stock.price += stock.price * priceChangePercentage;
 
-    if (stock.price < 10) {
-      stock.price = 10;
+      if (stock.price < 10) {
+        stock.price = 10;
+      }
+
+      await stock.save();
+      console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (minute effect)`);
+    } catch (error) {
+      console.error("Error updating stock price (minute effect):", error);
     }
-
-    await stock.save();
-    console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (minute effect)`);
   }, 60000);
 
   setInterval(async () => {
-    const priceChangePercentage = (Math.random() * (0.05 + 0.05) - 0.05);
-    stock.price += stock.price * priceChangePercentage;
+    try {
+      const stock = await KingBotStock.findOne({ symbol: "KGB" });
+      const priceChangePercentage = (Math.random() * (0.05 + 0.05) - 0.05);
+      stock.price += stock.price * priceChangePercentage;
 
-    if (stock.price < 10) {
-      stock.price = 10;
+      if (stock.price < 10) {
+        stock.price = 10;
+      }
+
+      await stock.save();
+      console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (hour effect)`);
+    } catch (error) {
+      console.error("Error updating stock price (hour effect):", error);
     }
-
-    await stock.save();
-    console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (hour effect)`);
   }, 3600000);
 
   setInterval(async () => {
-    const priceChangePercentage = (Math.random() * (0.15 + 0.15) - 0.15);
-    stock.price += stock.price * priceChangePercentage;
+    try {
+      const stock = await KingBotStock.findOne({ symbol: "KGB" });
+      const priceChangePercentage = (Math.random() * (0.15 + 0.15) - 0.15);
+      stock.price += stock.price * priceChangePercentage;
 
-    if (stock.price < 10) {
-      stock.price = 10;
+      if (stock.price < 10) {
+        stock.price = 10;
+      }
+
+      await stock.save();
+      console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (day effect)`);
+    } catch (error) {
+      console.error("Error updating stock price (day effect):", error);
     }
-
-    await stock.save();
-    console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (day effect)`);
   }, 86400000);
 }
 
