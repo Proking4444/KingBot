@@ -1801,7 +1801,7 @@ client.on("messageCreate", async (message) => {
         "If the user you are talking to is not Ari, do not respond to them like they are Ari, and do not talk about Ari to other users unless asked.",
         "Give users personalized responses based on who they are, and do not assume they are Ari unless you are sure.",
         "11 PM to 6 AM is your bedtime, and you should only be sleepy at night.",
-        `You are currently talking to ${userName}.`,
+        `You are currently talking to ${userName} (If this is not "Ari", even if it is null or unnamed user, it is not Ari).`,
       ];
 
       const humanPrompt =
@@ -1830,7 +1830,7 @@ client.on("messageCreate", async (message) => {
       let result = await chat.sendMessage(humanPrompt);
       const botResponse = result.response.text();
 
-      const chunkSize = 2000;
+      const chunkSize = 1500;
       let chunks = [];
       let currentChunk = "";
 
@@ -3092,7 +3092,7 @@ async function updateKGBPrice() {
   setInterval(async () => {
     try {
       const stock = await KingBotStock.findOne({ symbol: "KGB" });
-      const priceChangePercentage = (Math.random() * (0.005075 + 0.005) - 0.005);
+      const priceChangePercentage = (Math.random() * (0.00525 + 0.005) - 0.005);
       stock.price += stock.price * priceChangePercentage;
 
       if (stock.price < 10) {
@@ -3126,36 +3126,60 @@ async function updateKGBPrice() {
   setInterval(async () => {
     try {
       const stock = await KingBotStock.findOne({ symbol: "KGB" });
-      const priceChangePercentage = (Math.random() * (0.05 + 0.05) - 0.05);
-      stock.price += stock.price * priceChangePercentage;
+      const now = new Date();
 
-      if (stock.price < 10) {
-        stock.price = 10;
+      if (stock.lastHourChange) {
+        const timeElapsed = (now - stock.lastHourChange) / 1000;
+        if (timeElapsed >= 3600) {
+          const priceChangePercentage = (Math.random() * (0.05 + 0.05) - 0.05);
+          stock.price += stock.price * priceChangePercentage;
+
+          if (stock.price < 10) {
+            stock.price = 10;
+          }
+
+          stock.lastHourChange = now;
+          await stock.save();
+          console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (hour effect)`);
+        }
+      } else {
+        stock.lastHourChange = now;
+        await stock.save();
+        console.log("No last hour change timestamp found, setting to current time without price change.");
       }
-
-      await stock.save();
-      console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (hour effect)`);
     } catch (error) {
       console.error("Error updating stock price (hour effect):", error);
     }
-  }, 3600000);
+  }, 60000);
 
   setInterval(async () => {
     try {
       const stock = await KingBotStock.findOne({ symbol: "KGB" });
-      const priceChangePercentage = (Math.random() * (0.15 + 0.15) - 0.15);
-      stock.price += stock.price * priceChangePercentage;
+      const now = new Date();
 
-      if (stock.price < 10) {
-        stock.price = 10;
+      if (stock.lastHalfDayChange) {
+        const timeElapsed = (now - stock.lastHalfDayChange) / 1000;
+        if (timeElapsed >= 43200) {
+          const priceChangePercentage = (Math.random() * (0.15 + 0.20) - 0.20);
+          stock.price += stock.price * priceChangePercentage;
+
+          if (stock.price < 10) {
+            stock.price = 10;
+          }
+
+          stock.lastHalfDayChange = now;
+          await stock.save();
+          console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (half-day effect)`);
+        }
+      } else {
+        stock.lastHalfDayChange = now;
+        await stock.save();
+        console.log("No last half-day change timestamp found, setting to current time without price change.");
       }
-
-      await stock.save();
-      console.log(`KGB stock price updated to $${stock.price.toFixed(2)} (day effect)`);
     } catch (error) {
-      console.error("Error updating stock price (day effect):", error);
+      console.error("Error updating stock price (half-day effect):", error);
     }
-  }, 43200000);
+  }, 60000);
 }
 
 async function buyKingbotStock(message, amount) {
@@ -3215,47 +3239,51 @@ async function buyKingbotStock(message, amount) {
 }
 
 async function sellKingbotStock(message, amount) {
-  const user = await User.findOne({ discordId: message.author.id });
+  try {
+    const stock = await KingBotStock.findOne({ symbol: "KGB" });
 
-  if (!user) {
-    return message.reply("You need to create an account first with `$start`.");
-  }
+    if (!stock) {
+      return message.reply("KGB stock is not available right now.");
+    }
 
-  const kgbStockIndex = user.stocks.findIndex((stock) => stock.symbol === "KGB");
+    const price = stock.price;
+    const user = await User.findOne({ discordId: message.author.id });
 
-  if (kgbStockIndex === -1 || user.stocks[kgbStockIndex].amount < amount) {
-    return message.reply("You do not own enough KGB shares to sell.");
-  }
+    if (!user) {
+      return message.reply("You need to create an account first with `$start`.");
+    }
 
-  const kgbPrice = await fetchStockPrice("KGB");
-  if (!kgbPrice) {
-    return message.reply("Error fetching KGB price.");
-  }
+    const kgbStockIndex = user.stocks.findIndex((stock) => stock.symbol === "KGB");
 
-  const revenue = kgbPrice * amount;
+    if (kgbStockIndex === -1 || user.stocks[kgbStockIndex].amount < amount) {
+      return message.reply("You do not own enough KGB shares to sell.");
+    }
 
-  user.stocks[kgbStockIndex].amount -= amount;
-  user.stocks[kgbStockIndex].currentTotalValue =
-    user.stocks[kgbStockIndex].amount * kgbPrice;
+    const revenue = price * amount;
 
-  if (user.stocks[kgbStockIndex].amount === 0) {
-    user.stocks.splice(kgbStockIndex, 1);
-  }
+    user.stocks[kgbStockIndex].amount -= amount;
+    user.stocks[kgbStockIndex].currentTotalValue =
+      user.stocks[kgbStockIndex].amount * price;
 
-  user.balance += revenue;
+    if (user.stocks[kgbStockIndex].amount === 0) {
+      user.stocks.splice(kgbStockIndex, 1);
+    }
 
-  const stock = await KingBotStock.findOne({ symbol: "KGB" });
-  if (stock) {
+    user.balance += revenue;
+
     stock.stocksInCirculation -= amount;
     stock.volume += amount;
     await stock.save();
+
+    await user.save();
+
+    message.reply(
+      `Successfully sold ${amount} shares of KGB at $${price.toFixed(4)} each.`
+    );
+  } catch (error) {
+    console.error("Error selling KGB stock:", error);
+    message.reply("Error selling KGB stock. Please try again later.");
   }
-
-  await user.save();
-
-  message.reply(
-    `Successfully sold ${amount} shares of KGB at $${kgbPrice.toFixed(4)} each.`
-  );
 }
 
 //Slash Functions

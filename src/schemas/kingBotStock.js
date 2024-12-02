@@ -7,6 +7,8 @@ const kingBotStockSchema = new mongoose.Schema({
   currency: { type: String, required: true },
   stocksInCirculation: { type: Number, required: true },
   volume: { type: Number, required: true },
+  lastHourChange: { type: Date },
+  lastHalfDayChange: { type: Date },
 });
 
 export default mongoose.model("KingBotStock", kingBotStockSchema);
