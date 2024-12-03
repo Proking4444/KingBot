@@ -324,6 +324,24 @@ const ClassMeme40 = new EmbedBuilder()
   .setFooter({ text: "Created by Roy Mei" });
 export { ClassMeme40 };
 
+const ClassMeme41 = new EmbedBuilder()
+  .setTitle("Band Lore 2")
+  .setImage("https://i.imgflip.com/9chg1z.jpg")
+  .setFooter({ text: "Created by Anonymous" });
+export { ClassMeme41 };
+
+const ClassMeme42 = new EmbedBuilder()
+  .setTitle("Math Lore 3")
+  .setImage("https://i.imgflip.com/9chhi2.jpg")
+  .setFooter({ text: "Created by Anonymous" });
+export { ClassMeme42 };
+
+const ClassMeme43 = new EmbedBuilder()
+  .setTitle("English Lore 2")
+  .setImage("https://i.imgflip.com/9chijf.jpg")
+  .setFooter({ text: "Created by Anonymous" });
+export { ClassMeme43 };
+
 //Lists
 
 export const randomJokeList = [

@@ -62,6 +62,9 @@ import {
   ClassMeme38,
   ClassMeme39,
   ClassMeme40,
+  ClassMeme41,
+  ClassMeme42,
+  ClassMeme43,
   randomJokeList,
   randomLongJokeList,
   randomFactList,
@@ -1509,7 +1512,7 @@ client.on("messageCreate", (message) => {
       if (memeEmbed) {
         message.reply({ embeds: [memeEmbed] });
       } else {
-        message.reply("Please use `$classmeme (number)` to send a meme");
+        message.reply("Please use `$classmeme (number)` to send a meme.");
       }
     }
   }
@@ -3092,7 +3095,7 @@ async function updateKGBPrice() {
   setInterval(async () => {
     try {
       const stock = await KingBotStock.findOne({ symbol: "KGB" });
-      const priceChangePercentage = (Math.random() * (0.00525 + 0.005) - 0.005);
+      const priceChangePercentage = (Math.random() * (0.00515 + 0.005) - 0.005);
       stock.price += stock.price * priceChangePercentage;
 
       if (stock.price < 10) {
