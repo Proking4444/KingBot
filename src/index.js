@@ -3477,12 +3477,6 @@ client.on("messageCreate", async (message) => {
   }
 });
 
-client.on("messageCreate", (message) => {
-  if (message.content === "$election") {
-    message.reply({ embeds: [election] });
-  }
-});
-
 client.on("messageCreate", async (message) => {
   if (message.content === "$fixfields" && message.author.id === "786745378212282368") {
     try {
