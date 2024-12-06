@@ -2241,13 +2241,34 @@ client.on('messageCreate', async (message) => {
 client.on('messageCreate', async (message) => {
   if (message.content.startsWith('$image')) {
     const args = message.content.split(' ').slice(1);
-    const prompt = args.join(' ') || 'human';
-    const width = 1024;
-    const height = 1024;
-    const seed = Math.floor(Math.random() * 100000000);
-    const model = 'flux';
 
-    const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=True`;
+    if (args.length === 0 || !args[0]) {
+      return message.reply(
+        "**Sending Images**\nUse `$image (prompt) (model) (width) (height) (enhancetext)` to generate an image.\n\n**Available Models** \n- pro (flux-pro) \n- realism (flux-realism) \n- anime (flux-anime) \n- 3D (flux-3D) \n- cablyai (flux-CablyAI) \n- turbo (turbo) \n\n**Optional Parameters**:\n- Width: default 1024\n- Height: default 1024\n- Enhancetext: true if provided"
+      );
+    }
+
+    const parts = message.content.split(' | ');
+    const prompt = parts[0].slice(7).trim();
+    const argsAfterPrompt = parts[1] ? parts[1].split(' ') : [];
+
+    const modelMap = {
+      pro: 'flux-pro',
+      realism: 'flux-realism',
+      anime: 'flux-anime',
+      '3d': 'flux-3D',
+      cablyai: 'flux-CablyAI',
+      turbo: 'turbo',
+    };
+
+    const model = modelMap[argsAfterPrompt[0]?.toLowerCase()] || 'flux';
+    const width = parseInt(argsAfterPrompt[1]) || 1024;
+    const height = parseInt(argsAfterPrompt[2]) || 1024;
+    const enhancetext = argsAfterPrompt[3]?.toLowerCase();
+    const enhance = enhancetext === 'enhance' ? true : false;
+    const seed = Math.floor(Math.random() * 100000000);
+
+    const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=True&enhance=${enhance}`;
 
     try {
       const response = await fetch(imageUrl);
