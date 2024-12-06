@@ -2247,7 +2247,7 @@ client.on('messageCreate', async (message) => {
     const seed = Math.floor(Math.random() * 100000000);
     const model = 'flux';
 
-    const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}`;
+    const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=True`;
 
     try {
       const response = await fetch(imageUrl);
