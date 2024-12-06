@@ -14,13 +14,13 @@
     "@google/generative-ai": "^0.21.0",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.7",
-    "mongoose": "^8.8.3",
+    "mongoose": "^8.8.4",
     "node-fetch": "^3.3.2",
     "node.js": "^0.0.1-security",
     "nodemon": "^3.1.7",
-    "npm": "^10.9.1",
+    "npm": "^10.9.2",
     "ollama": "^0.5.10",
-    "openai": "^4.75.0",
+    "openai": "^4.76.0",
     "yahoo-finance2": "^2.13.2"
   }
 }
