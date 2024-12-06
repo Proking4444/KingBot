@@ -2238,6 +2238,33 @@ client.on('messageCreate', async (message) => {
   }
 });
 
+client.on('messageCreate', async (message) => {
+  if (message.content.startsWith('$image')) {
+    const args = message.content.split(' ').slice(1);
+    const prompt = args.join(' ') || 'human';
+    const width = 1024;
+    const height = 1024;
+    const seed = Math.floor(Math.random() * 100000000);
+    const model = 'flux';
+
+    const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}`;
+
+    try {
+      const response = await fetch(imageUrl);
+      const buffer = await response.buffer();
+      const filePath = path.join(__dirname, 'image.png');
+
+      fs.writeFileSync(filePath, buffer);
+
+      await message.reply({ files: [{ attachment: filePath, name: 'image.png' }] });
+      fs.unlinkSync(filePath);
+    } catch (error) {
+      console.error(error);
+      message.reply('Failed to generate or download the image.');
+    }
+  }
+});
+
 //Miscellaneous
 client.on("messageCreate", (message) => {
   if (message.content === "$topgg") {
