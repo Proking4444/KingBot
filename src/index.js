@@ -2021,7 +2021,7 @@ client.on("messageCreate", async (message) => {
 client.on("messageCreate", async (message) => {
   if (message.content.startsWith("$visual")) {
     const imageAttachment = message.attachments.first();
-    const prompt = message.content.slice("$image".length).trim();
+    const prompt = message.content.slice("$visual".length).trim();
 
     if (!imageAttachment || !imageAttachment.contentType.startsWith("image/")) {
       return message.reply("Please provide an image attachment with your `$visual` command.");
@@ -2244,7 +2244,7 @@ client.on('messageCreate', async (message) => {
 
     if (args.length === 0 || !args[0]) {
       return message.reply(
-        "**Sending Images**\nUse `$image (prompt) | (model) (width) (height) (enhancetext)` to generate an image.\n\n**Available Models** \n- pro (flux-pro) \n- realism (flux-realism) \n- anime (flux-anime) \n- 3D (flux-3D) \n- cablyai (flux-CablyAI) \n- turbo (turbo) \n\n**Optional Parameters** \n- Width: default 1024\n- Height: default 1024\n- Enhancetext: true if provided"
+        "**Sending Images**\nUse `$image (prompt) | (model) (width) (height) (enhancetext)` to generate an image.\n\n**Available Models** \n- flux (default) (slow, medium-detail, all-purpose) \n- pro (flux-pro) (medium, high-detail, all-purpose) \n- realism (flux-realism) (medium, high-detail, realistic) \n- anime (flux-anime) (fast, low-detail, anime) \n- 3D (flux-3D) (medium, medium-detail, 3D rendering) \n- cablyai (flux-CablyAI) (medium, high-detail, all-purpose) \n- turbo (turbo) (fast, medium-detail, photorealistic) \n\n**Optional Parameters** \n- width (in pixels) \n- height (in pixels)\n- enhancetext (enhances prompt) \n\n**Speed Reference** \n- slow (~35 seconds) \n- medium (~25 seconds) \n- fast (~10 seconds)"
       );
     }
 
@@ -2253,6 +2253,7 @@ client.on('messageCreate', async (message) => {
     const argsAfterPrompt = parts[1] ? parts[1].split(' ') : [];
 
     const modelMap = {
+      flux: 'flux',
       pro: 'flux-pro',
       realism: 'flux-realism',
       anime: 'flux-anime',
@@ -2637,7 +2638,7 @@ client.on("interactionCreate", (interaction) => {
 
   if (interaction.commandName === "movie") {
     return interaction.reply(
-      "**Watching Movies** \nPlease use `$movie (code)` to watch a movie. \n\n**Movie Codes:** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV) \n\nBoehlke 2023 \n- Happy Little Accidents (HLA) \n- King's Crypt (KC) \n- Monkey Murder (MM) \n- Mount Foreverrest (MF) \n- The Wild Jeffois (TWJ) \n- Thirst For Clout (TFC) \n- Recnac!! (The Miracle Drug) (RTMD) \n\nDeluca 2024 \n- 90 Days of Different (90DOD) \n- Ella vs Sohpie (Gun Version) (EVSGV) \n- Graffiti Day (GD) \n- Paint Ballistic (PB) \n- Sophie and Ella Travel the World (SAETTW) \n- The Mask (TM) \n- Thomas, Baron, Alice (TBA) \n- W Rube Goldberg (WRG) \n- Fire Rube Goldberg (FRG) \n\nGibson 2024 \n- 90 Days of Different: Day 40 (90DODD40) \n- A Ruff Day (ARD) \n- The Horror Movie (THM) \n- Epic Ice Cream Movie (EICM) \n- Every Fast Food Worker's Dream (EFFWD) \n- Slay 49 (S49) \n- Snowy Paintball Fight (SPF) \n\nOther \n- Donut Animation in Blender (DAIB) \n- The CN Tower (TCNT)"
+      "**Watching Movies** \nPlease use `$movie (code)` to watch a movie. \n\n**Movie Codes:** \nBoehlke 2024 \n- 2 Guys Who Got Brutally Unalived (2GWGBU) \n- Destined With You (DWY) \n- Fixing Good (FG) \n- Khan Artist (KA) \n- The Circle Of Life (TCOL) \n- The First Victim (TFV) \n\nBoehlke 2023 \n- Happy Little Accidents (HLA) \n- King's Crypt (KC) \n- Monkey Murder (MM) \n- Mount Foreverrest (MF) \n- The Wild Jeffois (TWJ) \n- Thirst For Clout (TFC) \n- Recnac!! (The Miracle Drug) (RTMD) \n\nDeluca 2024 \n- 90 Days of Different (90DOD) \n- Ella vs Sohpie (Gun Version) (EVSGV) \n- Graffiti Day (GD) \n- Paint Ballistic (PB) \n- Sophie and Ella Travel the World (SAETTW) \n- The Mask (TM) \n- Thomas, Baron, Alice (TBA) \n- W Rube Goldberg (WRG) \n- Fire Rube Goldberg (FRG) \n\nGibson 2024 \n- 90 Days of Different: Day 40 (90DODD40) \n- A Ruff Day (ARD) \n- The Horror Movie (THM) \n- Epic Ice Cream Movie (EICM) \n- Every Fast Food Worker's Dream (EFFWD) \n- Slay 49 (S49) \n- Snowy Paintball Fight (SPF) \n\n**Other** \n- Donut Animation in Blender (DAIB) \n- The CN Tower (TCNT)"
     );
   }
 });
@@ -3162,7 +3163,7 @@ async function updateKGBPrice() {
   setInterval(async () => {
     try {
       const stock = await KingBotStock.findOne({ symbol: "KGB" });
-      const priceChangePercentage = (Math.random() * (0.01 + 0.01) - 0.01);
+      const priceChangePercentage = (Math.random() * (0.012 + 0.01) - 0.01);
       stock.price += stock.price * priceChangePercentage;
 
       if (stock.price < 10) {
@@ -3184,7 +3185,7 @@ async function updateKGBPrice() {
       if (stock.lastHourChange) {
         const timeElapsed = (now - stock.lastHourChange) / 1000;
         if (timeElapsed >= 3600) {
-          const priceChangePercentage = (Math.random() * (0.05 + 0.05) - 0.05);
+          const priceChangePercentage = (Math.random() * (0.05 + 0.06) - 0.06);
           stock.price += stock.price * priceChangePercentage;
 
           if (stock.price < 10) {
@@ -3213,7 +3214,7 @@ async function updateKGBPrice() {
       if (stock.lastHalfDayChange) {
         const timeElapsed = (now - stock.lastHalfDayChange) / 1000;
         if (timeElapsed >= 43200) {
-          const priceChangePercentage = (Math.random() * (0.15 + 0.20) - 0.20);
+          const priceChangePercentage = (Math.random() * (0.15 + 0.25) - 0.25);
           stock.price += stock.price * priceChangePercentage;
 
           if (stock.price < 10) {
