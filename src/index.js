@@ -1395,44 +1395,46 @@ client.on("messageCreate", async (message) => {
 });
 
 client.on("messageCreate", async (message) => {
-  if (message.content === "$kingbotstocksplitdevtool") {
-      if (message.author.id !== "786745378212282368") {
-          return message.reply("You are not authorized to use this command.");
+  if (message.content.trim().toLowerCase() === "$kingbotstocksplitdevtool") {
+    if (message.author.id !== "786745378212282368") {
+      return message.reply("You are not authorized to use this command.");
+    }
+
+    try {
+      const kgbStock = await KingBotStock.findOne({ symbol: "KGB" });
+      if (!kgbStock) {
+        return message.reply("KGB stock not found in the database.");
       }
 
-      try {
-          const kgbStock = await KingBotStock.findOne({ symbol: "KGB" });
-          if (!kgbStock) {
-              return message.reply("KGB stock not found in the database.");
-          }
+      kgbStock.price /= 2;
+      kgbStock.stocksInCirculation *= 2;
+      await kgbStock.save();
 
-          kgbStock.price /= 2;
-          kgbStock.stocksInCirculation *= 2;
-          await kgbStock.save();
+      const usersWithKGBStocks = await User.find({ "stocks.symbol": "KGB" });
 
-          const usersWithKGBStocks = await User.find({ "stocks.symbol": "KGB" });
-
-          if (usersWithKGBStocks.length === 0) {
-              return message.reply("No users own shares of KGB.");
-          }
-
-          for (const user of usersWithKGBStocks) {
-              const kgbStockEntry = user.stocks.find((stock) => stock.symbol === "KGB");
-              if (kgbStockEntry) {
-                  kgbStockEntry.amount *= 2;
-              }
-              await user.save();
-          }
-
-          return message.reply(
-              `A stock split for KGB has been performed. The new price is $${kgbStock.price.toFixed(2)}, ` +
-              `stocks in circulation have doubled to ${kgbStock.stocksInCirculation}, ` +
-              `and all users' holdings have been updated.`
-          );
-      } catch (error) {
-          console.error("Error performing stock split:", error);
-          return message.reply("An error occurred while performing the stock split.");
+      if (usersWithKGBStocks.length === 0) {
+        return message.reply("No users own shares of KGB.");
       }
+
+      for (const user of usersWithKGBStocks) {
+        const kgbStockEntry = user.stocks.find((stock) => stock.symbol === "KGB");
+
+        if (kgbStockEntry) {
+          kgbStockEntry.purchasePrice /= 2;
+
+          await user.save();
+        }
+      }
+
+      return message.reply(
+        `A stock split for KGB has been performed. The new price is $${kgbStock.price.toFixed(
+          2
+        )}, stocks in circulation have doubled, and all users' holdings have been updated.`
+      );
+    } catch (error) {
+      console.error("Error performing stock split:", error);
+      return message.reply("An error occurred while performing the stock split.");
+    }
   }
 });
 
