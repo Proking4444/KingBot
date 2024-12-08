@@ -1166,19 +1166,19 @@ client.on("messageCreate", async (message) => {
 
       if (kgbStock) {
         const kgbData = await KingBotStock.findOne({ symbol: "KGB" });
-
+      
         if (kgbData) {
           const kgbCurrentValue = kgbData.price * kgbStock.amount;
           const kgbProfit = (kgbCurrentValue - kgbStock.purchasePrice * kgbStock.amount).toFixed(2);
-
+      
           totalPortfolioValue[kgbData.currency] = (totalPortfolioValue[kgbData.currency] || 0) + kgbCurrentValue;
           totalProfit[kgbData.currency] = (totalProfit[kgbData.currency] || 0) + parseFloat(kgbProfit);
-
+      
           portfolioMessage += `**${kgbData.name} (${kgbStock.symbol}):** \n`;
           portfolioMessage += `**Date:** ${kgbStock.purchaseDate ? kgbStock.purchaseDate.toISOString().split("T")[0] : "Unknown"} \n`;
           portfolioMessage += `**Shares:** ${kgbStock.amount} \n`;
           portfolioMessage += `**Currency:** ${kgbData.currency} \n`;
-          portfolioMessage += `**Average Purchase Price:** $${kgbStock.purchasePrice.toFixed(2)} \n`;
+          portfolioMessage += `**Average Purchase Price:** $${kgbStock.purchasePrice.toFixed(2)} \n`;  
           portfolioMessage += `**Current Price:** $${kgbData.price.toFixed(2)} \n`;
           portfolioMessage += `**Value:** $${kgbCurrentValue.toFixed(2)} \n`;
           portfolioMessage += `**Profit:** $${kgbProfit} \n\n`;
@@ -1402,12 +1402,14 @@ client.on("messageCreate", async (message) => {
 
     try {
       const kgbStock = await KingBotStock.findOne({ symbol: "KGB" });
+
       if (!kgbStock) {
         return message.reply("KGB stock not found in the database.");
       }
 
       kgbStock.price /= 2;
       kgbStock.stocksInCirculation *= 2;
+
       await kgbStock.save();
 
       const usersWithKGBStocks = await User.find({ "stocks.symbol": "KGB" });
@@ -1420,6 +1422,7 @@ client.on("messageCreate", async (message) => {
         const kgbStockEntry = user.stocks.find((stock) => stock.symbol === "KGB");
 
         if (kgbStockEntry) {
+          kgbStockEntry.amount *= 2;
           kgbStockEntry.purchasePrice /= 2;
 
           await user.save();
