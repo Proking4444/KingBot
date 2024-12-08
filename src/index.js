@@ -3146,7 +3146,7 @@ async function updateKGBPrice() {
   setInterval(async () => {
     try {
       const stock = await KingBotStock.findOne({ symbol: "KGB" });
-      const priceChangePercentage = (Math.random() * (0.00515 + 0.005) - 0.005);
+      const priceChangePercentage = (Math.random() * (0.0051 + 0.005) - 0.005);
       stock.price += stock.price * priceChangePercentage;
 
       if (stock.price < 10) {
