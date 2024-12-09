@@ -3168,7 +3168,7 @@ async function updateKGBPrice() {
   setInterval(async () => {
     try {
       const stock = await KingBotStock.findOne({ symbol: "KGB" });
-      const priceChangePercentage = (Math.random() * (0.011 + 0.01) - 0.01);
+      const priceChangePercentage = (Math.random() * (0.0105 + 0.01) - 0.01);
       stock.price += stock.price * priceChangePercentage;
 
       if (stock.price < 10) {
@@ -3219,7 +3219,7 @@ async function updateKGBPrice() {
       if (stock.lastHalfDayChange) {
         const timeElapsed = (now - stock.lastHalfDayChange) / 1000;
         if (timeElapsed >= 43200) {
-          const priceChangePercentage = (Math.random() * (0.15 + 0.25) - 0.25);
+          const priceChangePercentage = (Math.random() * (0.10 + 0.25) - 0.25);
           stock.price += stock.price * priceChangePercentage;
 
           if (stock.price < 10) {
