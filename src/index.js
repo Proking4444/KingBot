@@ -1715,7 +1715,7 @@ client.on("messageCreate", async (message) => {
     const prompt = message.content.slice("$gemini".length).trim();
 
     if (!prompt) {
-      message.reply("Please use `$gemini (prompt)` to send Gemini a prompt. \n\n**Disclaimer:** KingBot AI provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed.");
+      message.reply("Please use `$gemini (prompt)` to send Gemini a prompt. \n\n**Disclaimer:** KingBot AI™™ provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed.");
       return;
     }
 
@@ -1761,7 +1761,7 @@ client.on("messageCreate", async (message) => {
 
     if (!prompt) {
       message.reply(
-        "Please use $human (prompt) to send Gemini Human a prompt. \n\n**Disclaimer:** KingBot AI provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed."
+        "Please use $human (prompt) to send Gemini Human a prompt. \n\n**Disclaimer:** KingBot AI™ provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed."
       );
       return;
     }
@@ -1901,7 +1901,7 @@ client.on("messageCreate", async (message) => {
 
     if (!prompt) {
       message.reply(
-        "Please use `$progemini (prompt)` to send Gemini a prompt. \n\n**Disclaimer:** KingBot AI provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed." 
+        "Please use `$progemini (prompt)` to send Gemini a prompt. \n\n**Disclaimer:** KingBot AI™ provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed." 
       );
       return;
     }
@@ -1947,7 +1947,7 @@ client.on("messageCreate", async (message) => {
     const query = message.content.slice(6).trim();
 
     if (!query) {
-      message.reply("Please provide a prompt. \n\n**Disclaimer:** KingBot AI provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed.");
+      message.reply("Please provide a prompt. \n\n**Disclaimer:** KingBot AI™ provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed.");
       return;
     }
 
@@ -1972,7 +1972,7 @@ client.on("messageCreate", async (message) => {
     const query = message.content.slice(7).trim();
 
     if (!query) {
-      message.reply("Please provide a prompt. \n\n**Disclaimer:** KingBot AI provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed.");
+      message.reply("Please provide a prompt. \n\n**Disclaimer:** KingBot AI™ provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed.");
       return;
     }
 
@@ -2033,7 +2033,7 @@ client.on("messageCreate", async (message) => {
     }
 
     if (!prompt) {
-      return message.reply("Please provide a text prompt along with the image to use the `$visual` command. \n\n**Disclaimer:** KingBot AI provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed.");
+      return message.reply("Please provide a text prompt along with the image to use the `$visual` command. \n\n**Disclaimer:** KingBot AI™ provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed.");
     }
 
     try {
@@ -2103,7 +2103,7 @@ client.on("messageCreate", async (message) => {
     }
 
     if (!prompt) {
-      return message.reply("Please provide a text prompt along with the image to use the `$vision` command. \n\n**Disclaimer:** KingBot AI provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed.");
+      return message.reply("Please provide a text prompt along with the image to use the `$vision` command. \n\n**Disclaimer:** KingBot AI™ provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed.");
     }
 
     try {
@@ -2249,7 +2249,7 @@ client.on('messageCreate', async (message) => {
 
     if (args.length === 0 || !args[0]) {
       return message.reply(
-        "**Sending Images**\nUse `$image (prompt) | (model) (width) (height) (enhancetext)` to generate an image.\n\n**Available Models** \n- flux (default) (slow, medium-detail, all-purpose) \n- pro (flux-pro) (medium, high-detail, all-purpose) \n- realism (flux-realism) (medium, high-detail, realistic) \n- anime (flux-anime) (fast, low-detail, anime) \n- 3D (flux-3D) (medium, medium-detail, 3D rendering) \n- cablyai (flux-CablyAI) (medium, high-detail, all-purpose) \n- turbo (turbo) (fast, medium-detail, photorealistic) \n\n**Optional Parameters** \n- width (in pixels) \n- height (in pixels)\n- enhancetext (enhances prompt) \n\n**Speed Reference** \n- slow (~35 seconds) \n- medium (~25 seconds) \n- fast (~10 seconds) \n\n**Disclaimer:** KingBot AI provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed."
+        "**Sending Images**\nUse `$image (prompt) | (model) (width) (height) (enhancetext)` to generate an image.\n\n**Available Models** \n- flux (default) (slow, medium-detail, all-purpose) \n- pro (flux-pro) (medium, high-detail, all-purpose) \n- realism (flux-realism) (medium, high-detail, realistic) \n- anime (flux-anime) (fast, low-detail, anime) \n- 3D (flux-3D) (medium, medium-detail, 3D rendering) \n- cablyai (flux-CablyAI) (medium, high-detail, all-purpose) \n- turbo (turbo) (fast, medium-detail, photorealistic) \n\n**Optional Parameters** \n- width (in pixels) \n- height (in pixels)\n- enhancetext (enhances prompt) \n\n**Speed Reference** \n- slow (~35 seconds) \n- medium (~25 seconds) \n- fast (~10 seconds) \n\n**Disclaimer:** KingBot AI™ provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed."
       );
     }
 
