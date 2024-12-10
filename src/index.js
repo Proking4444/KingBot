@@ -2290,10 +2290,10 @@ client.on('messageCreate', async (message) => {
       const buffer = Buffer.from(arrayBuffer);
       const filePath = path.join(__dirname, 'image.png');
 
-      await fs.writeFile(filePath, buffer);
+      fs.writeFile(filePath, buffer);
 
       await message.reply({ files: [{ attachment: filePath, name: 'image.png' }] });
-      await fs.unlink(filePath);
+      fs.unlink(filePath);
     } catch (error) {
       console.error(error);
       message.reply('Failed to generate or download the image.');
