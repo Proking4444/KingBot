@@ -2313,6 +2313,7 @@ client.on('messageCreate', async (message) => {
 
       if (isSafe) {
         await message.reply({ files: [{ attachment: filePath, name: 'image.png' }] });
+        console.log("Image is SFW.")
       } else {
         message.reply('Failed to generate a suitable image. It contained explicit content.');
       }
