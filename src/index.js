@@ -2279,10 +2279,17 @@ client.on('messageCreate', async (message) => {
       height = parseInt(argsAfterPrompt[2]) || 1024;
       enhancetext = argsAfterPrompt[3]?.toLowerCase();
     } else {
+      width = parseInt(argsAfterPrompt[0]);
+      height = parseInt(argsAfterPrompt[1]);
+    
+      if (isNaN(width) || isNaN(height)) {
+        console.log('Invalid dimensions provided.');
+        return message.reply('Please provide valid width and height dimensions.');
+      }
+    
       model = 'flux';
-      width = parseInt(argsAfterPrompt[0]) || 1024;
-      height = parseInt(argsAfterPrompt[1]) || 1024;
     }
+    
 
     const enhance = enhancetext === 'enhance' ? true : false;
     const seed = Math.floor(Math.random() * 100000000);
