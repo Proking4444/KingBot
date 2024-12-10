@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import fetch from "node-fetch";
 import fs from 'fs';
 import path from 'path';
-import { createCanvas, loadImage } from 'canvas';
 import { fileURLToPath } from 'url';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { HarmBlockThreshold, HarmCategory } from "@google/generative-ai";
@@ -2299,27 +2298,8 @@ client.on('messageCreate', async (message) => {
 
       fs.writeFileSync(filePath, buffer);
 
-      const image = await loadImage(filePath);
-      const canvas = createCanvas(image.width, image.height);
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(image, 0, 0, image.width, image.height);
-
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const predictions = await safeModelInstance.classify(canvas);
-
-      const isSafe = predictions.every(prediction => {
-        return ['drawings', 'neutral'].includes(prediction.className);
-      });
-
-      if (isSafe) {
-        await message.reply({ files: [{ attachment: filePath, name: 'image.png' }] });
-        console.log("Image is SFW.")
-      } else {
-        message.reply('Failed to generate a suitable image. It contained explicit content.');
-      }
-
+      await message.reply({ files: [{ attachment: filePath, name: 'image.png' }] });
       fs.unlinkSync(filePath);
-
     } catch (error) {
       console.error('Failed to generate or download the image:', error);
       message.reply('Failed to generate or download the image.');
