@@ -2277,8 +2277,16 @@ client.on('messageCreate', async (message) => {
     const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=True&enhance=${enhance}`;
 
     try {
-      const response = await fetch(imageUrl);
-      const buffer = await response.arrayBuffer();
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 120000);
+
+      const response = await fetch(imageUrl, { signal: controller.signal });
+      clearTimeout(timeout);
+
+      if (!response.ok) throw new Error('Failed to generate the image.');
+
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
       const filePath = path.join(__dirname, 'image.png');
 
       fs.writeFileSync(filePath, buffer);
@@ -2286,7 +2294,7 @@ client.on('messageCreate', async (message) => {
       await message.reply({ files: [{ attachment: filePath, name: 'image.png' }] });
       fs.unlinkSync(filePath);
     } catch (error) {
-      console.error(error);
+      console.error('Failed to generate or download the image:', error);
       message.reply('Failed to generate or download the image.');
     }
   }
