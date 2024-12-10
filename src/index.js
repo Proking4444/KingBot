@@ -176,13 +176,6 @@ client.on("ready", async () => {
   totalGuilds = client.guilds.cache.size;
 });
 
-let safeModelInstance;
-
-(async () => {
-  safeModelInstance = await safeModel.load();
-  console.log('Safe model loaded.');
-})();
-
 //Information/Management
 
 client.on("messageCreate", (message) => {
