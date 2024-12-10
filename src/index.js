@@ -2283,19 +2283,18 @@ client.on('messageCreate', async (message) => {
     try {
       const response = await fetch(imageUrl, { signal: controller.signal });
       clearTimeout(timeoutId);
-
+    
       if (!response.ok) throw new Error('Failed to generate image.');
-
+    
       const arrayBuffer = await response.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       const filePath = path.join(__dirname, 'image.png');
-
-      fs.writeFile(filePath, buffer);
-
+    
+      await fs.writeFile(filePath, buffer);
       await message.reply({ files: [{ attachment: filePath, name: 'image.png' }] });
-      fs.unlink(filePath);
+      await fs.unlink(filePath);  // Clean up the temporary image file
     } catch (error) {
-      console.error(error);
+      console.error('Error generating the image:', error);
       message.reply('Failed to generate or download the image.');
     }
   }
