@@ -2249,7 +2249,7 @@ client.on('messageCreate', async (message) => {
 
     if (args.length === 0 || !args[0]) {
       return message.reply(
-        "**Sending Images**\nUse `$image (prompt) | (model) (width) (height) (enhancetext)` to generate an image.\n\n**Available Models** \n- flux (default) (slow, medium-detail, all-purpose) \n- pro (flux-pro) (medium, high-detail, all-purpose) \n- realism (flux-realism) (medium, high-detail, realistic) \n- anime (flux-anime) (fast, low-detail, anime) \n- 3D (flux-3D) (medium, medium-detail, 3D rendering) \n- cablyai (flux-CablyAI) (medium, high-detail, all-purpose) \n- turbo (turbo) (fast, medium-detail, photorealistic) \n\n**Optional Parameters** \n- width (in pixels) \n- height (in pixels)\n- enhancetext (enhances prompt) \n\n**Speed Reference** \n- slow (~35 seconds) \n- medium (~25 seconds) \n- fast (~10 seconds) \n\n**Disclaimer:** KingBot AI™ provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed."
+        "**Sending Images**\nUse `$image (prompt) | (model) (width) (height) (raw)` to generate an image.\n\n**Available Models** \n- flux (default) (slow, medium-detail, all-purpose) \n- pro (flux-pro) (medium, high-detail, all-purpose) \n- realism (flux-realism) (medium, high-detail, realistic) \n- anime (flux-anime) (fast, low-detail, anime) \n- 3D (flux-3D) (medium, medium-detail, 3D rendering) \n- cablyai (flux-CablyAI) (medium, high-detail, all-purpose) \n- turbo (turbo) (fast, medium-detail, photorealistic) \n\n**Optional Parameters** \n- width (in pixels) \n- height (in pixels)\n- raw (uses raw prompt without enhancement) \n\n**Speed Reference** \n- slow (~35 seconds) \n- medium (~25 seconds) \n- fast (~10 seconds) \n\n**Disclaimer:** KingBot AI™ provides information and assistance but is not responsible for any outcomes, decisions, or consequences resulting from the malicious use of its responses or generated content. Please review, use discretion, and consult professionals when needed."
       );
     }
 
@@ -2270,11 +2270,11 @@ client.on('messageCreate', async (message) => {
     const model = modelMap[argsAfterPrompt[0]?.toLowerCase()] || 'flux';
     const width = parseInt(argsAfterPrompt[1]) || 1024;
     const height = parseInt(argsAfterPrompt[2]) || 1024;
-    const enhancetext = argsAfterPrompt[3]?.toLowerCase();
-    const enhance = enhancetext === 'enhance' ? true : false;
+    const rawtext = argsAfterPrompt[3]?.toLowerCase();
+    const raw = rawtext === 'raw' ? false : true;
     const seed = Math.floor(Math.random() * 100000000);
 
-    const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=True&enhance=${enhance}`;
+    const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=True&enhance=${raw}`;
 
     try {
       const controller = new AbortController();
