@@ -2276,8 +2276,17 @@ client.on('messageCreate', async (message) => {
 
     const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=True&enhance=${enhance}`;
 
+    const controller = new AbortController();
+    const timeout = 120000;
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
     try {
-      const response = await fetch(imageUrl);
+      const response = await fetch(imageUrl, { signal: controller.signal });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) throw new Error('Failed to generate image.');
+
       const buffer = await response.buffer();
       const filePath = path.join(__dirname, 'image.png');
 
@@ -2286,8 +2295,13 @@ client.on('messageCreate', async (message) => {
       await message.reply({ files: [{ attachment: filePath, name: 'image.png' }] });
       fs.unlinkSync(filePath);
     } catch (error) {
-      console.error(error);
-      message.reply('Failed to generate or download the image.');
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        message.reply('The request timed out. Image generation might take too long.');
+      } else {
+        console.error(error);
+        message.reply('Failed to generate or download the image.');
+      }
     }
   }
 });
