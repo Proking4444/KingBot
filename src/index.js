@@ -2278,7 +2278,8 @@ client.on('messageCreate', async (message) => {
 
     try {
       const response = await fetch(imageUrl);
-      const buffer = await response.buffer();
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
       const filePath = path.join(__dirname, 'image.png');
 
       fs.writeFileSync(filePath, buffer);
@@ -2286,11 +2287,12 @@ client.on('messageCreate', async (message) => {
       await message.reply({ files: [{ attachment: filePath, name: 'image.png' }] });
       fs.unlinkSync(filePath);
     } catch (error) {
-      console.error(error);
+      console.error('Image fetch error:', error);
       message.reply('Failed to generate or download the image.');
     }
   }
 });
+
 
 //Miscellaneous
 client.on("messageCreate", (message) => {
