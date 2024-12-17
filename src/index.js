@@ -2274,7 +2274,7 @@ client.on('messageCreate', async (message) => {
     const raw = rawtext === 'raw' ? false : true;
     const seed = Math.floor(Math.random() * 100000000);
 
-    const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=True&enhance=${raw}`;
+    const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=True&enhance=${raw}&safe=True`;
 
     try {
       const controller = new AbortController();
