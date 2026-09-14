@@ -28,5 +28,9 @@
     "ollama": "^0.6.3",
     "openai": "^6.22.0",
     "yahoo-finance2": "^3.13.0"
+  },
+  "allowScripts": {
+    "@google/genai@1.52.0": true,
+    "protobufjs@7.6.6": true
   }
 }
